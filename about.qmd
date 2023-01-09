@@ -2,11 +2,11 @@
 title: "About"
 image: profile.jpeg
 about:
-  template: solna
+  template: solana
   links:
     - icon: twitter
       text: Twitter
-      href: https://twitter.com
+      href: https://twitter.com/kamesen
     - icon: linkedin
       text: LinkedIn
       href: https://linkedin.com
