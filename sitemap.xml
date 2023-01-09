@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/post-with-code/index.html</loc>
-    <lastmod>2023-01-09T21:15:25.870Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/about.html</loc>
+    <lastmod>2023-01-09T21:43:06.528Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/welcome/index.html</loc>
-    <lastmod>2023-01-09T21:15:26.159Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/welcome/index.html</loc>
+    <lastmod>2023-01-09T21:43:07.172Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/2022-01-04-covid.html</loc>
-    <lastmod>2023-01-09T21:15:26.824Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/post-with-code/index.html</loc>
+    <lastmod>2023-01-09T21:43:07.452Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/hello.html</loc>
-    <lastmod>2023-01-09T21:15:34.450Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/Julia--demo.html</loc>
+    <lastmod>2023-01-09T21:43:07.804Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/Julia--demo.html</loc>
-    <lastmod>2023-01-09T21:15:38.534Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/2022-01-04-covid.html</loc>
+    <lastmod>2023-01-09T21:43:13.104Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/posts/computations.html</loc>
-    <lastmod>2023-01-09T21:15:42.954Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/computations.html</loc>
+    <lastmod>2023-01-09T21:43:23.036Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/index.html</loc>
-    <lastmod>2023-01-09T21:15:43.357Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/hello.html</loc>
+    <lastmod>2023-01-09T21:43:23.332Z</lastmod>
   </url>
   <url>
-    <loc>https://kameyama.github.io/notebooks2/about.html</loc>
-    <lastmod>2023-01-09T21:15:43.633Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/index.html</loc>
+    <lastmod>2023-01-09T21:43:27.769Z</lastmod>
   </url>
 </urlset>
