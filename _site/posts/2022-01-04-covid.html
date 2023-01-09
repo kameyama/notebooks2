@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Masaya Kameyama">
+
+<title>notebooks2 - Covid in Japan</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">notebooks2</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Covid in Japan</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Masaya Kameyama </p>
+            </div>
+    </div>
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#covid-in-japan" id="toc-covid-in-japan" class="nav-link active" data-scroll-target="#covid-in-japan"><span class="toc-section-number">1</span>  “Covid in Japan”</a></li>
+  <li><a href="#はじめに" id="toc-はじめに" class="nav-link" data-scroll-target="#はじめに"><span class="toc-section-number">2</span>  はじめに</a></li>
+  <li><a href="#データの準備と可視化" id="toc-データの準備と可視化" class="nav-link" data-scroll-target="#データの準備と可視化"><span class="toc-section-number">3</span>  データの準備と可視化</a>
+  <ul class="collapse">
+  <li><a href="#グラフ所感" id="toc-グラフ所感" class="nav-link" data-scroll-target="#グラフ所感"><span class="toc-section-number">3.1</span>  グラフ所感</a></li>
+  </ul></li>
+  <li><a href="#傾向変動の計算" id="toc-傾向変動の計算" class="nav-link" data-scroll-target="#傾向変動の計算"><span class="toc-section-number">4</span>  傾向変動の計算</a>
+  <ul class="collapse">
+  <li><a href="#raw-dataと7日間移動平均" id="toc-raw-dataと7日間移動平均" class="nav-link" data-scroll-target="#raw-dataと7日間移動平均"><span class="toc-section-number">4.1</span>  raw dataと7日間移動平均</a></li>
+  <li><a href="#対数とその7日間移動平均" id="toc-対数とその7日間移動平均" class="nav-link" data-scroll-target="#対数とその7日間移動平均"><span class="toc-section-number">4.2</span>  対数とその7日間移動平均</a></li>
+  <li><a href="#対数と線形回帰" id="toc-対数と線形回帰" class="nav-link" data-scroll-target="#対数と線形回帰"><span class="toc-section-number">4.3</span>  対数と線形回帰</a>
+  <ul class="collapse">
+  <li><a href="#区間の計算" id="toc-区間の計算" class="nav-link" data-scroll-target="#区間の計算"><span class="toc-section-number">4.3.1</span>  区間の計算</a></li>
+  <li><a href="#線形回帰" id="toc-線形回帰" class="nav-link" data-scroll-target="#線形回帰"><span class="toc-section-number">4.3.2</span>  線形回帰</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#まとめ" id="toc-まとめ" class="nav-link" data-scroll-target="#まとめ"><span class="toc-section-number">5</span>  まとめ</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="covid-in-japan" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> “Covid in Japan”</h1>
+<blockquote class="blockquote">
+<p>“コロナの新規陽性者数のデータを使った時系列データ分析の練習ノート. 日本のコロナの新規陽性者数のデータを使って<a href="http://www.tokyo-tosho.co.jp/books/978-4-489-02227-2/">統計学基礎 1.7.3節</a>の時系列データの変動分解を試みる. 傾向変動として全国新規陽性者数<span class="math inline">y_t</span>のデータで7日間移動平均を使ったもの, <span class="math inline">y_t</span>の対数を取ったデータに対し7日間移動平均をとったもの, <span class="math inline">y_t</span>の対数を取ったデータを線形回帰したものを使った変動分解を行い結果を考察する.” - toc: false - branch: master - badges: true - comments: true - categories: [julia, covid, statistics] - hide: false - search_exclude: true</p>
+</blockquote>
+</section>
+<section id="はじめに" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> はじめに</h1>
+<p>経済時系列データ＄y_t＄の伝統的な分析方法にはデータを次の3種類に分ける方法がある: <span class="math display">
+y_t=TC_t+S_t+I_t
+</span> ここで<span class="math inline">TC_t</span>は傾向変動, <span class="math inline">S_t</span>は季節変動, <span class="math inline">I_t</span>は不規則変動である. <span class="math inline">TC_t</span>は長期的な傾向を表し, <span class="math inline">S_t</span>は１年を周期とするような循環的に繰り返す変動を表し, <span class="math inline">I_t</span>はは上記以外の変動を表す.</p>
+<p>会社の統計勉強会で<a href="http://www.tokyo-tosho.co.jp/books/978-4-489-02227-2/">統計学基礎</a>を読んでいるがその際にコロナのデータで試そうという話になり, 個人的にも(このような時間の影響をはっきり受ける)時系列データを扱ったことがなかったので練習がてら計算をしてみた. コロナの新規陽性者数の場合では<span class="math inline">TC_t</span>は流行(所謂第<span class="math inline">n</span>波とよばれるもの), <span class="math inline">S_t</span>は曜日別の影響, <span class="math inline">I_t</span>はは上記以外の変動ということになるだろう. コロナの場合には名前がおかしい気がするが気にしないことにする.</p>
+<p>使用している環境は次の通り:</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">versioninfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Julia Version 1.8.4
+Commit 00177ebc4fc (2022-12-23 21:32 UTC)
+Platform Info:
+  OS: macOS (arm64-apple-darwin21.5.0)
+  CPU: 8 × Apple M1
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-13.0.1 (ORCJIT, apple-m1)
+  Threads: 1 on 4 virtual cores</code></pre>
+</div>
+</div>
+</section>
+<section id="データの準備と可視化" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> データの準備と可視化</h1>
+<p>必要なパッケージをロードする:</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p<span class="op">=</span>[</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">"CSV"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">"DataFrames"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">"Plots"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">"Statistics"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">"Indicators"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">"StatsPlots"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">"GLM"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">"HTTP"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">"Dates"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>9-element Vector{String}:
+ "CSV"
+ "DataFrames"
+ "Plots"
+ "Statistics"
+ "Indicators"
+ "StatsPlots"
+ "GLM"
+ "HTTP"
+ "Dates"</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Pkg; Pkg</span>.<span class="fu">add</span>.(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>    Updating registry at `~/.julia/registries/General.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`
+   Resolving package versions...
+  No Changes to `~/.julia/environments/v1.8/Project.toml`
+  No Changes to `~/.julia/environments/v1.8/Manifest.toml`</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>9-element Vector{Nothing}:
+ nothing
+ nothing
+ nothing
+ nothing
+ nothing
+ nothing
+ nothing
+ nothing
+ nothing</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>Plots.<span class="fu">gr</span>(fmt <span class="op">=</span> <span class="op">:</span>png)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Statistics</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Indicators</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsPlots</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GLM </span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">HTTP</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Dates</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>以上の考え方を試す前にまずは全国新規陽性者数を見てみる. <a href="https://www.mhlw.go.jp/stf/covid-19/open-data.html">厚生労働省のオープンデータ</a>を利用する.</p>
+<div class="cell" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> HTTP.<span class="fu">get</span>(<span class="st">"https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv"</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> CSV.<span class="fu">read</span>(res.body,DataFrame);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">last</span>(df,<span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+
+<div><div style="float: left;"><span>10×49 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;"><table class="data-frame table table-sm table-striped" style="margin-bottom: 6px;"><thead><tr class="header"><th class="rowNumber" style="font-weight: bold; text-align: right;">Row</th><th style="text-align: left;">Date</th><th style="text-align: left;">ALL</th><th style="text-align: left;">Hokkaido</th><th style="text-align: left;">Aomori</th><th style="text-align: left;">Iwate</th><th style="text-align: left;">Miyagi</th><th style="text-align: left;">Akita</th><th style="text-align: left;">Yamagata</th><th style="text-align: left;">Fukushima</th><th style="text-align: left;">Ibaraki</th><th style="text-align: left;">Tochigi</th><th style="text-align: left;">Gunma</th><th style="text-align: left;">Saitama</th><th style="text-align: left;">Chiba</th><th style="text-align: left;">Tokyo</th><th style="text-align: left;">Kanagawa</th><th style="text-align: left;">Niigata</th><th style="text-align: left;">Toyama</th><th style="text-align: left;">Ishikawa</th><th style="text-align: left;">Fukui</th><th style="text-align: left;">Yamanashi</th><th style="text-align: left;">Nagano</th><th style="text-align: left;">Gifu</th><th style="text-align: left;">Shizuoka</th><th style="text-align: left;">Aichi</th><th style="text-align: left;">Mie</th><th style="text-align: left;">Shiga</th><th style="text-align: left;">Kyoto</th><th style="text-align: left;">Osaka</th><th style="text-align: left;">Hyogo</th><th style="text-align: left;">Nara</th><th style="text-align: left;">Wakayama</th><th style="text-align: left;">Tottori</th><th style="text-align: left;">Shimane</th><th style="text-align: left;">Okayama</th><th style="text-align: left;">Hiroshima</th><th style="text-align: left;">Yamaguchi</th><th style="text-align: left;">Tokushima</th><th style="text-align: left;">Kagawa</th><th style="text-align: left;">Ehime</th><th style="text-align: left;">Kochi</th><th style="text-align: left;">Fukuoka</th><th style="text-align: left;">Saga</th><th style="text-align: left;">Nagasaki</th><th style="text-align: left;">Kumamoto</th><th style="text-align: left;">Oita</th><th style="text-align: left;">Miyazaki</th><th style="text-align: left;">Kagoshima</th><th style="text-align: left;">Okinawa</th></tr><tr class="subheader headerLastRow"><th class="rowNumber" style="font-weight: bold; text-align: right;"></th><th title="String15" style="text-align: left;">String15</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th><th title="Int64" style="text-align: left;">Int64</th></tr></thead><tbody><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">1</td><td style="text-align: left;">2022/12/31</td><td style="text-align: right;">107621</td><td style="text-align: right;">2377</td><td style="text-align: right;">808</td><td style="text-align: right;">787</td><td style="text-align: right;">1893</td><td style="text-align: right;">498</td><td style="text-align: right;">653</td><td style="text-align: right;">1343</td><td style="text-align: right;">2825</td><td style="text-align: right;">1586</td><td style="text-align: right;">1343</td><td style="text-align: right;">5287</td><td style="text-align: right;">4318</td><td style="text-align: right;">11190</td><td style="text-align: right;">6891</td><td style="text-align: right;">1406</td><td style="text-align: right;">564</td><td style="text-align: right;">782</td><td style="text-align: right;">701</td><td style="text-align: right;">792</td><td style="text-align: right;">1709</td><td style="text-align: right;">2261</td><td style="text-align: right;">3398</td><td style="text-align: right;">5409</td><td style="text-align: right;">2063</td><td style="text-align: right;">1001</td><td style="text-align: right;">1695</td><td style="text-align: right;">6947</td><td style="text-align: right;">4416</td><td style="text-align: right;">719</td><td style="text-align: right;">1198</td><td style="text-align: right;">656</td><td style="text-align: right;">822</td><td style="text-align: right;">2037</td><td style="text-align: right;">4663</td><td style="text-align: right;">1715</td><td style="text-align: right;">683</td><td style="text-align: right;">1075</td><td style="text-align: right;">1808</td><td style="text-align: right;">716</td><td style="text-align: right;">5346</td><td style="text-align: right;">1338</td><td style="text-align: right;">1271</td><td style="text-align: right;">2183</td><td style="text-align: right;">1854</td><td style="text-align: right;">1698</td><td style="text-align: right;">1959</td><td style="text-align: right;">937</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">2</td><td style="text-align: left;">2023/1/1</td><td style="text-align: right;">87042</td><td style="text-align: right;">2077</td><td style="text-align: right;">690</td><td style="text-align: right;">651</td><td style="text-align: right;">1715</td><td style="text-align: right;">359</td><td style="text-align: right;">506</td><td style="text-align: right;">1263</td><td style="text-align: right;">2142</td><td style="text-align: right;">1078</td><td style="text-align: right;">1191</td><td style="text-align: right;">3791</td><td style="text-align: right;">3705</td><td style="text-align: right;">9186</td><td style="text-align: right;">5518</td><td style="text-align: right;">1052</td><td style="text-align: right;">448</td><td style="text-align: right;">720</td><td style="text-align: right;">723</td><td style="text-align: right;">890</td><td style="text-align: right;">1378</td><td style="text-align: right;">1780</td><td style="text-align: right;">3310</td><td style="text-align: right;">4547</td><td style="text-align: right;">1771</td><td style="text-align: right;">654</td><td style="text-align: right;">1450</td><td style="text-align: right;">6214</td><td style="text-align: right;">3177</td><td style="text-align: right;">850</td><td style="text-align: right;">988</td><td style="text-align: right;">770</td><td style="text-align: right;">680</td><td style="text-align: right;">1767</td><td style="text-align: right;">3527</td><td style="text-align: right;">1542</td><td style="text-align: right;">433</td><td style="text-align: right;">774</td><td style="text-align: right;">1190</td><td style="text-align: right;">607</td><td style="text-align: right;">3565</td><td style="text-align: right;">807</td><td style="text-align: right;">1081</td><td style="text-align: right;">1446</td><td style="text-align: right;">1129</td><td style="text-align: right;">1614</td><td style="text-align: right;">1534</td><td style="text-align: right;">752</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">3</td><td style="text-align: left;">2023/1/2</td><td style="text-align: right;">76015</td><td style="text-align: right;">1833</td><td style="text-align: right;">557</td><td style="text-align: right;">624</td><td style="text-align: right;">1450</td><td style="text-align: right;">344</td><td style="text-align: right;">518</td><td style="text-align: right;">1038</td><td style="text-align: right;">1665</td><td style="text-align: right;">1092</td><td style="text-align: right;">1284</td><td style="text-align: right;">3189</td><td style="text-align: right;">3164</td><td style="text-align: right;">7537</td><td style="text-align: right;">5008</td><td style="text-align: right;">937</td><td style="text-align: right;">435</td><td style="text-align: right;">570</td><td style="text-align: right;">571</td><td style="text-align: right;">622</td><td style="text-align: right;">1174</td><td style="text-align: right;">1562</td><td style="text-align: right;">2319</td><td style="text-align: right;">4252</td><td style="text-align: right;">1155</td><td style="text-align: right;">500</td><td style="text-align: right;">1432</td><td style="text-align: right;">4980</td><td style="text-align: right;">2749</td><td style="text-align: right;">665</td><td style="text-align: right;">1101</td><td style="text-align: right;">532</td><td style="text-align: right;">596</td><td style="text-align: right;">1356</td><td style="text-align: right;">3008</td><td style="text-align: right;">1534</td><td style="text-align: right;">444</td><td style="text-align: right;">1095</td><td style="text-align: right;">1190</td><td style="text-align: right;">602</td><td style="text-align: right;">3424</td><td style="text-align: right;">790</td><td style="text-align: right;">1049</td><td style="text-align: right;">1187</td><td style="text-align: right;">1273</td><td style="text-align: right;">1469</td><td style="text-align: right;">1521</td><td style="text-align: right;">618</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">4</td><td style="text-align: left;">2023/1/3</td><td style="text-align: right;">89643</td><td style="text-align: right;">2235</td><td style="text-align: right;">696</td><td style="text-align: right;">932</td><td style="text-align: right;">1903</td><td style="text-align: right;">440</td><td style="text-align: right;">498</td><td style="text-align: right;">1372</td><td style="text-align: right;">1498</td><td style="text-align: right;">1347</td><td style="text-align: right;">1182</td><td style="text-align: right;">4162</td><td style="text-align: right;">4088</td><td style="text-align: right;">9628</td><td style="text-align: right;">4828</td><td style="text-align: right;">1070</td><td style="text-align: right;">635</td><td style="text-align: right;">827</td><td style="text-align: right;">528</td><td style="text-align: right;">738</td><td style="text-align: right;">1318</td><td style="text-align: right;">2169</td><td style="text-align: right;">2841</td><td style="text-align: right;">4850</td><td style="text-align: right;">1127</td><td style="text-align: right;">1162</td><td style="text-align: right;">1723</td><td style="text-align: right;">6355</td><td style="text-align: right;">2874</td><td style="text-align: right;">858</td><td style="text-align: right;">1155</td><td style="text-align: right;">749</td><td style="text-align: right;">693</td><td style="text-align: right;">1429</td><td style="text-align: right;">2917</td><td style="text-align: right;">1713</td><td style="text-align: right;">482</td><td style="text-align: right;">1021</td><td style="text-align: right;">1725</td><td style="text-align: right;">753</td><td style="text-align: right;">3352</td><td style="text-align: right;">1048</td><td style="text-align: right;">1163</td><td style="text-align: right;">2146</td><td style="text-align: right;">1503</td><td style="text-align: right;">1685</td><td style="text-align: right;">1449</td><td style="text-align: right;">776</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">5</td><td style="text-align: left;">2023/1/4</td><td style="text-align: right;">104304</td><td style="text-align: right;">2500</td><td style="text-align: right;">730</td><td style="text-align: right;">920</td><td style="text-align: right;">2028</td><td style="text-align: right;">498</td><td style="text-align: right;">753</td><td style="text-align: right;">1607</td><td style="text-align: right;">1660</td><td style="text-align: right;">1495</td><td style="text-align: right;">1609</td><td style="text-align: right;">4991</td><td style="text-align: right;">4035</td><td style="text-align: right;">10554</td><td style="text-align: right;">6567</td><td style="text-align: right;">1527</td><td style="text-align: right;">688</td><td style="text-align: right;">786</td><td style="text-align: right;">801</td><td style="text-align: right;">1069</td><td style="text-align: right;">1493</td><td style="text-align: right;">2281</td><td style="text-align: right;">4311</td><td style="text-align: right;">5829</td><td style="text-align: right;">1461</td><td style="text-align: right;">871</td><td style="text-align: right;">1773</td><td style="text-align: right;">7255</td><td style="text-align: right;">3379</td><td style="text-align: right;">1005</td><td style="text-align: right;">1367</td><td style="text-align: right;">849</td><td style="text-align: right;">764</td><td style="text-align: right;">1848</td><td style="text-align: right;">3698</td><td style="text-align: right;">2072</td><td style="text-align: right;">615</td><td style="text-align: right;">1124</td><td style="text-align: right;">1512</td><td style="text-align: right;">879</td><td style="text-align: right;">4580</td><td style="text-align: right;">1225</td><td style="text-align: right;">1337</td><td style="text-align: right;">1759</td><td style="text-align: right;">1474</td><td style="text-align: right;">1852</td><td style="text-align: right;">1838</td><td style="text-align: right;">1035</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">6</td><td style="text-align: left;">2023/1/5</td><td style="text-align: right;">226904</td><td style="text-align: right;">5582</td><td style="text-align: right;">1792</td><td style="text-align: right;">2009</td><td style="text-align: right;">3458</td><td style="text-align: right;">1316</td><td style="text-align: right;">1235</td><td style="text-align: right;">3335</td><td style="text-align: right;">1794</td><td style="text-align: right;">3335</td><td style="text-align: right;">4156</td><td style="text-align: right;">10707</td><td style="text-align: right;">10174</td><td style="text-align: right;">20735</td><td style="text-align: right;">10688</td><td style="text-align: right;">2990</td><td style="text-align: right;">1840</td><td style="text-align: right;">2456</td><td style="text-align: right;">1819</td><td style="text-align: right;">1404</td><td style="text-align: right;">3164</td><td style="text-align: right;">5695</td><td style="text-align: right;">6090</td><td style="text-align: right;">13174</td><td style="text-align: right;">1884</td><td style="text-align: right;">3025</td><td style="text-align: right;">3185</td><td style="text-align: right;">15772</td><td style="text-align: right;">7684</td><td style="text-align: right;">2401</td><td style="text-align: right;">1900</td><td style="text-align: right;">1305</td><td style="text-align: right;">1970</td><td style="text-align: right;">4598</td><td style="text-align: right;">3962</td><td style="text-align: right;">5097</td><td style="text-align: right;">2100</td><td style="text-align: right;">3211</td><td style="text-align: right;">5219</td><td style="text-align: right;">1903</td><td style="text-align: right;">13075</td><td style="text-align: right;">3593</td><td style="text-align: right;">3888</td><td style="text-align: right;">6615</td><td style="text-align: right;">3496</td><td style="text-align: right;">4498</td><td style="text-align: right;">5209</td><td style="text-align: right;">2366</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">7</td><td style="text-align: left;">2023/1/6</td><td style="text-align: right;">245542</td><td style="text-align: right;">5713</td><td style="text-align: right;">1791</td><td style="text-align: right;">1521</td><td style="text-align: right;">3960</td><td style="text-align: right;">1114</td><td style="text-align: right;">1481</td><td style="text-align: right;">3102</td><td style="text-align: right;">5242</td><td style="text-align: right;">3280</td><td style="text-align: right;">3571</td><td style="text-align: right;">11429</td><td style="text-align: right;">9578</td><td style="text-align: right;">20720</td><td style="text-align: right;">11773</td><td style="text-align: right;">3083</td><td style="text-align: right;">1692</td><td style="text-align: right;">2171</td><td style="text-align: right;">1557</td><td style="text-align: right;">2201</td><td style="text-align: right;">3989</td><td style="text-align: right;">4975</td><td style="text-align: right;">8471</td><td style="text-align: right;">15928</td><td style="text-align: right;">4610</td><td style="text-align: right;">2331</td><td style="text-align: right;">4212</td><td style="text-align: right;">15957</td><td style="text-align: right;">12210</td><td style="text-align: right;">2719</td><td style="text-align: right;">2692</td><td style="text-align: right;">1795</td><td style="text-align: right;">1604</td><td style="text-align: right;">5323</td><td style="text-align: right;">8046</td><td style="text-align: right;">3617</td><td style="text-align: right;">2053</td><td style="text-align: right;">2475</td><td style="text-align: right;">3775</td><td style="text-align: right;">1602</td><td style="text-align: right;">14859</td><td style="text-align: right;">2953</td><td style="text-align: right;">3601</td><td style="text-align: right;">5717</td><td style="text-align: right;">3998</td><td style="text-align: right;">4331</td><td style="text-align: right;">4644</td><td style="text-align: right;">2076</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">8</td><td style="text-align: left;">2023/1/7</td><td style="text-align: right;">238654</td><td style="text-align: right;">5352</td><td style="text-align: right;">1511</td><td style="text-align: right;">1558</td><td style="text-align: right;">3802</td><td style="text-align: right;">957</td><td style="text-align: right;">1224</td><td style="text-align: right;">3005</td><td style="text-align: right;">5138</td><td style="text-align: right;">3280</td><td style="text-align: right;">3373</td><td style="text-align: right;">11330</td><td style="text-align: right;">10180</td><td style="text-align: right;">19630</td><td style="text-align: right;">12840</td><td style="text-align: right;">2962</td><td style="text-align: right;">1338</td><td style="text-align: right;">2177</td><td style="text-align: right;">1232</td><td style="text-align: right;">1762</td><td style="text-align: right;">3202</td><td style="text-align: right;">4888</td><td style="text-align: right;">9475</td><td style="text-align: right;">15774</td><td style="text-align: right;">4579</td><td style="text-align: right;">2741</td><td style="text-align: right;">4267</td><td style="text-align: right;">16704</td><td style="text-align: right;">11490</td><td style="text-align: right;">2394</td><td style="text-align: right;">2450</td><td style="text-align: right;">1681</td><td style="text-align: right;">1565</td><td style="text-align: right;">5332</td><td style="text-align: right;">8091</td><td style="text-align: right;">4006</td><td style="text-align: right;">1726</td><td style="text-align: right;">2593</td><td style="text-align: right;">3573</td><td style="text-align: right;">1456</td><td style="text-align: right;">13963</td><td style="text-align: right;">2664</td><td style="text-align: right;">2955</td><td style="text-align: right;">5269</td><td style="text-align: right;">2886</td><td style="text-align: right;">3946</td><td style="text-align: right;">4147</td><td style="text-align: right;">2186</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">9</td><td style="text-align: left;">2023/1/8</td><td style="text-align: right;">190538</td><td style="text-align: right;">3363</td><td style="text-align: right;">989</td><td style="text-align: right;">925</td><td style="text-align: right;">3010</td><td style="text-align: right;">666</td><td style="text-align: right;">822</td><td style="text-align: right;">2176</td><td style="text-align: right;">5542</td><td style="text-align: right;">2590</td><td style="text-align: right;">2673</td><td style="text-align: right;">8782</td><td style="text-align: right;">7605</td><td style="text-align: right;">15124</td><td style="text-align: right;">10096</td><td style="text-align: right;">2090</td><td style="text-align: right;">1106</td><td style="text-align: right;">1477</td><td style="text-align: right;">1290</td><td style="text-align: right;">1336</td><td style="text-align: right;">3182</td><td style="text-align: right;">3210</td><td style="text-align: right;">9184</td><td style="text-align: right;">11350</td><td style="text-align: right;">5232</td><td style="text-align: right;">1919</td><td style="text-align: right;">3719</td><td style="text-align: right;">12542</td><td style="text-align: right;">11053</td><td style="text-align: right;">2228</td><td style="text-align: right;">2057</td><td style="text-align: right;">1263</td><td style="text-align: right;">1088</td><td style="text-align: right;">4015</td><td style="text-align: right;">8076</td><td style="text-align: right;">2772</td><td style="text-align: right;">1449</td><td style="text-align: right;">1763</td><td style="text-align: right;">2236</td><td style="text-align: right;">905</td><td style="text-align: right;">11705</td><td style="text-align: right;">1952</td><td style="text-align: right;">2591</td><td style="text-align: right;">3614</td><td style="text-align: right;">2136</td><td style="text-align: right;">2674</td><td style="text-align: right;">3616</td><td style="text-align: right;">1345</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">10</td><td style="text-align: left;">2023/1/9</td><td style="text-align: right;">95308</td><td style="text-align: right;">1584</td><td style="text-align: right;">612</td><td style="text-align: right;">566</td><td style="text-align: right;">1642</td><td style="text-align: right;">346</td><td style="text-align: right;">352</td><td style="text-align: right;">1063</td><td style="text-align: right;">4136</td><td style="text-align: right;">1306</td><td style="text-align: right;">1169</td><td style="text-align: right;">3816</td><td style="text-align: right;">3750</td><td style="text-align: right;">8199</td><td style="text-align: right;">6755</td><td style="text-align: right;">1221</td><td style="text-align: right;">394</td><td style="text-align: right;">808</td><td style="text-align: right;">581</td><td style="text-align: right;">839</td><td style="text-align: right;">1419</td><td style="text-align: right;">1561</td><td style="text-align: right;">5404</td><td style="text-align: right;">4043</td><td style="text-align: right;">3254</td><td style="text-align: right;">761</td><td style="text-align: right;">1321</td><td style="text-align: right;">5661</td><td style="text-align: right;">4639</td><td style="text-align: right;">683</td><td style="text-align: right;">1288</td><td style="text-align: right;">655</td><td style="text-align: right;">500</td><td style="text-align: right;">2058</td><td style="text-align: right;">6131</td><td style="text-align: right;">1482</td><td style="text-align: right;">468</td><td style="text-align: right;">503</td><td style="text-align: right;">1170</td><td style="text-align: right;">556</td><td style="text-align: right;">3774</td><td style="text-align: right;">730</td><td style="text-align: right;">928</td><td style="text-align: right;">1460</td><td style="text-align: right;">1330</td><td style="text-align: right;">1625</td><td style="text-align: right;">1894</td><td style="text-align: right;">871</td></tr></tbody></table></div>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>, df.ALL,seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<p><img src="2022-01-04-covid_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>この図から日本のコロナの流行は過去５回ピークが発生していることが読み取れる.</p>
+<section id="グラフ所感" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="グラフ所感"><span class="header-section-number">3.1</span> グラフ所感</h2>
+<ul>
+<li>2022/01/04現在では第6波の兆しが見える.</li>
+<li>2022/01/11現在では第6波が確定した.</li>
+</ul>
+</section>
+</section>
+<section id="傾向変動の計算" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 傾向変動の計算</h1>
+<section id="raw-dataと7日間移動平均" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="raw-dataと7日間移動平均"><span class="header-section-number">4.1</span> raw dataと7日間移動平均</h2>
+<p>このデータから<span class="math inline">TC_t</span>を分離したい. まずは教科書に倣い<span class="math inline">TC_t</span>として移動平均を使ってみる. 日本の検査では休日(日曜)明けの検査では陽性者数が少なく, 木曜に陽性者数が多くでる傾向があることが知られている. そこで7日間の移動平均を取ってみる:</p>
+<div class="cell" data-execution_count="9">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df.weekly_ave<span class="op">=</span><span class="fu">sma</span>(df.ALL, n<span class="op">=</span><span class="fl">7</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="10">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>, df.weekly_ave, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<p><img src="2022-01-04-covid_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>raw dataから移動平均を引いたものをプロットしてみる:</p>
+<div class="cell" data-execution_count="11">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.ALL <span class="op">.-</span> df.weekly_ave, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<p><img src="2022-01-04-covid_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>教科書のやり方に倣えば次のステップでは曜日別に平均を取って季節変動を求めるが上記グラフから<span class="math inline">TC_t</span>として移動平均を用いるのは適していない. なぜなら傾向変動<span class="math inline">TC_t</span>は大域的な寄与を表しているはずなのにその影響を除いた<span class="math inline">y_t-TC_t</span>に山の影響が現れているからである.</p>
+</section>
+<section id="対数とその7日間移動平均" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="対数とその7日間移動平均"><span class="header-section-number">4.2</span> 対数とその7日間移動平均</h2>
+<p>感染症は指数的に増減することが知られているので対数をとってプロットしてみる. データには新規陽性者数が0の日があり対数をとる際に不便なので微小な数<span class="math inline">\epsilon</span>を加えて回避する.</p>
+<div class="cell" data-execution_count="12">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ϵ <span class="op">=</span> <span class="fl">0.0000001</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="13">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df.log_all<span class="op">=</span><span class="fu">log</span>.(df.ALL <span class="op">.+</span> ϵ);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="14">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>, df.log_all, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<p><img src="2022-01-04-covid_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>対数をとってみると第6波の兆候がよりはっきり確認できる.</p>
+<p>対数の世界で移動平均を取り対数化したデータとの差分を見てみる:</p>
+<div class="cell" data-execution_count="15">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df.log_weekly_ave <span class="op">=</span> <span class="fu">sma</span>(df.log_all, n<span class="op">=</span><span class="fl">7</span>);</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.log_diff <span class="op">=</span> df.log_all <span class="op">.-</span> df.log_weekly_ave;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="16">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>((df.log_diff )[<span class="fl">40</span><span class="op">:</span><span class="kw">end</span>], seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<p><img src="2022-01-04-covid_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>対数の世界では移動平均からの差分が大体-1.5~1の間に収まりピークの影響を受けづらくなったことがわかる. ここで最初の39日分は陽性者数が0のデータの影響を受け変動が激しいため捨てた. まだ若干の傾向があるようにも見えるが取り敢えず次に進む.</p>
+<p>次は季節変動<span class="math inline">S_t</span>を計算したい. 上記の図からは曜日別の変動が目視では確認しずらいが曜日別の平均をとって季節変動<span class="math inline">S</span>計算してみる.</p>
+<div class="cell" data-execution_count="17">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sum_n<span class="op">=</span><span class="fu">zeros</span>(<span class="fl">7</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>count_day_of_week<span class="op">=</span><span class="fu">zeros</span>(<span class="dt">Int</span>,<span class="fl">7</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, n) <span class="kw">in</span> <span class="fu">enumerate</span>((df.log_diff )[<span class="fl">40</span><span class="op">:</span><span class="kw">end</span>])</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    sum_n[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]<span class="op">+=</span>n</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    count_day_of_week[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]<span class="op">+=</span><span class="fl">1</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a> <span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="18">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> sum_n <span class="op">./</span> count_day_of_week</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>7-element Vector{Float64}:
+ -0.0458947770756838
+ -0.48588728064630987
+  0.055816830757215156
+  0.18126518762346477
+  0.1879316238881742
+  0.1451808639178051
+  0.15539502298303573</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="19">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Dates</span>.<span class="fu">dayname</span>(<span class="fu">Date</span>(df.<span class="dt">Date</span>[<span class="fl">40</span>], dateformat<span class="st">"y/m/d"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>"Monday"</code></pre>
+</div>
+</div>
+<p>40番目のデータに対応する曜日は月曜日なので<span class="math inline">S</span>の1番目は日曜日に対応する.</p>
+<div class="cell" data-execution_count="20">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dow<span class="op">=</span>[<span class="bu">Dates</span>.<span class="fu">dayname</span>(<span class="fu">Date</span>(df.<span class="dt">Date</span>[<span class="fl">40</span><span class="op">+</span>i], dateformat<span class="st">"y/m/d"</span>)) for i<span class="op">=-</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>];</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="21">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dow,S,seriestype <span class="op">=</span> <span class="op">:</span>bar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<p><img src="2022-01-04-covid_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>上図からも確かに曜日別の影響として月曜が少なく, 木曜が大きくでる傾向がわかる.</p>
+<p>最後に<span class="math inline">I_t</span>を計算してみる.</p>
+<div class="cell" data-execution_count="22">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>I<span class="op">=</span><span class="fu">zeros</span>(<span class="fu">length</span>(df.ALL)<span class="op">-</span><span class="fl">39</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i,n) <span class="kw">in</span> <span class="fu">enumerate</span>((df.log_diff )[<span class="fl">40</span><span class="op">:</span><span class="kw">end</span>])</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    I[i]<span class="op">=</span>n<span class="op">-</span>S[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="23">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(I, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<p><img src="2022-01-04-covid_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>以上が<span class="math inline">TC_t</span>として移動平均を採用した場合の結果である. <span class="math inline">I_t</span>は流行と曜日の影響を除外したものであることを期待しているが上図からは明らかにそれらが除外できていないことがわかる. 実際山が5つある.</p>
+<div class="cell" data-execution_count="24">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>[<span class="fl">40</span><span class="op">:</span><span class="kw">end</span>], df.log_all[<span class="fl">40</span><span class="op">:</span><span class="kw">end</span>], seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot!</span>(I, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<p><img src="2022-01-04-covid_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><span class="math inline">log(y_t)</span>と<span class="math inline">I_t</span>を並べてみると位相のずれた波と似た挙動をしていることがわかる. すなわちコロナのデータに対し<span class="math inline">TC_t</span>として移動平均は適していない.</p>
+</section>
+<section id="対数と線形回帰" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="対数と線形回帰"><span class="header-section-number">4.3</span> 対数と線形回帰</h2>
+<p>次は<span class="math inline">TC_t</span>として各流行を線形回帰したものを採用してみる.</p>
+<section id="区間の計算" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="区間の計算"><span class="header-section-number">4.3.1</span> 区間の計算</h3>
+<p>まずは流行の区間を計算する. (以下では流行の山と谷を計算しようとしているが上手に計算できなかった. 連続関数なら1階微分が0となる点を求めるが今のデータの場合このアイデアではうまく求めることができなかった. 代わりに全期間から最大の位置を求め, 順に適当な区間で最大最小を交互に計算した. それでも上手に計算できなかったので最後は目視で区間を設定した.)</p>
+<div class="cell" data-execution_count="25">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">minima</span>(array,i,r)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span><span class="fu">i-r+findmin</span>(array[<span class="fu">max</span>(i<span class="op">-</span>r,<span class="fl">1</span>)<span class="op">:</span>i])[<span class="fl">2</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> res<span class="op">!=</span>i</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>res</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>        res<span class="op">=</span><span class="fu">i-r+findmin</span>(array[<span class="fu">max</span>(i<span class="op">-</span>r,<span class="fl">1</span>)<span class="op">:</span>i])[<span class="fl">2</span>]</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>minima (generic function with 1 method)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="26">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">maxima</span>(array,i,r)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span><span class="fu">i-r+findmax</span>(array[<span class="fu">max</span>(i<span class="op">-</span>r,<span class="fl">1</span>)<span class="op">:</span>i])[<span class="fl">2</span>]</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> res<span class="op">!=</span>i</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>res</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>        res<span class="op">=</span><span class="fu">i-r+findmax</span>(array[<span class="fu">max</span>(i<span class="op">-</span>r,<span class="fl">1</span>)<span class="op">:</span>i])[<span class="fl">2</span>]</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>maxima (generic function with 1 method)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="27">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">extremes</span>(array,r)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    i_max<span class="op">=</span><span class="fu">findmax</span>(array)[<span class="fl">2</span>]</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    res<span class="op">=</span>[i_max]</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    i<span class="op">=</span>i_max</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    i_min<span class="op">=</span><span class="fl">1</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> i<span class="op">-</span>r<span class="op">&gt;</span><span class="fl">0</span> <span class="op">&amp;&amp;</span> i <span class="op">!=</span>i_min</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        i_min<span class="op">=</span><span class="fu">minima</span>(array,i_max,r)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span>(i,<span class="st">" "</span>,i_min)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        i_max<span class="op">=</span><span class="fu">maxima</span>(array,i_min,r)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(res,i_min)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(res,i_max)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>        i<span class="op">=</span>i_min</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>extremes (generic function with 1 method)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="28">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>period<span class="op">=</span><span class="fu">extremes</span>(df.ALL, <span class="fl">20</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">append!</span>(period,<span class="fu">extremes</span>(df.ALL[<span class="fl">1</span><span class="op">:</span><span class="fl">480</span>], <span class="fl">15</span>))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unique!</span>(period)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">push!</span>(period,<span class="fu">minima</span>(df.ALL,<span class="fl">450</span>,<span class="fl">10</span>))</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">append!</span>(period,[<span class="fl">30</span>,<span class="fl">90</span>,<span class="fl">140</span>,<span class="fl">680</span>,<span class="fu">length</span>(df.ALL)])</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sort!</span>(period)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>947 888
+359 253</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>12-element Vector{Int64}:
+   30
+   90
+  140
+  206
+  253
+  359
+  419
+  680
+  847
+  888
+  947
+ 1090</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="29">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>, df.weekly_ave,seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vline!</span>(period)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<p><img src="2022-01-04-covid_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="30">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>, df.log_all, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">vline!</span>(period)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<p><img src="2022-01-04-covid_files/figure-html/cell-31-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="線形回帰" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="線形回帰"><span class="header-section-number">4.3.2</span> 線形回帰</h3>
+<p>最初の流行について対数の世界で線形回帰してみる. 回帰には<a href="https://juliastats.org/GLM.jl/v0.11/">GLMパッケージ</a>を利用する.</p>
+<div class="cell" data-execution_count="31">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(period[<span class="fl">1</span>]<span class="op">:</span>period[<span class="fl">2</span>],df.log_all[period[<span class="fl">1</span>]<span class="op">:</span>period[<span class="fl">2</span>]], seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<p><img src="2022-01-04-covid_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="32">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>i<span class="op">=</span><span class="fl">1</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">DataFrame</span>(X<span class="op">=</span>period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>], Y<span class="op">=</span>df.log_all[period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>]])</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>ols <span class="op">=</span> <span class="fu">lm</span>(<span class="pp">@formula</span>(Y <span class="op">~</span> X), data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>StatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}
+
+Y ~ 1 + X
+
+Coefficients:
+────────────────────────────────────────────────────────────────────────────
+                  Coef.  Std. Error      t  Pr(&gt;|t|)   Lower 95%   Upper 95%
+────────────────────────────────────────────────────────────────────────────
+(Intercept)  -0.807003   0.22738     -3.55    0.0008  -1.26199    -0.352016
+X             0.0789489  0.00363634  21.71    &lt;1e-29   0.0716726   0.0862252
+────────────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="33">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>]<span class="op">-</span><span class="fl">1</span>,df.log_all[period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>]<span class="op">-</span><span class="fl">1</span>], seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot!</span>(data.X,<span class="fu">predict</span>(ols))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<p><img src="2022-01-04-covid_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>同様に他の区間でも回帰する:</p>
+<div class="cell" data-execution_count="34">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>pred<span class="op">=</span><span class="fu">predict</span>(ols)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i<span class="op">=</span><span class="fl">2</span><span class="op">:</span><span class="fu">length</span>(period)<span class="op">-</span><span class="fl">1</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> <span class="fu">DataFrame</span>(X<span class="op">=</span>period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>]<span class="op">-</span><span class="fl">1</span>, Y<span class="op">=</span>df.log_all[period[i]<span class="op">:</span>period[i<span class="op">+</span><span class="fl">1</span>]<span class="op">-</span><span class="fl">1</span>])</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    ols <span class="op">=</span> <span class="fu">lm</span>(<span class="pp">@formula</span>(Y <span class="op">~</span> X), data)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">append!</span>(pred,<span class="fu">predict</span>(ols))</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="35">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df.<span class="dt">Date</span>[period[<span class="fl">1</span>]<span class="op">:</span><span class="kw">end</span>], df.log_all[period[<span class="fl">1</span>]<span class="op">:</span><span class="kw">end</span>], seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot!</span>(df.<span class="dt">Date</span>[period[<span class="fl">1</span>]<span class="op">:</span><span class="kw">end</span>],pred,seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<p><img src="2022-01-04-covid_files/figure-html/cell-36-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>これで各流行で回帰ができた.</p>
+<p>あとはこの回帰を<span class="math inline">TC_t</span>として先ほどと同じ手順で<span class="math inline">S_t</span>, <span class="math inline">I_t</span>を計算してみる.</p>
+<div class="cell" data-execution_count="36">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>diff<span class="op">=</span> df.log_all[period[<span class="fl">1</span>]<span class="op">:</span><span class="kw">end</span>] <span class="op">.-</span> pred;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="37">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(diff, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<p><img src="2022-01-04-covid_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="38">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>sum_n<span class="op">=</span><span class="fu">zeros</span>(<span class="fl">7</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>count_day_of_week<span class="op">=</span><span class="fu">zeros</span>(<span class="dt">Int</span>,<span class="fl">7</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, n) <span class="kw">in</span> <span class="fu">enumerate</span>(diff)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    sum_n[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]<span class="op">+=</span>n</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    count_day_of_week[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]<span class="op">+=</span><span class="fl">1</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a> <span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="39">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>S2 <span class="op">=</span> sum_n <span class="op">./</span> count_day_of_week</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>7-element Vector{Float64}:
+  0.1597298156141544
+  0.1224051792494716
+  0.14164292461164305
+ -0.07029766752689469
+ -0.4973507234395729
+  0.03803188451298746
+  0.14337600662335104</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Dates</span>.<span class="fu">dayname</span>(<span class="fu">Date</span>(df.<span class="dt">Date</span>[period[<span class="fl">1</span>]], dateformat<span class="st">"y/m/d"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="40">
+<pre><code>"Friday"</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="41">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>dow<span class="op">=</span>[<span class="bu">Dates</span>.<span class="fu">dayname</span>(<span class="fu">Date</span>(df.<span class="dt">Date</span>[period[<span class="fl">1</span>]<span class="op">+</span>i], dateformat<span class="st">"y/m/d"</span>)) for i<span class="op">=-</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>];</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="42">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dow,S2,seriestype <span class="op">=</span> <span class="op">:</span>bar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<p><img src="2022-01-04-covid_files/figure-html/cell-43-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="43">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>I2<span class="op">=</span><span class="fu">zeros</span>(<span class="fu">length</span>(df.ALL)<span class="op">-</span>period[<span class="fl">1</span>]<span class="op">+</span><span class="fl">1</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i,n) <span class="kw">in</span> <span class="fu">enumerate</span>((diff )[period[<span class="fl">1</span>]<span class="op">:</span><span class="kw">end</span>])</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    I2[i]<span class="op">=</span>n<span class="op">-</span>S2[i<span class="op">%</span><span class="fl">7</span><span class="op">+</span><span class="fl">1</span>]</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="44">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(I2, seriestype <span class="op">=</span> <span class="op">:</span>scatter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<p><img src="2022-01-04-covid_files/figure-html/cell-45-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>個人的な感覚ではこの結果からもまだ傾向のようなもの感じるがを移動平均を使った場合の結果と比べるとかなり改善はされた. コロナの新規陽性者のデータに対し<span class="math inline">TC_t</span>として安直に移動平均を使うのは不適切である.</p>
+</section>
+</section>
+</section>
+<section id="まとめ" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> まとめ</h1>
+<p>コロナのデータに対し(1)生データと移動平均, (2)対数とその移動平均, (3)対数とその線形回帰で変動分解を比較した.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
