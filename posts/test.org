@@ -1,0 +1,16 @@
+#+TAGS: org-mode
+#+toc: true
+#+layout: post
+#+comments: true
+#+categories: linux ubuntu memo
+#+TITLE: Ubuntu memo
+#+description: Ubuntu memo for myself
+
+
+---
+format: org
+---
+
+* test
+
+hoge
