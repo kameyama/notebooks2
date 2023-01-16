@@ -7,9 +7,6 @@
 #+description: Ubuntu memo for myself
 
 
----
-format: org
----
 
 * test
 
