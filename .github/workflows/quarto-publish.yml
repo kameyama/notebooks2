@@ -5,6 +5,14 @@ on:
 name: Render and Publish
 
 jobs:
+  convert_via_pandoc:
+    name: Convert via Pandoc
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+      - uses: nikeee/setup-pandoc@v1
+      - run: echo ./org | xargs -IXXX pandoc -t html
+          
   build-deploy:
     runs-on: ubuntu-latest
     steps:
