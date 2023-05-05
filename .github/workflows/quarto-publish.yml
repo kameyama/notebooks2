@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: nikeee/setup-pandoc@v1
+      - uses: docker://pandoc/core:2.9
       - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html org/XXX.org -o _site/posts/XXX.html
           
   build-deploy:
