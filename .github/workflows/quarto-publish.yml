@@ -8,9 +8,10 @@ jobs:
   convert_via_pandoc:
     name: Convert via Pandoc
     runs-on: ubuntu-latest
+    container:
+      image: pandoc/core:2.9
     steps:
       - uses: actions/checkout@master
-      - uses: docker://pandoc/core:2.9
       - run: ls org
       - run: ls org | sed 's/\..*//' 
       - run: ls org | sed 's/\..*//' | xargs -IXXX cat $(pwd)/org/XXX.org 
