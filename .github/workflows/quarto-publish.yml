@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: nikeee/setup-pandoc@v1
-      - run: echo ./org | xargs -IXXX pandoc -t html
+      - run: ls ./org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html ./org/XXX.org -o ./_site/posts/XXX.html
           
   build-deploy:
     runs-on: ubuntu-latest

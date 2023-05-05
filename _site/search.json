@@ -49,20 +49,6 @@
     "text": "4.3 対数と線形回帰\n次はTC_tとして各流行を線形回帰したものを採用してみる.\n\n4.3.1 区間の計算\nまずは流行の区間を計算する. (以下では流行の山と谷を計算しようとしているが上手に計算できなかった. 連続関数なら1階微分が0となる点を求めるが今のデータの場合このアイデアではうまく求めることができなかった. 代わりに全期間から最大の位置を求め, 順に適当な区間で最大最小を交互に計算した. それでも上手に計算できなかったので最後は目視で区間を設定した.)\n\n\nCode\nfunction minima(array,i,r)\n    res=i-r+findmin(array[max(i-r,1):i])[2]\n    while res!=i\n        i=res\n        res=i-r+findmin(array[max(i-r,1):i])[2]\n    end\n    return res\nend\n\n\nminima (generic function with 1 method)\n\n\n\n\nCode\nfunction maxima(array,i,r)\n    res=i-r+findmax(array[max(i-r,1):i])[2]\n    while res!=i\n        i=res\n        res=i-r+findmax(array[max(i-r,1):i])[2]\n    end\n    return res\nend\n\n\nmaxima (generic function with 1 method)\n\n\n\n\nCode\nfunction extremes(array,r)\n    i_max=findmax(array)[2]\n    res=[i_max]\n    i=i_max\n    i_min=1\n    while i-r>0 && i !=i_min\n        i_min=minima(array,i_max,r)\n        println(i,\" \",i_min)\n        i_max=maxima(array,i_min,r)\n        push!(res,i_min)\n        push!(res,i_max)\n        i=i_min\n    end\n    return res\nend\n    \n\n\nextremes (generic function with 1 method)\n\n\n\n\nCode\nperiod=extremes(df.ALL, 20)\nappend!(period,extremes(df.ALL[1:480], 15))\nunique!(period)\npush!(period,minima(df.ALL,450,10))\nappend!(period,[30,90,140,680,length(df.ALL)])\nsort!(period)\n\n\n947 888\n359 253\n\n\n12-element Vector{Int64}:\n   30\n   90\n  140\n  206\n  253\n  359\n  419\n  680\n  847\n  888\n  947\n 1090\n\n\n\n\nCode\nplot(df.Date, df.weekly_ave,seriestype = :scatter)\nvline!(period)\n\n\n\n\n\n\n\nCode\nplot(df.Date, df.log_all, seriestype = :scatter)\nvline!(period)\n\n\n\n\n\n\n\n4.3.2 線形回帰\n最初の流行について対数の世界で線形回帰してみる. 回帰にはGLMパッケージを利用する.\n\n\nCode\nplot(period[1]:period[2],df.log_all[period[1]:period[2]], seriestype = :scatter)\n\n\n\n\n\n\n\nCode\ni=1\ndata = DataFrame(X=period[i]:period[i+1], Y=df.log_all[period[i]:period[i+1]])\nols = lm(@formula(Y ~ X), data)\n\n\nStatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}\n\nY ~ 1 + X\n\nCoefficients:\n────────────────────────────────────────────────────────────────────────────\n                  Coef.  Std. Error      t  Pr(>|t|)   Lower 95%   Upper 95%\n────────────────────────────────────────────────────────────────────────────\n(Intercept)  -0.807003   0.22738     -3.55    0.0008  -1.26199    -0.352016\nX             0.0789489  0.00363634  21.71    <1e-29   0.0716726   0.0862252\n────────────────────────────────────────────────────────────────────────────\n\n\n\n\nCode\nplot(period[i]:period[i+1]-1,df.log_all[period[i]:period[i+1]-1], seriestype = :scatter)\nplot!(data.X,predict(ols))\n\n\n\n\n\n同様に他の区間でも回帰する:\n\n\nCode\npred=predict(ols)\nfor i=2:length(period)-1\n    data = DataFrame(X=period[i]:period[i+1]-1, Y=df.log_all[period[i]:period[i+1]-1])\n    ols = lm(@formula(Y ~ X), data)\n    append!(pred,predict(ols))\nend\n\n\n\n\nCode\nplot(df.Date[period[1]:end], df.log_all[period[1]:end], seriestype = :scatter)\nplot!(df.Date[period[1]:end],pred,seriestype = :scatter)\n\n\n\n\n\nこれで各流行で回帰ができた.\nあとはこの回帰をTC_tとして先ほどと同じ手順でS_t, I_tを計算してみる.\n\n\nCode\ndiff= df.log_all[period[1]:end] .- pred;\n\n\n\n\nCode\nplot(diff, seriestype = :scatter)\n\n\n\n\n\n\n\nCode\nsum_n=zeros(7)\ncount_day_of_week=zeros(Int,7)\nfor (i, n) in enumerate(diff)\n    sum_n[i%7+1]+=n\n    count_day_of_week[i%7+1]+=1\n end\n\n\n\n\nCode\nS2 = sum_n ./ count_day_of_week\n\n\n7-element Vector{Float64}:\n  0.1597298156141544\n  0.1224051792494716\n  0.14164292461164305\n -0.07029766752689469\n -0.4973507234395729\n  0.03803188451298746\n  0.14337600662335104\n\n\n\n\nCode\nDates.dayname(Date(df.Date[period[1]], dateformat\"y/m/d\"))\n\n\n\"Friday\"\n\n\n\n\nCode\ndow=[Dates.dayname(Date(df.Date[period[1]+i], dateformat\"y/m/d\")) for i=-1:5];\n\n\n\n\nCode\nplot(dow,S2,seriestype = :bar)\n\n\n\n\n\n\n\nCode\nI2=zeros(length(df.ALL)-period[1]+1)\nfor (i,n) in enumerate((diff )[period[1]:end])\n    I2[i]=n-S2[i%7+1]\nend\n\n\n\n\nCode\nplot(I2, seriestype = :scatter)\n\n\n\n\n\n個人的な感覚ではこの結果からもまだ傾向のようなもの感じるがを移動平均を使った場合の結果と比べるとかなり改善はされた. コロナの新規陽性者のデータに対しTC_tとして安直に移動平均を使うのは不適切である."
   },
   {
-    "objectID": "posts/hello.html",
-    "href": "posts/hello.html",
-    "title": "Quarto Basics",
-    "section": "",
-    "text": "For a demonstration of a line plot on a polar axis, see Figure 1.\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
-  },
-  {
-    "objectID": "posts/Julia--demo.html",
-    "href": "posts/Julia--demo.html",
-    "title": "Plots Demo",
-    "section": "",
-    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x->sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
-  },
-  {
     "objectID": "posts/computations.html",
     "href": "posts/computations.html",
     "title": "Quarto Computations",
@@ -84,11 +70,18 @@
     "text": "Plotly"
   },
   {
+    "objectID": "posts/Julia-demo.html",
+    "href": "posts/Julia-demo.html",
+    "title": "Plots Demo",
+    "section": "",
+    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x->sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "notebooks2",
     "section": "",
-    "text": "Covid in Japan\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Basics\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Computations\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n+TAGS: org-mode\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\nMy Project\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJan 8, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJan 5, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
+    "text": "Covid in Japan\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Computations\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nJan 8, 2023\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nJan 5, 2023\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -96,26 +89,5 @@
     "title": "About",
     "section": "",
     "text": "About this blog"
-  },
-  {
-    "objectID": "posts/test.html",
-    "href": "posts/test.html",
-    "title": "My Project",
-    "section": "",
-    "text": "This is a GitHub README that has content dynamically generated from Python:\n\n1 + 1\n\n2"
-  },
-  {
-    "objectID": "posts/org.html",
-    "href": "posts/org.html",
-    "title": "notebooks2",
-    "section": "",
-    "text": "test\nhoge"
-  },
-  {
-    "objectID": "posts/Julia-demo.html",
-    "href": "posts/Julia-demo.html",
-    "title": "Plots Demo",
-    "section": "",
-    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x->sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
   }
 ]
