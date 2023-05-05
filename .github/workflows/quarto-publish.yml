@@ -13,7 +13,7 @@ jobs:
       - uses: docker://pandoc/core:2.9
       - run: ls org
       - run: ls org | sed 's/\..*//' 
-      - run: ls org | sed 's/\..*//' | xargs -IXXX cat$(pwd)/org/XXX.org 
+      - run: ls org | sed 's/\..*//' | xargs -IXXX cat $(pwd)/org/XXX.org 
       - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html $(pwd)/org/XXX.org        
       - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.html
           
