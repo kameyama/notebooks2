@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: docker://pandoc/core:2.9
       - run: ls org
-      - run: ls ./org
+      - run: ls org | sed 's/\..*//'
       - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html org/XXX.org -o _site/posts/XXX.html
           
   build-deploy:
