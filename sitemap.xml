@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://github.com/kameyama/notebooks2/index.html</loc>
-    <lastmod>2023-01-16T00:17:08.538Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/about.html</loc>
-    <lastmod>2023-01-16T00:17:09.170Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/post-with-code/index.html</loc>
+    <lastmod>2023-05-05T18:04:42.735Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/computations.html</loc>
-    <lastmod>2023-01-16T00:17:09.914Z</lastmod>
+    <lastmod>2023-05-05T18:04:44.239Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-04-covid.html</loc>
-    <lastmod>2023-01-16T00:17:10.822Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/post-with-code/index.html</loc>
-    <lastmod>2023-01-16T00:17:20.819Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/hello.html</loc>
-    <lastmod>2023-01-16T00:17:21.151Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/Julia--demo.html</loc>
-    <lastmod>2023-01-16T00:17:25.240Z</lastmod>
+    <lastmod>2023-05-05T18:04:58.624Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/welcome/index.html</loc>
-    <lastmod>2023-01-16T00:17:29.476Z</lastmod>
+    <lastmod>2023-05-05T18:04:59.064Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/Julia-demo.html</loc>
+    <lastmod>2023-05-05T18:05:04.565Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/about.html</loc>
+    <lastmod>2023-05-05T18:05:04.905Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/index.html</loc>
+    <lastmod>2023-05-05T18:05:05.589Z</lastmod>
   </url>
 </urlset>
