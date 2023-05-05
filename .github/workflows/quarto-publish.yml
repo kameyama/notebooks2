@@ -12,6 +12,7 @@ jobs:
       image: pandoc/core:2.9
     steps:
       - uses: actions/checkout@master
+      - run: mkdir $(pwd)/_site/posts
       - run: ls org
       - run: ls org | sed 's/\..*//' 
       - run: ls org | sed 's/\..*//' | xargs -IXXX cat $(pwd)/org/XXX.org 
