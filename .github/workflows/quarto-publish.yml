@@ -14,8 +14,8 @@ jobs:
       - run: ls org
       - run: ls org | sed 's/\..*//' 
       - run: ls org | sed 's/\..*//' | xargs -IXXX cat $(pwd)/org/XXX.org 
-      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html $(pwd)/org/XXX.org        
-      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc  -f org -t html $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.html
+      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t html $(pwd)/org/XXX.org        
+      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t html $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.html
           
   build-deploy:
     needs: convert_via_pandoc
