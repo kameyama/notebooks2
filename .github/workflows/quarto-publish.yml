@@ -12,7 +12,7 @@ jobs:
       image: pandoc/core:2.9
     steps:
       - uses: actions/checkout@master
-      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.qmd
+      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/posts/XXX.qmd
           
   build-deploy:
     needs: convert_via_pandoc
