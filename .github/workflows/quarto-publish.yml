@@ -12,8 +12,7 @@ jobs:
       image: pandoc/core:2.9
     steps:
       - uses: actions/checkout@master
-      - run: mkdir $(pwd)/_site/posts
-      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t html $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.html
+      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/_site/posts/XXX.qmd
           
   build-deploy:
     needs: convert_via_pandoc
@@ -29,11 +28,6 @@ jobs:
           tinytex: true 
           # uncomment below and fill to pin a version
           # version: 0.9.600
-      - name: Render Quarto Project
-        uses: quarto-dev/quarto-actions/render@v2
-        with:
-          to: html # If set, it will be equivalent to `quarto render --to html`
-        #  path: source-folder # By default, the current working dir is used i.e `quarto render .
       # add software dependencies here
 
       # To publish to Netlify, RStudio Connect, or GitHub Pages, uncomment
@@ -56,7 +50,6 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
-          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
       

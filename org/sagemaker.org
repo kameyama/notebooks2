@@ -1,10 +1,7 @@
-#+toc: true
-#+layout: post
-#+comments: true
-#+categories: aws sagemaker
 #+TITLE: Amazon Sagemakerの感想
 #+description: 1週間くらい調査してみた感想
-
+#+date: 2023-05-08
+#+author: Masaya Kameyama
 
 
 * Introduction
