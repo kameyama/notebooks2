@@ -1,0 +1,108 @@
+#+TITLE: use org-mode like jupyter
+#+description: org-modeをjupyterのように使う方法
+#+date: 2022-01-11
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter-python :session py
+#+PROPERTY: header-args:jupyter-julia :session jl
+#+PROPERTY: header-args:jupyter+ :async yes
+
+* org-babelを使ってorg-modeをjupyterのように使う
+
+  emacsからjupyterを使用する方法はいくつかありeinが有名である. ここではorg-modeをnotebookのように使う方法を紹介する. [[https://github.com/nnicandro/emacs-jupyter][emacs-jupyter]]はorg-modeのcode blockをjupyterで評価可能にする. 
+
+** org-modeのcode blockでpythonを使う一般的なやり方
+
+#+begin_src python :results output
+  s=1+1
+  print('Hello world!')
+#+end_src
+
+#+RESULTS:
+: Hello world!
+
+
+ファイルの先頭に
+#+begin_org
+#+PROPERTY: header-args:python :results output
+#+end_org
+
+と書いておけば以下のように書ける:
+
+#+begin_src python
+  s=1+1
+  print('Hello world!')
+#+end_src
+
+#+RESULTS:
+: Hello world!
+
+
+ただし標準入力(今の場合標準入力とは言わないかも)は使えない:
+
+#+begin_src python 
+name = input('Name: ')
+print(f'Hello, {name}!')
+#+end_src
+
+#+RESULTS:
+
+plotも使えない:
+
+#+begin_src python
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+#+end_src
+
+#+RESULTS:
+
+** jupyter経由でpythonを使う
+
+  pythonと同様に先頭に
+  #+begin_org
+  #+PROPERTY: header-args:jupyter-python :session py
+  #+PROPERTY: header-args:jupyter+ :async yes
+  #+end_org
+  を書いておく. pythonと違って入力ができるようになる. 
+
+#+begin_src jupyter-python 
+name = input('Name: ')
+print(f'Hello, {name}!')
+#+end_src
+
+#+RESULTS:
+: Hello, kame!
+
+画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)
+
+#+begin_src jupyter-python
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots()
+ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+| <matplotlib.lines.Line2D | at | 0x116871270> |
+[[file:./.ob-jupyter/34da6fddc7f96e3599edc6300d73f3e5dec042a0.png]]
+:END:
+
+
+
+** juliaを使う
+
+   org-modeiでjuliaを使うパッケージには[[https://github.com/gjkerns/ob-julia/blob/master/ob-julia-doc.org][ob-julia]]がある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている: 
+#+begin_src jupyter-julia
+  using Plots
+  println("hello")
+  plot(sin)
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+: hello
+[[file:./.ob-jupyter/202f605d6b9936ceb12636c30960d4e99104fd24.svg]]
+:END:
+
+

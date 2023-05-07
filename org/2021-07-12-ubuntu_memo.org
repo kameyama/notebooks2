@@ -1,0 +1,439 @@
+#+TITLE: Ubuntu memo
+#+description: Ubuntu memo for myself
+#+date: 2021-07-12
+
+* Ubuntu 18.04
+
+** インストール(間違えると起動がおかしくなる )
+
+
+- インストール用DVDを突っ込んでインストール以下の２点に気をつける
+
+  1. GPUの設定のためInstall Ubuntuにカーソルをあわせてe
+     =quiet splash ---= を =quiet splash nomodeset ---= に変更しctrl + x
+
+  2. 自動ログイン https://forums.ubuntulinux.jp/viewtopic.php?id=19823
+
+#+begin_quote
+  Ubuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2.
+  インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3.
+  端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。
+  sudo gedit /etc/gdm3/custom.conf 4.
+  コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5.
+  「設定」を起動し、左ペインの項目から「詳細」→「ユーザー
+  」と辿り、「自動ログイン」を「オフ」にします。 6.
+  PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。
+#+end_quote
+
+最初にapt(macOSでのhomebrewみたいな奴)を更新しておく
+
+#+begin_src shell
+sudo apt update
+sudo apt upgrade
+sudo apt-get update
+sudo apt-get upgrade
+#+end_src
+
+** GPU の設定(nvidia-diriver, CUDA, cuDNN)
+重要
+
+- https://www.tensorflow.org/install/source#common_installation_problems
+  の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する
+
+*** NVIDIA driver
+
+- nouveau(デフォルトドライバ?)の停止.
+
+#+begin_src shell
+sudo lsmod | grep nouveau
+#+end_src
+
+でnouveauの確認.
+
+#+begin_src shell
+sudo emacs /etc/modprobe.d/blacklist-nouveau.conf
+#+end_src
+に
+#+begin_src
+blacklist nouveau
+options nouveau modeset=0
+#+end_src
+
+を書き込む.
+
+#+begin_src shell
+sudo update-initramfs -u
+sudo ubuntu-drivers autoinstall
+#+end_src
+
+を叩いた後
+
+#+begin_src shll
+sudo reboot
+#+end_src
+
+で再起動.
+
+#+begin_src sehll
+nvidia-smi
+#+end_src
+
+で動作確認. 念の為
+
+#+begin_src shll
+sudo lsmod | grep nouveau
+#+end_src
+
+確認し反応なければok.
+
+*** CUDA + cuDNN
+
+くどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems
+でバージョン確認.
+
+**** CUDA
+
+https://developer.nvidia.com/cuda-toolkit-archive
+で必要なCUDAをダウンロードする.
+バージョンを選択するとインストール方法を教えてくれるのでそれに従う.
+
+インストール後
+
+#+begin_src shell
+sudo emacs .bashrc
+#+end_src
+
+してから
+
+#+begin_src 
+export PATH=/usr/local/cuda/bin:${PATH}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+#+end_src
+
+でpathを追加.
+
+再起動して
+
+#+begin_src shell
+nvcc -V
+#+end_src
+
+でバージョン確認
+
+**** cuDNN
+
+公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9
+でバージョンを選択し
+
+- cuDNN Library for Linux
+
+- cuDNN Runtime Library for Ubuntu18.04 (Deb)
+
+- cuDNN Developer Library for Ubuntu18.04 (Deb)
+
+- cuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)
+
+をダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に
+
+#+begin_src shell
+sudo dpkg -i $file_name
+#+end_src
+
+とする. 一番上は
+
+#+begin_src shell
+  tar xvf $file_name
+  sudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/
+  sudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/
+  sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+  cp -r /usr/src/cudnn_samples_v7/ $HOME
+  cd $HOME/cudnn_samples_v7/mnistCUDNN
+  make clean && make
+#+end_src
+
+を叩く.
+pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).
+
+*** 参考
+
+- https://soinn.esa.io/posts/840
+- https://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed
+- https://qiita.com/yukoba/items/4733e8602fa4acabcc35
+- https://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651
+
+** python環境構築
+
+#+begin_src shell
+  sudo apt install build-essential libbz2-dev libdb-dev \
+  libreadline-dev libffi-dev libgdbm-dev liblzma-dev \
+  libncursesw5-dev libsqlite3-dev libssl-dev \
+  zlib1g-dev uuid-dev tk-dev
+#+end_src
+i
+の後
+
+- pyenvの入れ方(好み)
+  https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee
+
+あとは好きにpipで色々入れる.
+
+** +USキーボード設定+
+結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた.
+sshで繋げばよい
+ 
+- 左commandで検索画面が出る場合の対処法
+  https://forums.ubuntulinux.jp/viewtopic.php?id=19987
+
+#+begin_src
+gsettings set org.gnome.mutter overlay-key ''
+gsettings set org.gnome.desktop.wm.keybindings switch-input-source "['Super_L']"
+#+end_src
+
+- macのcommandキーやwinのwindowsキーはlinuxではsuperキー
+
+- usキーボードで日本語を使うための設定 1(fcitixとtweakで管理する)
+  https://www.shujima.work/entry/2018/08/16/174352
+  https://qiita.com/tokida/items/a89b981680a1ce4523fa
+
+- 困ったらfcitixとtweakの設定を見直す
+
+- ctrlキーとsuperキーの入れ替え
+  https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c
+
+** +macbuntu(mac風レイアウト)+ sshで繋げば良いのでいらない
+
+- +https://hermemo.com/218/ ここを見てやる+
+
+** アプリケーション
+
+chrome, slack, emacs等を入れる.
+
+** Wolfram Engine
+
+公式をみて入れる. activation回数に限りがあるので注意.
+(linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)
+
+** Google drive
+
+google-drive-ocamlfuseを使う
+(デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)
+
+** ハードディスクマウント
+
+OSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要.
+ホームディレクトリに適当な名前のディレクトリ(例えば=mount_vol=)を作り
+
+#+begin_src shell
+sudo mount $マウントしたいhhdのパス $マウント先のディレクトリ
+#+end_src
+
+とする. 自分の場合
+
+#+begin_src shell
+sudo mount /dev/sdb2 mount_vol
+#+end_src
+
+とやる.
+
+*** reference
+
+https://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/
+
+** ssh
+
+ターミナルで
+
+#+begin_src shell
+ssh $user_id@$ip_adress
+#+end_src
+
+リモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば
+
+#+begin_src shell
+ssh $host_name
+#+end_src
+
+で繋がる.
+
+** GPUサーバー使い方
+
+自分の場合
+
+#+begin_src shell
+ssh kameyama@ip_adress
+#+end_src
+
+設定しておけば
+
+#+begin_src shell
+ssh gpu1
+#+end_src
+
+*** docker(+jupyter)
+
+git clone等でdockerを用意
+
+**** 4.1.1. 旧バージョン
+
+ターミナルで
+
+#+begin_src shell
+sudo docker-compose build
+#+end_src
+
+で環境構築.
+
+**** 新バージョン
+
+ターミナルで
+
+#+begin_src shell
+sh build.sh
+#+end_src
+
+で環境構築.
+
+**** Jupyter
+
+#+begin_src shell
+sudo docker-compose up
+#+end_src
+
+でdocker環境のjuputer notebook起動,
+
+その後ブラウザからアドレスに
+
+#+begin_src
+<ip adress>:<port number>
+#+end_src
+
+でアクセス.
+
+例えば
+
+#+begin_src 
+192.xxx.xx.xxx:8899
+#+end_src
+
+など. port番号は
+
+#+begin_src
+sudo emacs docker-compose.yml
+#+end_src
+
+で確認/変更もできる.
+トークンは入力=dockerfile=内の=Notebook.App.token==を見る.
+
+** 公開鍵の登録
+
+*** ref
+
+https://qiita.com/mukoya/items/f20def019e25dc162ca8
+
+ssh先をmac finder上にマウント
+
+brewでsshfsとosxfuseを入れる.
+
+#+begin_src shell
+sshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号
+#+end_src
+
+例えば
+
+#+begin_src shell
+sshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22
+#+end_src
+
+*** ref
+
+https://techracho.bpsinc.jp/hachi8833/2019_02_05/66454
+
+** .ssh/config設定(mac側)
+
+サーバー側に公開鍵を渡しておいて、macの=.ssh/config=に
+
+#+begin_src
+Host *
+  ForwardAgent yes
+  ServerAliveInterval 60
+  GSSAPIAuthentication no
+  UseKeychain yes
+  AddKeysToAgent yes
+
+
+Host ubuntu
+    HostName <ip address>
+    Port 22
+    User kameyama
+    IdentityFile  ~/.ssh/id_rsa
+    ServerAliveInterval 60
+    AddKeysToAgent yes
+    UseKeychain yes
+
+Host gpu1
+    HostName hogehoge
+    Port 22
+    User kameyama
+    IdentityFile  ~/.ssh/id_rsa
+    ServerAliveInterval 60
+    AddKeysToAgent yes
+    UseKeychain yes
+#+end_src
+
+と書いておけば
+
+#+begin_src shell
+ssh ubuntu
+#+end_src
+
+で手元のubuntu計算機に繋がる.
+一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.
+
+*** ref
+
+https://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1
+
+** shell(terminal)関連
+
+*** 仕組み
+
+ログインシェルから一回読み込まれるのがzprofileとbash_profile.
+場合により何度も読まれるのがzshrcやbashrc.
+
+Zshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通).
+=zsh -c env=だとzprofileは読まれない.
+=zsh -l -c env=だとzprofileが読まれる.
+
+以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\\
+brewは
+#+begin_src shell
+brew bundle dump --global --force
+#+end_src
+で書き出されるのでdotfilesにぶち込む.
+
+sshなどの設定は公開しない.
+
+*** zsh
+prezto: フレームワーク、見た目が変わったりする
+peco:履歴参照
+ghq: gitを便利にするやつ+
+
+**** +peco+
+
+     +sshでubuntuのterminalを操作する際pecoがおかしい挙動をする.+
+     +カーソルキーが使えないのでctrl + n とctrl + pで操作する.+
+     +https://www.yuuan.net/item/1017+
+
+*** Ubuntuでのbashの設定
+
+ubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bash_profile=が読み込まれる.
+そこで.=bash_profile=に
+
+#+begin_src
+# .bashrc
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+#+end_src
+
+と書いてsshでも=.bashrc=を読み込むようにする.

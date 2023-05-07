@@ -1,0 +1,71 @@
+#+TITLE: asdfのメモ
+#+description: pyenvからasdfへ移行を例に
+#+date: 2022-03-10
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter :session hello
+#+PROPERTY: header-args:jupyter+ :async yes
+
+* これまで
+  
+  これまでpythonのversion管理にpyenvを使ってきた. Macならbrewでpyenvを入れた後使用したいpythonのversionをinstallした. 
+  #+begin_src shell
+  pyenv install 3.9.7
+  #+end_src
+  project/directory毎にpythonのversionが違う場合は対象のversionをpyenvでinstallした後
+  #+begin_src shell
+  pytnv local 3.8.0
+  #+end_src
+  などでversionが指定できた. 同様にNode.jsのversion管理はnodenv, javaならjenvなどを使ってきた.
+
+
+* これから
+
+  asdfはpyenv等個別にversion管理を行うのではなく複数の言語のversionをこれ一つで管理できる. 使用感もpyenvと似ている. 上のpyenvと同じことがやりたかったら
+  #+begin_src shell
+    asdf install python 3.9.7
+    asdf local python 3.9.7
+  #+end_src
+で良い. 現在のdirectoryでどのversionが動くかどうか知りたかったら
+#+begin_src shell
+asdf current
+#+end_src
+で調べることができる. 
+
+asdfで追加したplugin一覧は
+#+begin_src shell
+asdf plugin list
+#+end_src
+で確認できる.
+
+どのversionがinstallされているかを確認するには
+#+begin_src shell
+asdf list python
+#+end_src
+
+* 設定
+
+  
+** pipでinstallしたcli実行可能package
+   asdfで適当なpythonを入れてcliで実行可能なpackage, 例えばvirtualenvやjupyterをpipでinstallしたとする. しかしvirtualenvやjupyterは実行できない. 手っ取り早く実行可能にするには[[https://til.hashrocket.com/posts/ques11vrjs-get-pip-installed-executables-into-the-asdf-path][次のやり方]]がある:
+  #+begin_src shell
+    asdf reshim python
+  #+end_src
+  を叩く. ただしこれはinstallする度に毎回実行する必要がある.
+
+** [[https://github.com/asdf-community/asdf-direnv][asdf-direnv]]
+   install毎に上記を行うのは面倒なので[[https://github.com/asdf-community/asdf-direnv][asdf-direnv]]を使う. zshなら
+   #+begin_src shell
+asdf plugin-add direnv
+asdf direnv setup zsh
+   #+end_src
+でinstallできる. versionを切り替えたいlocal directoryに.envrcを書く. directoryへ行き
+#+begin_src shell
+asdf direnv local python 3.10.4
+#+end_src
+でdirenvが設定してくれる. localだけでなく$HOME以下にも.envrcを作ってコマンドを追記するのを忘れずに.
+
+* メモ
+
+asdfをupdateした際に~/.asdf/shims/のリンクが古いバージョンを参照してしまう現象に出会った. [[https://github.com/asdf-vm/asdf/issues/1147][.asdf/shimsを削除してasdf reshimを実行する]]と良い.
+

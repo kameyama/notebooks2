@@ -1,0 +1,36 @@
+#+TITLE: post org-mode files via fastpages
+#+description: A guide of posting org-mode files 
+#+date: 2022-01-10
+
+* Overview
+  [[https://github.com/fastai/fastpages][Fastpages]] is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a [[https://fastpagesdev.netlify.app/fastpages/orgmode/2020/04/27/blogging-with-orgmode-and-fastpages][blog]], but it does not work for me. We soleve it in easy way.
+
+* Customize fastpages
+
+  Fastpages uses jekyll. Threfore, we use [[https://github.com/eggcaker/jekyll-org][jekyll-org]]. The customization is easy: modify _config.yml and gemfile.
+
+
+   Add a next line to _config.yml:
+   #+begin_src yaml
+plugins:
+  - jekyll-org
+   #+end_src
+
+
+   Add a next line to Gemfile:    
+   #+begin_src ruby
+   gem 'jekyll-org', '>= 1.0.2'
+   #+end_src
+
+   
+* Templete
+
+  We can configure front matter like bellow:
+  
+#+BEGIN_EXAMPLE
+#+toc: true
+#+layout: post
+#+comments: true
+#+categories: org-mode english
+#+TITLE: post org-mode files via fastpages
+#+description: A guide of posting org-mode files 
