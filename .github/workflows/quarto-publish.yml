@@ -5,21 +5,18 @@ on:
 name: Render and Publish
 
 jobs:
-  convert_via_pandoc:
-    name: Convert via Pandoc
-    runs-on: ubuntu-latest
-    container:
-      image: pandoc/core:2.9
-    steps:
-      - uses: actions/checkout@master
-      - run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/posts/XXX.qmd
           
   build-deploy:
     needs: convert_via_pandoc
     runs-on: ubuntu-latest
+    container:
+      image: pandoc/core:2.9    
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
+        
+      - name: Convert org to markdown via Pandoc
+        run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/posts/XXX.qmd
         
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
