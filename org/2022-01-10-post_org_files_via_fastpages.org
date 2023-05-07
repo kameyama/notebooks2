@@ -26,11 +26,13 @@ plugins:
 * Templete
 
   We can configure front matter like bellow:
-  
-#+BEGIN_EXAMPLE
+
+#+begin_src
 #+toc: true
 #+layout: post
 #+comments: true
 #+categories: org-mode english
 #+TITLE: post org-mode files via fastpages
 #+description: A guide of posting org-mode files 
+
+#+end_src
