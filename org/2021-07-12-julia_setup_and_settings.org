@@ -1,0 +1,62 @@
+#+TITLE: Julia setup & settings
+#+description: Julia setup & settings for myself
+#+date: 2021-07-12
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter-julia :session jl
+#+PROPERTY: header-args:jupyter+ :async yes
+
+
+* Julia
+
+** インストール
+-  +[[https://julialang.org/][公式]]からdmgをダウンロードする.+
+-  brewで入れる
+
+** コマンドライン
+  コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す.
+  (何故かv1.3のpathが通っているがzshrcには書いていない...
+  エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)
+
+** jupyter jupyterで使うためにはjulia起動後
+
+#+begin_src julia
+using Pkg
+Pkg.add("IJulia")
+#+end_src
+
+何故かversion1.4では以下が必要だった.
+
+#+begin_src julia
+Pkg.build("IJulia")
+#+end_src
+
+** Package
+
+MambaはPkgからインストールするとコケる. githubからインストールする場合は
+
+#+begin_src julia
+# ver 1.0
+Pkg.clone("https://github.com/JuliaData/DataFramesMeta.jl") 
+# ver 1.4
+Pkg.add(PackageSpec(url="https://github.com/JuliaDatabases/DBInterface.jl"))
+#+end_src
+
+などとする. 念のためパッケージはテストする.
+
+#+begin_src julia
+Pkg.test("Queryverse")
+#+end_src
+
+削除は
+
+#+begin_src julia
+Pkg.rm(hoge)
+Pkg.resolve()
+#+end_src
+
+*** Daraframeのcolumnを全て表示させる方法
+
+~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.
+
+ref https://ki-chi.jp/?p=992

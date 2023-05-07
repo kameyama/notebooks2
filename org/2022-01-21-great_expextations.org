@@ -1,0 +1,22 @@
+#+TITLE: great_expectationsの紹介
+#+description: グレートですよこいつはァ
+#+date: 2022-01-21
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter :session hello
+#+PROPERTY: header-args:jupyter+ :async yes
+
+* はじめに
+  
+ [[https://greatexpectations.io/][great_expectations]]はデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ. 
+
+ 
+great expectationsは大雑把に
+1. data context (great expectations全体の設定)
+2. data source (validation data用のディレクトリ)   
+3. expectation suite (validationの設定)
+4. checkpoint (validationの実行とその結果の保存)
+5. data docs (expectation suiteやcheckpointの結果の可視化)
+
+から構成されておりこれらが[[https://docs.greatexpectations.io/docs/tutorials/getting_started/intro][tutorial]]で概要が把握できる. なのでまずはをやるとよい. 
+

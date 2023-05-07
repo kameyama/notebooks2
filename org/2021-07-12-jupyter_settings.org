@@ -1,0 +1,119 @@
+#+TITLE: jupyter settings
+#+description: Jupyter settings for myself
+#+date: 2022-07-12
+
+#+PROPERTY: header-args:jupyter+ :async yes
+
+
+
+
+* Jupyter
+
+** 括弧補完をオフにする
+
+#+begin_src python
+from notebook.services.config import ConfigManager
+
+c = ConfigManager()
+c.update('notebook',
+         {"CodeCell": {"cm_config": {"autoCloseBrackets": False}}})
+#+end_src
+
+** 行番号をデフォルトで表示する
+   viewの項目から変更できる.
+
+- 注意
+  2019/12/2現在nbextensionとjupyterthemesを同時に使うと行番号の表示がおかしくなる.
+
+** 見た目を変える
+
+#+begin_src shell
+pip install jupyterthemes
+#+end_src
+
+https://github.com/dunovank/jupyter-themes
+
+現在のお気に入り
+
+#+begin_src shell
+jt -t chesterish -f hack -fs 120 -ofs 100 -tfs 11 -nfs 115 -cellw 100% -T -N -kl
+#+end_src
+
+
+- 注意 テーマを変えると=.jupyter/custom=が上書きされる.
+
+** kernel一覧
+
+https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
+
+** shhでのjupyter利用法
+
+sshでリモート先へ接続しjupyterを起動する. その際ポートフォワードする:
+
+#+begin_src shell
+ssh $user@$ip-address -L 8989:localhost:8888
+jupyter notebook & 
+#+end_src
+
+これでブラウザからlocalhost:8889とすればjupyterに繋がる.
+8890:localhost:8888とするとmac側でブラウザに入力するときにlocalhost:8890となる.
+nohupでjupyterを立ち上げた場合はポートフォワーディングから再開できる.
+jupyter labを使いたい場合は
+
+#+begin_src shell
+jupyter lab --no-browser
+#+end_src
+で起動する.
+
+**  ssh接続を切っても計算を続けさせる方法
+
+   
+nohupを使う. 例えば
+
+#+begin_src shell
+nohup jupyter notebook --no-browser &
+#+end_src
+
+
+で接続を切って再接続ができる.
+
+- 追記
+
+#+begin_src shell
+jupyter notebook &
+#+end_src
+
+でもOK.
+
+プロセスを終了するには
+
+
+#+begin_src sehll
+jupyter notebook list
+#+end_src
+
+でportを調べる.
+
+#+begin_src shll
+jupyter notebook stop
+#+end_src
+
+で終了するか
+
+#+begin_src sehll
+netstat -tulpn
+#+end_src
+
+でpidを確認し
+
+#+begin_src shell
+kill $pid
+#+end_src
+でプロセスを終了.
+
+wolfram kernel等はプロセスとして生き残っている可能性がある.
+
+*** ref
+
+https://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin
+https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996

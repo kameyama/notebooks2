@@ -1,0 +1,188 @@
+#+TITLE: Database memo
+#+description: A DB memo for myself
+#+date: 2021-07-12
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter-python :session py
+#+PROPERTY: header-args:jupyter-julia :session jl
+#+PROPERTY: header-args:jupyter+ :async yes
+
+
+* PostgreSQL
+
+データベース管理システム
+チュートリアル: [[https://www.postgresql.jp/document/9.0/html/index.html][tutorial]]
+
+** install
+
+#+begin_src shell
+  brew install postgresql
+#+end_src
+
+確認
+
+#+begin_src shell
+postgres
+#+end_src
+
+
+これでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら
+
+#+begin_example
+postgres does not know where to find the server configuration file.
+You must specify the --config-file or -D invocation option or set the PGDATA environment variable.
+#+end_example
+
+.zshrcに
+
+#+begin_example
+export PGDATA=/usr/local/var/postgres
+#+end_example
+
+を追加する.
+
+** Unique index
+
+#+begin_src sql
+	  SELECT * FROM pg_indexes
+#+end_src
+
+**** reference
+
+https://github.com/Homebrew/legacy-homebrew/issues/21920
+https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2
+
+** データベースにアクセス
+
+#+begin_src shell
+psql mydbname
+#+end_src
+でデータベースにアクセスし, 対話型で起動する.
+
+#+begin_src
+psql -l
+#+end_src
+
+でデータベースの一覧が確認できる.
+
+** pythonやjuliaからremoteの(postgres)sql queryを叩く方法
+pythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う.
+pythonはsqlalchemyがおすすめ.
+具体例は[[https://github.com/Homebrew/legacy-homebrew/issues/21920][python]], [[https://kameyama.github.io/notebooks/julia/database/aws/gcp/bigquery/2021/07/14/examples_to_connect_dbs_in_julia.html][julia]]を参照.
+以下はやや特殊な場合なので必要なら見る.
+
+*** ssh tunnelを使う場合
+
+#+begin_src python
+import psycopg2
+import pandas as pd
+import time
+from sshtunnel import SSHTunnelForwarder
+
+
+def queryAurora(sql):
+    with SSHTunnelForwarder(
+        "ssh_name",
+        ssh_pkey="~/.ssh/id_rsa",
+        remote_bind_address=("hogehoge", 5432)
+    ) as server:
+        conn = psycopg2.connect(
+            host='localhost',
+            port=server.local_bind_port,
+            dbname='hogedb',
+            user='foo',
+            password='bar')
+        cur = conn.cursor()
+        cur.execute(sql)
+        result = cur.fetchall()
+        colnames = [col.name for col in cur.description]
+        # pandas.DataFrameで返す用の処理
+        new_result = [[one for one in one_result]  for one_result in result]
+        result = pd.DataFrame(new_result,columns=colnames)
+        cur.close()
+        conn.close()
+        # 連続で叩くと凄くヤバいので1秒待つ
+        time.sleep(1)
+        return resul
+#+end_src
+
+
+*** port forwarding
+
+#+begin_src julia
+using LibPQ
+
+function sql(query)
+    conn = LibPQ.Connection("dbname='hogedb' host='localhost' user='foo' password='bar' port=45432")
+    result =execute(conn,query)
+    df = DataFrame(result)
+    close(conn)
+    sleep(1)
+    return df
+end
+#+end_src
+
+[[https://goropikari.hatenablog.com/entry/julia_postgresql][reference]]
+
+
+*** ipython magic command with port forwarding (only python)
+
+#+begin_src 
+pgconfig = {
+    'host': 'localhost',
+    'port': 45432,
+    'database': 'hoge',
+    'user': 'foo',
+    'password': 'bar',
+}
+
+%load_ext sql
+dsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)
+%sql $dsl
+
+%%sql
+select *
+from companies c
+where name~'Apple'
+#+end_src
+
+変数化したいときは以下のようにやる.
+
+#+begin_src
+hogehoge = 'Apple'
+
+%%sql
+select *
+from companies c
+where name~hogehoge
+#+end_src
+
+**** reference
+
+https://github.com/catherinedevlin/ipython-sql
+https://towardsdatascience.com/jupyter-magics-with-sql-921370099589
+
+* チラシの裏
+
+- COALESCE関数はnullを別の値に置き換える関数
+
+- RDBは負荷がかかりすぎると当然おちる
+
+- GlueはDBが落ちて接続が切れるとunknownReasonでerrorを返すと推察される
+
+- numPartitionsはテーブルの読み書きの平行数とJDBC接続の最大数を設定する(http://mogile.web.fc2.com/spark/sql-data-sources-jdbc.html)
+
+- Aurora
+  postgresは標準でかなりのconnectionを許す(https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Managing.html
+  )が負荷がかかり過ぎれば当然落ちる
+
+- Aurora（一般にRDB）には大量にくるクエリをqueueのようにさばく機能はない.
+
+- auto
+  scaling機能は今回のようなケースの解決策として適さない。なぜなら負荷のスピードとスケーリングの速度がマッチしない。普通はユーザーの数のようにゆっくり増えるようなスケーリングに対して有効な機能である。
+
+- 'select * from pg_stat_activity'でprosessが確認できる
+
+- auroraには集計関数array_aggが存在するがredshiftにはない.
+
+- bigqueryはtimezoneがUSのみ

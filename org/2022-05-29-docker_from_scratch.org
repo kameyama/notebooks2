@@ -1,0 +1,175 @@
+#+TITLE: docker image from scratch
+#+description: docker imageをscratchから作る
+#+date: 2022-06-29
+
+
+* はじめに
+  
+世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る.
+例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:
+
+- Dockerfile
+#+BEGIN_SRC
+FROM python:3
+COPY hello.py /
+CMD ["python", "hello.py"]
+#+END_SRC
+
+- hello.py
+#+begin_src python
+print("hello")
+#+end_src
+
+#+begin_src shell
+  docker build -t python-hello .
+  docker container run python-hello
+#+end_src
+
+#+begin_src 
+ hello
+#+end_src
+
+
+ubuntu 18のimageが欲しければ
+#+begin_src shell
+docker image pull ubuntu:18.04
+#+end_src
+でimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.
+
+所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのが[[https://hub.docker.com/_/scratch][scratch image]]だ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する. 
+
+** 参考
+
+[[https://docs.docker.jp/v19.03/engine/userguide/eng-image/baseimages.html][ドキュメント: ベース・イメージの作成]]
+
+* hello worldバイナリの作成1
+
+公式ドキュメントではC言語のhello worldを例にしているがC言語は触ったことがないのでfortranでコンテナ外でバイナリを用意して実行する.
+
+- hello.f90
+#+begin_src fortran
+program hello
+  print *, 'Hello World!'
+end program hello
+#+end_src
+
+#+begin_src shell
+gfortran hello.f90
+#+end_src
+
+これでコンパイルされて実行バイナリa.outができあがる. しかしこの実行バイナリはコンテナ内部では動作しない.
+
+- Dockerfile_a
+#+begin_src 
+FORM scratch
+COPY a.out /
+CMD ["/a.out"]
+#+end_src
+
+#+begin_src shell
+  docker build -t hello-a -f Dockerfile_a .
+  docker container run --rm hello-a
+#+end_src
+
+#+begin_src 
+standard_init_linux.go:228: exec user process caused: exec format error
+#+end_src
+
+
+その理由はa.outがM1 Mac動作するプログラムだからだ. 
+#+begin_src shell
+  file a.out
+#+end_src
+
+#+begin_src
+a.out: Mach-O 64-bit executable arm64
+#+end_src
+
+
+scratch imageはlinuxなのでlinuxの実行バイナリが必要だ.
+
+* hello worldバイナリの作成2
+
+1ではlinuxの実行バイナリを作成しなかったことが失敗の原因だったのでlinuxでバイナリを用意してscratch imageへコピーしよう. その方法としてmulti stage buildを使う. 
+
+- Dockerfile_b
+alpine imageを利用してgfortran, musl-dev(gfortranを実行するために入れた), fileをインストールしてコンパイル後scratchへコピーする.
+  #+begin_src 
+FROM alpine AS b
+
+RUN apk update
+RUN apk add --upgrade gfortran musl-dev file
+
+COPY a.out /
+COPY hello.f90 /
+RUN gfortran hello.f90 -o b.out
+
+FROM scratch
+COPY a.out /
+COPY --from=b b.out /
+CMD ["/b.out"]
+  #+end_src
+
+しかしこのb.outも動作しない:
+#+begin_src shell
+  docker build -t hello-b -f Dockerfile_b .
+  docker container run --rm hello-b
+#+end_src
+
+#+begin_src shell
+standard_init_linux.go:228: exec user process caused: no such file or directory
+#+end_src
+
+
+その理由はb.outがdynamically linkになっているからだ. multi stageのbのコンテナからfileを実行する:
+
+#+begin_src shell
+  docker build -t hello-bb -f Dockerfile_b --target b .
+  docker container run --rm hello-bb file b.out
+#+end_src
+
+#+begin_src shell
+b.out: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-aarch64.so.1, with debug_info, not stripped
+#+end_src
+
+
+* hello worldバイナリの作成3
+
+2ではdynamically linkだったことが良くなかったのでstatic linkのバイナリを作って実行する.
+
+- Dockerfile
+#+begin_src 
+FROM alpine AS b
+
+RUN apk update
+RUN apk add --upgrade gfortran musl-dev file
+
+COPY a.out /
+COPY hello.f90 /
+RUN gfortran hello.f90 -o b.out
+RUN gfortran hello.f90 -o c.out -static
+
+FROM scratch
+COPY --from=b a.out /
+COPY --from=b b.out /
+COPY --from=b c.out /
+CMD ["/c.out"]
+#+end_src
+
+#+begin_src shell
+  docker build -t hello -f Dockerfile  .
+  docker container run --rm hello
+#+end_src
+
+#+begin_src shell
+Hello World!
+#+end_src
+
+
+2と同様にmulti stageのbでc.outをfileで調べると
+#+begin_src shell
+c.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, with debug_info, not stripped
+#+end_src
+
+
+となりstatic linkになっていることがわかる.
