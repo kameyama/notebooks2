@@ -7,14 +7,9 @@ name: Render and Publish
 jobs:  
   build-deploy:
     runs-on: ubuntu-latest
-    container:
-      image: pandoc/core:2.9    
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
-        
-      - name: Convert org to markdown via Pandoc
-        run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/posts/XXX.qmd
         
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
@@ -25,6 +20,9 @@ jobs:
           # version: 0.9.600
       # add software dependencies here
 
+      - name: Convert org to markdown via Pandoc
+        run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown $(pwd)/org/XXX.org -o $(pwd)/posts/XXX.qmd
+              
       # To publish to Netlify, RStudio Connect, or GitHub Pages, uncomment
       # the appropriate block below
       
