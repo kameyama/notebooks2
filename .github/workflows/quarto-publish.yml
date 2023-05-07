@@ -4,8 +4,7 @@ on:
 
 name: Render and Publish
 
-jobs:
-          
+jobs:  
   build-deploy:
     needs: convert_via_pandoc
     runs-on: ubuntu-latest
