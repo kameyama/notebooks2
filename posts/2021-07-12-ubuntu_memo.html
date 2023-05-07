@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Masaya Kameyama">
+<meta name="dcterms.date" content="2021-07-12">
+<meta name="description" content="Ubuntu memo for myself">
+
+<title>notebooks2 - Ubuntu memo</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-3B1NXS7X3W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">notebooks2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Ubuntu memo</h1>
+                  <div>
+        <div class="description">
+          Ubuntu memo for myself
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Masaya Kameyama </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 12, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="ubuntu-18.04" class="level1">
+<h1>Ubuntu 18.04</h1>
+<section id="インストール間違えると起動がおかしくなる" class="level2">
+<h2 class="anchored" data-anchor-id="インストール間違えると起動がおかしくなる">インストール(間違えると起動がおかしくなる )</h2>
+<ul>
+<li><p>インストール用DVDを突っ込んでインストール以下の２点に気をつける</p>
+<ol type="1">
+<li><p>GPUの設定のためInstall Ubuntuにカーソルをあわせてe <code>quiet splash ---</code> を <code>quiet splash nomodeset ---</code> に変更しctrl + x</p></li>
+<li><p>自動ログイン <a href="https://forums.ubuntulinux.jp/viewtopic.php?id=19823" class="uri">https://forums.ubuntulinux.jp/viewtopic.php?id=19823</a></p></li>
+</ol></li>
+</ul>
+<blockquote class="blockquote">
+<p>Ubuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2. インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3. 端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。 sudo gedit /etc/gdm3/custom.conf 4. コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5. 「設定」を起動し、左ペインの項目から「詳細」→「ユーザー 」と辿り、「自動ログイン」を「オフ」にします。 6. PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。</p>
+</blockquote>
+<p>最初にapt(macOSでのhomebrewみたいな奴)を更新しておく</p>
+<pre class="shell"><code>sudo apt update
+sudo apt upgrade
+sudo apt-get update
+sudo apt-get upgrade</code></pre>
+</section>
+<section id="gpu-の設定nvidia-diriver-cuda-cudnn" class="level2">
+<h2 class="anchored" data-anchor-id="gpu-の設定nvidia-diriver-cuda-cudnn">GPU の設定(nvidia-diriver, CUDA, cuDNN)</h2>
+<p>重要</p>
+<ul>
+<li><a href="https://www.tensorflow.org/install/source#common_installation_problems" class="uri">https://www.tensorflow.org/install/source#common_installation_problems</a> の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する</li>
+</ul>
+<section id="nvidia-driver" class="level3">
+<h3 class="anchored" data-anchor-id="nvidia-driver">NVIDIA driver</h3>
+<ul>
+<li>nouveau(デフォルトドライバ?)の停止.</li>
+</ul>
+<pre class="shell"><code>sudo lsmod | grep nouveau</code></pre>
+<p>でnouveauの確認.</p>
+<pre class="shell"><code>sudo emacs /etc/modprobe.d/blacklist-nouveau.conf</code></pre>
+<p>に</p>
+<pre><code>blacklist nouveau
+options nouveau modeset=0</code></pre>
+<p>を書き込む.</p>
+<pre class="shell"><code>sudo update-initramfs -u
+sudo ubuntu-drivers autoinstall</code></pre>
+<p>を叩いた後</p>
+<pre class="shll"><code>sudo reboot</code></pre>
+<p>で再起動.</p>
+<pre class="sehll"><code>nvidia-smi</code></pre>
+<p>で動作確認. 念の為</p>
+<pre class="shll"><code>sudo lsmod | grep nouveau</code></pre>
+<p>確認し反応なければok.</p>
+</section>
+<section id="cuda-cudnn" class="level3">
+<h3 class="anchored" data-anchor-id="cuda-cudnn">CUDA + cuDNN</h3>
+<p>くどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems でバージョン確認.</p>
+<ol type="1">
+<li><p>CUDA</p>
+<p><a href="https://developer.nvidia.com/cuda-toolkit-archive" class="uri">https://developer.nvidia.com/cuda-toolkit-archive</a> で必要なCUDAをダウンロードする. バージョンを選択するとインストール方法を教えてくれるのでそれに従う.</p>
+<p>インストール後</p>
+<pre class="shell"><code>sudo emacs .bashrc</code></pre>
+<p>してから</p>
+<pre><code>export PATH=/usr/local/cuda/bin:${PATH}
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}</code></pre>
+<p>でpathを追加.</p>
+<p>再起動して</p>
+<pre class="shell"><code>nvcc -V</code></pre>
+<p>でバージョン確認</p></li>
+<li><p>cuDNN</p>
+<p>公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9 でバージョンを選択し</p>
+<ul>
+<li><p>cuDNN Library for Linux</p></li>
+<li><p>cuDNN Runtime Library for Ubuntu18.04 (Deb)</p></li>
+<li><p>cuDNN Developer Library for Ubuntu18.04 (Deb)</p></li>
+<li><p>cuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)</p></li>
+</ul>
+<p>をダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に</p>
+<pre class="shell"><code>sudo dpkg -i $file_name</code></pre>
+<p>とする. 一番上は</p>
+<pre class="shell"><code>tar xvf $file_name
+sudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/
+sudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/
+sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
+cp -r /usr/src/cudnn_samples_v7/ $HOME
+cd $HOME/cudnn_samples_v7/mnistCUDNN
+make clean &amp;&amp; make</code></pre>
+<p>を叩く. pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).</p></li>
+</ol>
+</section>
+<section id="参考" class="level3">
+<h3 class="anchored" data-anchor-id="参考">参考</h3>
+<ul>
+<li><a href="https://soinn.esa.io/posts/840" class="uri">https://soinn.esa.io/posts/840</a></li>
+<li><a href="https://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed" class="uri">https://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed</a></li>
+<li><a href="https://qiita.com/yukoba/items/4733e8602fa4acabcc35" class="uri">https://qiita.com/yukoba/items/4733e8602fa4acabcc35</a></li>
+<li><a href="https://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651" class="uri">https://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651</a></li>
+</ul>
+</section>
+</section>
+<section id="python環境構築" class="level2">
+<h2 class="anchored" data-anchor-id="python環境構築">python環境構築</h2>
+<pre class="shell"><code>sudo apt install build-essential libbz2-dev libdb-dev \
+libreadline-dev libffi-dev libgdbm-dev liblzma-dev \
+libncursesw5-dev libsqlite3-dev libssl-dev \
+zlib1g-dev uuid-dev tk-dev</code></pre>
+<p>i の後</p>
+<ul>
+<li>pyenvの入れ方(好み) <a href="https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee" class="uri">https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee</a></li>
+</ul>
+<p>あとは好きにpipで色々入れる.</p>
+</section>
+<section id="usキーボード設定" class="level2">
+<h2 class="anchored" data-anchor-id="usキーボード設定"><del>USキーボード設定</del></h2>
+<p>結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた. sshで繋げばよい</p>
+<ul>
+<li>左commandで検索画面が出る場合の対処法 <a href="https://forums.ubuntulinux.jp/viewtopic.php?id=19987" class="uri">https://forums.ubuntulinux.jp/viewtopic.php?id=19987</a></li>
+</ul>
+<!-- -->
+<pre><code>gsettings set org.gnome.mutter overlay-key ''
+gsettings set org.gnome.desktop.wm.keybindings switch-input-source "['Super_L']"</code></pre>
+<ul>
+<li><p>macのcommandキーやwinのwindowsキーはlinuxではsuperキー</p></li>
+<li><p>usキーボードで日本語を使うための設定 1(fcitixとtweakで管理する) <a href="https://www.shujima.work/entry/2018/08/16/174352" class="uri">https://www.shujima.work/entry/2018/08/16/174352</a> <a href="https://qiita.com/tokida/items/a89b981680a1ce4523fa" class="uri">https://qiita.com/tokida/items/a89b981680a1ce4523fa</a></p></li>
+<li><p>困ったらfcitixとtweakの設定を見直す</p></li>
+<li><p>ctrlキーとsuperキーの入れ替え <a href="https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c" class="uri">https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c</a></p></li>
+</ul>
+</section>
+<section id="macbuntumac風レイアウト-sshで繋げば良いのでいらない" class="level2">
+<h2 class="anchored" data-anchor-id="macbuntumac風レイアウト-sshで繋げば良いのでいらない"><del>macbuntu(mac風レイアウト)</del> sshで繋げば良いのでいらない</h2>
+<ul>
+<li><del><a href="https://hermemo.com/218/" class="uri">https://hermemo.com/218/</a> ここを見てやる</del></li>
+</ul>
+</section>
+<section id="アプリケーション" class="level2">
+<h2 class="anchored" data-anchor-id="アプリケーション">アプリケーション</h2>
+<p>chrome, slack, emacs等を入れる.</p>
+</section>
+<section id="wolfram-engine" class="level2">
+<h2 class="anchored" data-anchor-id="wolfram-engine">Wolfram Engine</h2>
+<p>公式をみて入れる. activation回数に限りがあるので注意. (linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)</p>
+</section>
+<section id="google-drive" class="level2">
+<h2 class="anchored" data-anchor-id="google-drive">Google drive</h2>
+<p>google-drive-ocamlfuseを使う (デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)</p>
+</section>
+<section id="ハードディスクマウント" class="level2">
+<h2 class="anchored" data-anchor-id="ハードディスクマウント">ハードディスクマウント</h2>
+<p>OSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要. ホームディレクトリに適当な名前のディレクトリ(例えば=mount<sub>vol</sub>=)を作り</p>
+<pre class="shell"><code>sudo mount $マウントしたいhhdのパス $マウント先のディレクトリ</code></pre>
+<p>とする. 自分の場合</p>
+<pre class="shell"><code>sudo mount /dev/sdb2 mount_vol</code></pre>
+<p>とやる.</p>
+<section id="reference" class="level3">
+<h3 class="anchored" data-anchor-id="reference">reference</h3>
+<p><a href="https://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/" class="uri">https://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/</a></p>
+<p>ssh</p>
+<hr>
+<p>ターミナルで</p>
+<pre class="shell"><code>ssh $user_id@$ip_adress</code></pre>
+<p>リモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば</p>
+<pre class="shell"><code>ssh $host_name</code></pre>
+<p>で繋がる.</p>
+</section>
+</section>
+<section id="gpuサーバー使い方" class="level2">
+<h2 class="anchored" data-anchor-id="gpuサーバー使い方">GPUサーバー使い方</h2>
+<p>自分の場合</p>
+<pre class="shell"><code>ssh kameyama@ip_adress</code></pre>
+<p>設定しておけば</p>
+<pre class="shell"><code>ssh gpu1</code></pre>
+<section id="dockerjupyter" class="level3">
+<h3 class="anchored" data-anchor-id="dockerjupyter">docker(+jupyter)</h3>
+<p>git clone等でdockerを用意</p>
+<ol type="1">
+<li><p>4.1.1. 旧バージョン</p>
+<p>ターミナルで</p>
+<pre class="shell"><code>sudo docker-compose build</code></pre>
+<p>で環境構築.</p></li>
+<li><p>新バージョン</p>
+<p>ターミナルで</p>
+<pre class="shell"><code>sh build.sh</code></pre>
+<p>で環境構築.</p></li>
+<li><p>Jupyter</p>
+<pre class="shell"><code>sudo docker-compose up</code></pre>
+<p>でdocker環境のjuputer notebook起動,</p>
+<p>その後ブラウザからアドレスに</p>
+<pre><code>&lt;ip adress&gt;:&lt;port number&gt;</code></pre>
+<p>でアクセス.</p>
+<p>例えば</p>
+<pre><code>192.xxx.xx.xxx:8899</code></pre>
+<p>など. port番号は</p>
+<pre><code>sudo emacs docker-compose.yml</code></pre>
+<p>で確認/変更もできる. トークンは入力=dockerfile=内の=Notebook.App.token==を見る.</p></li>
+</ol>
+</section>
+</section>
+<section id="公開鍵の登録" class="level2">
+<h2 class="anchored" data-anchor-id="公開鍵の登録">公開鍵の登録</h2>
+<section id="ref" class="level3">
+<h3 class="anchored" data-anchor-id="ref">ref</h3>
+<p><a href="https://qiita.com/mukoya/items/f20def019e25dc162ca8" class="uri">https://qiita.com/mukoya/items/f20def019e25dc162ca8</a></p>
+<p>ssh先をmac finder上にマウント</p>
+<p>brewでsshfsとosxfuseを入れる.</p>
+<pre class="shell"><code>sshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号</code></pre>
+<p>例えば</p>
+<pre class="shell"><code>sshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22</code></pre>
+</section>
+<section id="ref-1" class="level3">
+<h3 class="anchored" data-anchor-id="ref-1">ref</h3>
+<p><a href="https://techracho.bpsinc.jp/hachi8833/2019_02_05/66454" class="uri">https://techracho.bpsinc.jp/hachi8833/2019_02_05/66454</a></p>
+</section>
+</section>
+<section id="sshconfig設定mac側" class="level2">
+<h2 class="anchored" data-anchor-id="sshconfig設定mac側">.ssh/config設定(mac側)</h2>
+<p>サーバー側に公開鍵を渡しておいて、macの=.ssh/config=に</p>
+<pre><code>Host *
+  ForwardAgent yes
+  ServerAliveInterval 60
+  GSSAPIAuthentication no
+  UseKeychain yes
+  AddKeysToAgent yes
+
+
+Host ubuntu
+    HostName &lt;ip address&gt;
+    Port 22
+    User kameyama
+    IdentityFile  ~/.ssh/id_rsa
+    ServerAliveInterval 60
+    AddKeysToAgent yes
+    UseKeychain yes
+
+Host gpu1
+    HostName hogehoge
+    Port 22
+    User kameyama
+    IdentityFile  ~/.ssh/id_rsa
+    ServerAliveInterval 60
+    AddKeysToAgent yes
+    UseKeychain yes</code></pre>
+<p>と書いておけば</p>
+<pre class="shell"><code>ssh ubuntu</code></pre>
+<p>で手元のubuntu計算機に繋がる. 一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.</p>
+<section id="ref-2" class="level3">
+<h3 class="anchored" data-anchor-id="ref-2">ref</h3>
+<p><a href="https://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1" class="uri">https://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1</a></p>
+</section>
+</section>
+<section id="shellterminal関連" class="level2">
+<h2 class="anchored" data-anchor-id="shellterminal関連">shell(terminal)関連</h2>
+<section id="仕組み" class="level3">
+<h3 class="anchored" data-anchor-id="仕組み">仕組み</h3>
+<p>ログインシェルから一回読み込まれるのがzprofileとbash<sub>profile</sub>. 場合により何度も読まれるのがzshrcやbashrc.</p>
+<p>Zshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.</p>
+<p>以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).<br>
+brewは</p>
+<pre class="shell"><code>brew bundle dump --global --force</code></pre>
+<p>で書き出されるのでdotfilesにぶち込む.</p>
+<p>sshなどの設定は公開しない.</p>
+</section>
+<section id="zsh" class="level3">
+<h3 class="anchored" data-anchor-id="zsh">zsh</h3>
+<p>prezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+</p>
+<ol type="1">
+<li><p><del>peco</del></p>
+<p><del>sshでubuntuのterminalを操作する際pecoがおかしい挙動をする.</del> <del>カーソルキーが使えないのでctrl + n とctrl + pで操作する.</del> +<a href="https://www.yuuan.net/item/1017+" class="uri">https://www.yuuan.net/item/1017+</a></p></li>
+</ol>
+</section>
+<section id="ubuntuでのbashの設定" class="level3">
+<h3 class="anchored" data-anchor-id="ubuntuでのbashの設定">Ubuntuでのbashの設定</h3>
+<p>ubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bash<sub>profile</sub>=が読み込まれる. そこで.=bash<sub>profile</sub>=に</p>
+<pre><code># .bashrc
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi</code></pre>
+<p>と書いてsshでも=.bashrc=を読み込むようにする.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
