@@ -21,7 +21,7 @@ jobs:
       # add software dependencies here
 
       - name: Convert org to markdown via Pandoc
-        run: ls org | sed 's/\..*//' | xargs -IXXX cat org/XXX.org #pandoc --standalone -f org -t markdown org/XXX.org -o posts/XXX.qmd
+        run: ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown org/XXX.org #-o posts/XXX.qmd
               
       # To publish to Netlify, RStudio Connect, or GitHub Pages, uncomment
       # the appropriate block below
