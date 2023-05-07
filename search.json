@@ -1,5 +1,40 @@
 [
   {
+    "objectID": "posts/sagemaker.html",
+    "href": "posts/sagemaker.html",
+    "title": "Amazon Sagemakerの感想",
+    "section": "",
+    "text": "SagemakerとはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する."
+  },
+  {
+    "objectID": "posts/sagemaker.html#jupyter",
+    "href": "posts/sagemaker.html#jupyter",
+    "title": "Amazon Sagemakerの感想",
+    "section": "jupyter",
+    "text": "jupyter\n僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう."
+  },
+  {
+    "objectID": "posts/sagemaker.html#学習",
+    "href": "posts/sagemaker.html#学習",
+    "title": "Amazon Sagemakerの感想",
+    "section": "学習",
+    "text": "学習\njupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. チュートリアルはsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ."
+  },
+  {
+    "objectID": "posts/sagemaker.html#デプロイ",
+    "href": "posts/sagemaker.html#デプロイ",
+    "title": "Amazon Sagemakerの感想",
+    "section": "デプロイ",
+    "text": "デプロイ\n仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある."
+  },
+  {
+    "objectID": "posts/sagemaker.html#mlops",
+    "href": "posts/sagemaker.html#mlops",
+    "title": "Amazon Sagemakerの感想",
+    "section": "MLOps",
+    "text": "MLOps\nこの辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置きエンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. SagemakerはMLOpsやプロジェクトで説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう."
+  },
+  {
     "objectID": "posts/computations.html",
     "href": "posts/computations.html",
     "title": "Quarto Computations",
@@ -81,6 +116,6 @@
     "href": "index.html",
     "title": "notebooks2",
     "section": "",
-    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nCovid in Japan\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
+    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\nCovid in Japan\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
   }
 ]
