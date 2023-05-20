@@ -1,7 +1,7 @@
 #+TITLE: docker image from scratch
 #+description: docker imageをscratchから作る
 #+date: 2022-06-29
-
+#+categories: docker
 
 * はじめに
   

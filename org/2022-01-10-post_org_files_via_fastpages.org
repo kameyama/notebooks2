@@ -1,8 +1,9 @@
 #+TITLE: post org-mode files via fastpages
 #+description: A guide of posting org-mode files 
 #+date: 2022-01-10
+#+categories: memo 
 
-* Overview
+* Overview(fastpages is already deprecated)
   [[https://github.com/fastai/fastpages][Fastpages]] is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a [[https://fastpagesdev.netlify.app/fastpages/orgmode/2020/04/27/blogging-with-orgmode-and-fastpages][blog]], but it does not work for me. We soleve it in easy way.
 
 * Customize fastpages

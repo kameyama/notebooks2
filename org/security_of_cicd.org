@@ -1,0 +1,69 @@
+#+TITLE: OpenAPIとSchemathesisの紹介
+#+description: OpenAPIに従ってrest apiへリクエストを投げるパッケージ
+#+date: 2023-05-21
+#+categories: dev openapi
+
+* Introduction
+
+[[https://github.com/schemathesis/schemathesis][Schemathesis]]とはREST APIのtest toolのひとつでopenapi.jsonが与えられた場合それをもとにtest caseを自動生成してリクエストを投げてテストを行ってくれる. 現在のプロジェクトでは[[https://fastapi.tiangolo.com][fastapi]]を使ってREST APIを開発しているのでopenapi.jsonも自動生成してくれる. APIをクラウドにdeployしたあとリクエストを投げてテストを行いたいがtestコードを書くのが面倒だったので[[https://openapi.tools][OpenAPI tools]]からいくつか試して一番良かったのがこれである.
+
+* 解説
+
+  OpenAPI Specification (OAS)とはREST APIのための機械で読み取り可能なインターフェース定義可能な言語のこと. 言い換えるとAPIの仕様書の規格. 以前はSwagger Specificationという名前で知られていた. Swaggerは2010年から開発が始まり, 2016年にプロジェクトが分かれ[[https://www.openapis.org/][OpenAPI Initiative]]で管理されるようになった. 一方[[https://swagger.io/][swagger]]はAPI開発のためのOSSツール群でOASを通じてAPI開発をサポートしてくれる.
+  OASはjsonやymlで書くことがきる. OASの作法に乗っ取って仕様を書いておけば, 例えばswagger UIから利用可能なendpoints, parameters, authentificationなどのドキュメントを生成することができる.
+
+  
+** 参考
+- [[https://en.wikipedia.org/wiki/Open_API][OpenAPI wikipedia]]
+- [[https://en.wikipedia.org/wiki/OpenAPI_Specification][OpenAPI Specification wikipedia]]
+
+  
+** fastAPI
+
+  チームで利用している[[https://fastapi.tiangolo.com/][fastAPI]]にはopenAPIを利用した機能がいくつかあり, 例えばlocalでAPIを起動するとhttp://127.0.0.1:8000/docs にアクセスすることでswagger UIによってinteractiveなドキュメントを参照することができる. 
+
+- http://127.0.0.1:8000/docs でinteractiveなドキュメントを参照することができる.
+- http://127.0.0.1:8000/redocs でinteractiveなドキュメントを参照することができる.
+- http://localhost:8000/openapi.json でopenapi.jsonが得られる.
+
+現在fastAPIが利用しているOSAはversion 3.0.2である. またAPI経由でopenapi.josnが得られるのでこれを利用してAPIのテストを作成したい. ここではCI/CD用にAPIを起動すれば勝手にそのendpointからリクエスト例を取ってきてリクエストを投げるようにしたい.
+[[https://openapi.tools][OpenAPI tools]]からいくつか試してみた.
+
+** [[https://docs.stepci.com/][step ci]]
+
+  APIをtestするOSSのtool. OSAからtest用のworkflowを自動生成してtestを実行できる. [[https://docs.stepci.com/integration/fastapi.html][step ciにはfastapiのintegration機能]]ある(が別にintegrationしていないと思う):
+
+#+begin_src shell
+stepci generate http://127.0.0.1:8000/openapi.json
+#+end_src
+
+ただしこうしてできるworkflow.ymlは文字列がラテン語で生成される箇所がある. これはopenapi.jsonの作りが悪いせいである. 
+
+
+stepci runの実行:
+#+begin_src 
+stepci run workflow.yml
+
+ⓘ  Anonymous usage data collected. Learn more on https://step.ci/privacy
+
+ PASS  Default
+
+Tests: 0 failed, 1 passed, 1 total
+Steps: 0 failed, 0 skipped, 1 passed, 1 total
+Time:  7.16s, estimated 7s
+
+Workflow passed after 7.16s
+Give us your feedback on https://step.ci/feedback
+
+#+end_src
+
+[[https://docs.stepci.com/reference/cli.html#generate-spec-path:~:text=passed%20after%200.524s-,generate,-%5Bspec%5D%20%5Bpath%5D][generateのオプション]]でexampleを使う様に指定できるが機能しなかった. 
+
+
+** [[https://github.com/schemathesis/schemathesis][Schemathesis]]
+
+使い方は公式のドキュメントを読んで欲しいが
+#+begin_src shell
+schemathesis run http://localhost/openapi.json --hypothesis-phases=explicit -H 'hoge:foo'
+#+end_src
+でexampleのリクエストを使ってtestを行ってくれる. また仕事ではalbの関係でheaderも付ける必要があったがそれも問題なかった. dockerのimageも提供されているのでci/cdに組み込んだりdocker-composeでtestを行うのも簡単だった. 
