@@ -1,6 +1,7 @@
-#+TITLE: great_expectationsの紹介
+#+TITLE: great expectationsの紹介
 #+description: グレートですよこいつはァ
 #+date: 2022-01-21
+#+categories: python 
 
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:jupyter :session hello

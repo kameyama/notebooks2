@@ -1,6 +1,7 @@
 #+TITLE: jupyter settings
 #+description: Jupyter settings for myself
 #+date: 2022-07-12
+#+categories: memo jupyter
 
 #+PROPERTY: header-args:jupyter+ :async yes
 

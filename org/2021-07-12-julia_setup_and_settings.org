@@ -1,6 +1,7 @@
 #+TITLE: Julia setup & settings
 #+description: Julia setup & settings for myself
 #+date: 2021-07-12
+#+categories: julia
 
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:jupyter-julia :session jl
@@ -11,7 +12,7 @@
 
 ** インストール
 -  +[[https://julialang.org/][公式]]からdmgをダウンロードする.+
--  brewで入れる
+-  brewで入れる or version管理がしたかったらasdfで入れる
 
 ** コマンドライン
   コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す.

@@ -1,6 +1,7 @@
 #+TITLE: asdfのメモ
 #+description: pyenvからasdfへ移行を例に
 #+date: 2022-03-10
+#+categories: memo
 
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:jupyter :session hello
