@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -123,7 +123,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
           1週間くらい調査してみた感想
         </div>
       </div>
-                </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AWS MLOps</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -178,7 +181,22 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 </section>
 <section id="mlops" class="level2">
 <h2 class="anchored" data-anchor-id="mlops">MLOps</h2>
-<p>この辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置きエンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. Sagemakerは<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-why.html">MLOps</a>や<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-whatis.html">プロジェクト</a>で説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう.</p>
+<p>この辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. Sagemakerは<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-why.html">MLOps</a>や<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-whatis.html">プロジェクト</a>で説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである.</p>
+</section>
+</section>
+<section id="sagemakerが便利そうなケース" class="level1">
+<h1>Sagemakerが便利そうなケース</h1>
+<p>最後にどういう場合にsagemakerが便利そうかを個人的な視点で書いてみようと思う.</p>
+<section id="個人利用" class="level3">
+<h3 class="anchored" data-anchor-id="個人利用">個人利用</h3>
+<p>一時的にパワーのいるマシンを使いたい場合はとても便利だろう. 個人で機械学習サービスを作りたい場合もAPIを作る部分まではSagemakerに乗っかると楽だと思う.</p>
+</section>
+<section id="チーム利用" class="level3">
+<h3 class="anchored" data-anchor-id="チーム利用">チーム利用</h3>
+<ol type="1">
+<li>組織に十分な資金が無い場合開発環境としてSagemakerは良い選択かもしれない.</li>
+<li>現在開発体制にMLOps的課題がある場合Sagemakerが提案するMLOpsに従ってみるのは良い試みだと思う.</li>
+</ol>
 
 
 </section>

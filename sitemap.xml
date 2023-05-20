@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/sagemaker.html</loc>
-    <lastmod>2023-05-07T19:29:27.135Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-database_memo.html</loc>
-    <lastmod>2023-05-07T19:29:28.079Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-ubuntu_memo.html</loc>
-    <lastmod>2023-05-07T19:29:28.751Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/computations.html</loc>
-    <lastmod>2023-05-07T19:29:29.599Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2022-01-04-covid.html</loc>
-    <lastmod>2023-05-07T19:29:41.143Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-mac_memo.html</loc>
-    <lastmod>2023-05-07T19:29:41.803Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-jupyter_settings.html</loc>
-    <lastmod>2023-05-07T19:29:42.435Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2022-05-29-docker_from_scratch.html</loc>
-    <lastmod>2023-05-07T19:29:43.027Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/index.html</loc>
+    <lastmod>2023-05-20T20:48:19.139Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-10-post_org_files_via_fastpages.html</loc>
-    <lastmod>2023-05-07T19:29:43.355Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2022-03-10-asdf.html</loc>
-    <lastmod>2023-05-07T19:29:43.947Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2022-01-21-great_expextations.html</loc>
-    <lastmod>2023-05-07T19:29:44.259Z</lastmod>
+    <lastmod>2023-05-20T20:48:19.783Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-11-org-jupyter.html</loc>
-    <lastmod>2023-05-07T19:29:44.811Z</lastmod>
+    <lastmod>2023-05-20T20:48:20.327Z</lastmod>
   </url>
   <url>
-    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-julia_setup_and_settings.html</loc>
-    <lastmod>2023-05-07T19:29:45.155Z</lastmod>
+    <loc>https://github.com/kameyama/notebooks2/posts/2022-03-10-asdf.html</loc>
+    <lastmod>2023-05-20T20:48:20.855Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/sagemaker.html</loc>
+    <lastmod>2023-05-20T20:48:21.143Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/Julia-demo.html</loc>
-    <lastmod>2023-05-07T19:29:49.663Z</lastmod>
+    <lastmod>2023-05-20T20:48:25.171Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-julia_setup_and_settings.html</loc>
+    <lastmod>2023-05-20T20:48:25.487Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2022-05-29-docker_from_scratch.html</loc>
+    <lastmod>2023-05-20T20:48:26.039Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2022-01-21-great_expextations.html</loc>
+    <lastmod>2023-05-20T20:48:26.319Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-ubuntu_memo.html</loc>
+    <lastmod>2023-05-20T20:48:26.951Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-mac_memo.html</loc>
+    <lastmod>2023-05-20T20:48:27.515Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-database_memo.html</loc>
+    <lastmod>2023-05-20T20:48:28.075Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/computations.html</loc>
+    <lastmod>2023-05-20T20:48:28.819Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/security_of_cicd.html</loc>
+    <lastmod>2023-05-20T20:48:29.367Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-jupyter_settings.html</loc>
+    <lastmod>2023-05-20T20:48:29.903Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/kameyama/notebooks2/posts/2022-01-04-covid.html</loc>
+    <lastmod>2023-05-20T20:48:41.259Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/about.html</loc>
-    <lastmod>2023-05-07T19:29:49.959Z</lastmod>
-  </url>
-  <url>
-    <loc>https://github.com/kameyama/notebooks2/index.html</loc>
-    <lastmod>2023-05-07T19:29:50.891Z</lastmod>
+    <lastmod>2023-05-20T20:48:41.531Z</lastmod>
   </url>
 </urlset>

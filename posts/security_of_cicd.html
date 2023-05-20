@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Masaya Kameyama">
-<meta name="dcterms.date" content="2022-06-29">
-<meta name="description" content="docker imageをscratchから作る">
+<meta name="dcterms.date" content="2023-05-21">
+<meta name="description" content="OpenAPIに従ってrest apiへリクエストを投げるパッケージ">
 
-<title>notebooks2 - docker image from scratch</title>
+<title>notebooks2 - OpenAPIとSchemathesisの紹介</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -151,14 +117,14 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">docker image from scratch</h1>
+      <h1 class="title">OpenAPIとSchemathesisの紹介</h1>
                   <div>
         <div class="description">
-          docker imageをscratchから作る
+          OpenAPIに従ってrest apiへリクエストを投げるパッケージ
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">docker</div>
+                <div class="quarto-category">dev openapi</div>
               </div>
                   </div>
   </div>
@@ -176,7 +142,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 29, 2022</p>
+        <p class="date">May 21, 2023</p>
       </div>
     </div>
     
@@ -194,117 +160,58 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
-<section id="はじめに" class="level1">
-<h1>はじめに</h1>
-<p>世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:</p>
-<ul>
-<li>Dockerfile</li>
-</ul>
-<!-- -->
-<pre><code>FROM python:3
-COPY hello.py /
-CMD ["python", "hello.py"]</code></pre>
-<ul>
-<li>hello.py</li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre class="shell"><code>docker build -t python-hello .
-docker container run python-hello</code></pre>
-<pre><code>hello</code></pre>
-<p>ubuntu 18のimageが欲しければ</p>
-<pre class="shell"><code>docker image pull ubuntu:18.04</code></pre>
-<p>でimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.</p>
-<p>所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのが<a href="https://hub.docker.com/_/scratch">scratch image</a>だ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p><a href="https://github.com/schemathesis/schemathesis">Schemathesis</a>とはREST APIのtest toolのひとつでopenapi.jsonが与えられた場合それをもとにtest caseを自動生成してリクエストを投げてテストを行ってくれる. 現在のプロジェクトでは<a href="https://fastapi.tiangolo.com">fastapi</a>を使ってREST APIを開発しているのでopenapi.jsonも自動生成してくれる. APIをクラウドにdeployしたあとリクエストを投げてテストを行いたいがtestコードを書くのが面倒だったので<a href="https://openapi.tools">OpenAPI tools</a>からいくつか試して一番良かったのがこれである.</p>
+</section>
+<section id="解説" class="level1">
+<h1>解説</h1>
+<p>OpenAPI Specification (OAS)とはREST APIのための機械で読み取り可能なインターフェース定義可能な言語のこと. 言い換えるとAPIの仕様書の規格. 以前はSwagger Specificationという名前で知られていた. Swaggerは2010年から開発が始まり, 2016年にプロジェクトが分かれ<a href="https://www.openapis.org/">OpenAPI Initiative</a>で管理されるようになった. 一方<a href="https://swagger.io/">swagger</a>はAPI開発のためのOSSツール群でOASを通じてAPI開発をサポートしてくれる. OASはjsonやymlで書くことがきる. OASの作法に乗っ取って仕様を書いておけば, 例えばswagger UIから利用可能なendpoints, parameters, authentificationなどのドキュメントを生成することができる.</p>
 <section id="参考" class="level2">
 <h2 class="anchored" data-anchor-id="参考">参考</h2>
-<p><a href="https://docs.docker.jp/v19.03/engine/userguide/eng-image/baseimages.html">ドキュメント: ベース・イメージの作成</a></p>
-</section>
-</section>
-<section id="hello-worldバイナリの作成1" class="level1">
-<h1>hello worldバイナリの作成1</h1>
-<p>公式ドキュメントではC言語のhello worldを例にしているがC言語は触ったことがないのでfortranでコンテナ外でバイナリを用意して実行する.</p>
 <ul>
-<li>hello.f90</li>
+<li><a href="https://en.wikipedia.org/wiki/Open_API">OpenAPI wikipedia</a></li>
+<li><a href="https://en.wikipedia.org/wiki/OpenAPI_Specification">OpenAPI Specification wikipedia</a></li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode fortran code-with-copy"><code class="sourceCode fortranfixed"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">program</span> hello</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> <span class="kw">*</span>, <span class="st">'Hello World!'</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end program</span> hello</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre class="shell"><code>gfortran hello.f90</code></pre>
-<p>これでコンパイルされて実行バイナリa.outができあがる. しかしこの実行バイナリはコンテナ内部では動作しない.</p>
-<ul>
-<li>Dockerfile<sub>a</sub></li>
-</ul>
-<!-- -->
-<pre><code>FORM scratch
-COPY a.out /
-CMD ["/a.out"]</code></pre>
-<pre class="shell"><code>docker build -t hello-a -f Dockerfile_a .
-docker container run --rm hello-a</code></pre>
-<pre><code>standard_init_linux.go:228: exec user process caused: exec format error</code></pre>
-<p>その理由はa.outがM1 Mac動作するプログラムだからだ.</p>
-<pre class="shell"><code>file a.out</code></pre>
-<pre><code>a.out: Mach-O 64-bit executable arm64</code></pre>
-<p>scratch imageはlinuxなのでlinuxの実行バイナリが必要だ.</p>
 </section>
-<section id="hello-worldバイナリの作成2" class="level1">
-<h1>hello worldバイナリの作成2</h1>
-<p>1ではlinuxの実行バイナリを作成しなかったことが失敗の原因だったのでlinuxでバイナリを用意してscratch imageへコピーしよう. その方法としてmulti stage buildを使う.</p>
+<section id="fastapi" class="level2">
+<h2 class="anchored" data-anchor-id="fastapi">fastAPI</h2>
+<p>チームで利用している<a href="https://fastapi.tiangolo.com/">fastAPI</a>にはopenAPIを利用した機能がいくつかあり, 例えばlocalでAPIを起動するとhttp://127.0.0.1:8000/docs にアクセスすることでswagger UIによってinteractiveなドキュメントを参照することができる.</p>
 <ul>
-<li>Dockerfile<sub>b</sub></li>
+<li><a href="http://127.0.0.1:8000/docs" class="uri">http://127.0.0.1:8000/docs</a> でinteractiveなドキュメントを参照することができる.</li>
+<li><a href="http://127.0.0.1:8000/redocs" class="uri">http://127.0.0.1:8000/redocs</a> でinteractiveなドキュメントを参照することができる.</li>
+<li><a href="http://localhost:8000/openapi.json" class="uri">http://localhost:8000/openapi.json</a> でopenapi.jsonが得られる.</li>
 </ul>
-<p>alpine imageを利用してgfortran, musl-dev(gfortranを実行するために入れた), fileをインストールしてコンパイル後scratchへコピーする.</p>
-<pre><code>FROM alpine AS b
-
-RUN apk update
-RUN apk add --upgrade gfortran musl-dev file
-
-COPY a.out /
-COPY hello.f90 /
-RUN gfortran hello.f90 -o b.out
-
-FROM scratch
-COPY a.out /
-COPY --from=b b.out /
-CMD ["/b.out"]</code></pre>
-<p>しかしこのb.outも動作しない:</p>
-<pre class="shell"><code>docker build -t hello-b -f Dockerfile_b .
-docker container run --rm hello-b</code></pre>
-<pre class="shell"><code>standard_init_linux.go:228: exec user process caused: no such file or directory</code></pre>
-<p>その理由はb.outがdynamically linkになっているからだ. multi stageのbのコンテナからfileを実行する:</p>
-<pre class="shell"><code>docker build -t hello-bb -f Dockerfile_b --target b .
-docker container run --rm hello-bb file b.out</code></pre>
-<pre class="shell"><code>b.out: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-aarch64.so.1, with debug_info, not stripped</code></pre>
+<p>現在fastAPIが利用しているOSAはversion 3.0.2である. またAPI経由でopenapi.josnが得られるのでこれを利用してAPIのテストを作成したい. ここではCI/CD用にAPIを起動すれば勝手にそのendpointからリクエスト例を取ってきてリクエストを投げるようにしたい. <a href="https://openapi.tools">OpenAPI tools</a>からいくつか試してみた.</p>
 </section>
-<section id="hello-worldバイナリの作成3" class="level1">
-<h1>hello worldバイナリの作成3</h1>
-<p>2ではdynamically linkだったことが良くなかったのでstatic linkのバイナリを作って実行する.</p>
-<ul>
-<li>Dockerfile</li>
-</ul>
-<!-- -->
-<pre><code>FROM alpine AS b
+<section id="step-ci" class="level2">
+<h2 class="anchored" data-anchor-id="step-ci"><a href="https://docs.stepci.com/">step ci</a></h2>
+<p>APIをtestするOSSのtool. OSAからtest用のworkflowを自動生成してtestを実行できる. <a href="https://docs.stepci.com/integration/fastapi.html">step ciにはfastapiのintegration機能</a>ある(が別にintegrationしていないと思う):</p>
+<pre class="shell"><code>stepci generate http://127.0.0.1:8000/openapi.json</code></pre>
+<p>ただしこうしてできるworkflow.ymlは文字列がラテン語で生成される箇所がある. これはopenapi.jsonの作りが悪いせいである.</p>
+<p>stepci runの実行:</p>
+<pre><code>stepci run workflow.yml
 
-RUN apk update
-RUN apk add --upgrade gfortran musl-dev file
+ⓘ  Anonymous usage data collected. Learn more on https://step.ci/privacy
 
-COPY a.out /
-COPY hello.f90 /
-RUN gfortran hello.f90 -o b.out
-RUN gfortran hello.f90 -o c.out -static
+ PASS  Default
 
-FROM scratch
-COPY --from=b a.out /
-COPY --from=b b.out /
-COPY --from=b c.out /
-CMD ["/c.out"]</code></pre>
-<pre class="shell"><code>docker build -t hello -f Dockerfile  .
-docker container run --rm hello</code></pre>
-<pre class="shell"><code>Hello World!</code></pre>
-<p>2と同様にmulti stageのbでc.outをfileで調べると</p>
-<pre class="shell"><code>c.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, with debug_info, not stripped</code></pre>
-<p>となりstatic linkになっていることがわかる.</p>
+Tests: 0 failed, 1 passed, 1 total
+Steps: 0 failed, 0 skipped, 1 passed, 1 total
+Time:  7.16s, estimated 7s
+
+Workflow passed after 7.16s
+Give us your feedback on https://step.ci/feedback</code></pre>
+<p><a href="https://docs.stepci.com/reference/cli.html#generate-spec-path:~:text=passed%20after%200.524s-,generate,-%5Bspec%5D%20%5Bpath%5D">generateのオプション</a>でexampleを使う様に指定できるが機能しなかった.</p>
+</section>
+<section id="schemathesis" class="level2">
+<h2 class="anchored" data-anchor-id="schemathesis"><a href="https://github.com/schemathesis/schemathesis">Schemathesis</a></h2>
+<p>使い方は公式のドキュメントを読んで欲しいが</p>
+<pre class="shell"><code>schemathesis run http://localhost/openapi.json --hypothesis-phases=explicit -H 'hoge:foo'</code></pre>
+<p>でexampleのリクエストを使ってtestを行ってくれる. また仕事ではalbの関係でheaderも付ける必要があったがそれも問題なかった. dockerのimageも提供されているのでci/cdに組み込んだりdocker-composeでtestを行うのも簡単だった.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
