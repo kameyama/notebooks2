@@ -1,0 +1,78 @@
+#+TITLE: stepciのworkflow.yamlの上手かもしれない書き方
+#+description: APIのテストツール
+#+date: 2023-06-05
+#+categories: dev ci/cd memo
+
+* Introduction
+
+REST APIのテストを作成してCI/CDで動かしたい. 以前紹介した[[https://github.com/schemathesis/schemathesis][schemathesis]]はopenapi.jsonがある場合にそれを利用して上手にテストしてくれるパッケージだった. 今回は[[https://github.com/stepci/stepci][stepci]]を試してみた. 実はstepciにもopenapiのintegration機能がありschemathesisより先に存在を知って一度試したことがあるがopneapiを利用するという形では思い通りのテストができなかったので一度断念した.
+ではなぜまたstepciを試したのかというとopenapi.jsonを使わないという方針が"上"によって決められたからである. APIの仕様はopenapiに沿って作られれば色々便利なことがあるがきちんと作るのはなかなか大変である. 実際のところは引き続きfastAPIを使うのでopenapi.jsonは存在するのだがそれは仕様ではないので仕様に沿ったテストを別途実施したいということだ. 当面はスプレッドシートで仕様が管理されるということなので我々はその仕様からjsonを生成してAPIのテストをするという話になった.
+jsonをいくつか用意してrequestを投げてstatus codeとresponseをチェックするだけなので自前で用意するより先人の知恵に頼ってgoogleで検索してみると[[https://qiita.com/developer-kikikaikai/items/74cedc67643ca93d2e0b][postman+newman]]が結果にでてくるので試してみたがPostmanが仕事のケースに合わなかったので保留した. Postmanが合わなかった部分はテストしたいPOST methodのrequest bodyの形が複雑なのでGUIの恩恵を受けられずraw dataとしてjsonをそのまま貼り付けなければならないこと, テストをjavascriptで書かなければならないことである.
+そこで再調査したとこと再びstepciに行き着いたので試してみた.
+
+
+
+* Stepci
+
+結論から言えばjsonを用意してrequestを行いresponseを検証するということはstepciで十分可能だった. しかしちょっと困った点はテストの項目1つに対し複数のrequest bodyを用意してfor loopのようなことがしたい場合にどうやって書くかがわからなかったことだ. 
+data/以下にhoge1.json, hoge2.json ...と用意してテストケースを分類してテストを行いたいと考えていたのだがloopに当たる機能はstepciにはなさそうで下のexample1のように助長になってしまう. なのでどうしたものかと思っていたがyamlの構文にアンカーやエイリアスがあるのでそれが使えるかもしれないと試してみたのがexample2である.
+この構文はstepciでも使えたので若干記述が楽になった. 更に調べてみると[[https://github.com/stepci/runner][stepci runner]]というものもありこちらはjavascript(typescript?)でworkflowが作れるようでloopしたい場合はこちらの方が便利かもしれない. 残念ながらdocmentは貧弱なのでソースコードを読む必要がある.
+
+#+begin_src yaml
+  version: "1.1"
+  name: Demo of API tests
+  env:
+    host: http://foo
+  common: &common
+    http:
+      url: ${{env.host}}/bar
+      method: POST
+      check:
+        status: 200
+
+  tests:
+    example1:
+      steps:
+        - name: GET request(example)
+          http:
+            url: https://example.com
+            method: GET
+            check:
+              selectors:
+                title: Example Domain
+        - name: GET
+          http:
+            url: ${{env.host}}/healthcheck
+            method: GET
+            check:
+              status: 200
+        - name: POST request
+          http:
+            url: ${{env.host}}/var
+            method: POST
+            body:
+              file: data/hoge1.json
+            check:
+              status: 200
+        - name: POST request
+          http:
+            url: ${{env.host}}/var
+            method: POST
+            body:
+              file: data/hoge2.json
+            check:
+              status: 200
+    example2:
+      steps:
+        - <<:: *common
+          name: 1
+          body:
+            file: data/hoge1.json
+        - <<:: *common
+          name: 2
+          body:
+            file: data/hoge2.json  
+#+end_src
+
+
+
