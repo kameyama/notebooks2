@@ -1,47 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "notebooks2",
-    "section": "",
-    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nCovid in Japan\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\nAWS MLOps\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "posts/2022-01-10-post_org_files_via_fastpages.html",
-    "href": "posts/2022-01-10-post_org_files_via_fastpages.html",
-    "title": "post org-mode files via fastpages",
-    "section": "",
-    "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files"
-  },
-  {
-    "objectID": "posts/2022-01-11-org-jupyter.html",
-    "href": "posts/2022-01-11-org-jupyter.html",
-    "title": "use org-mode like jupyter",
-    "section": "",
-    "text": "emacsからjupyterを使用する方法はいくつかありeinが有名である. ここではorg-modeをnotebookのように使う方法を紹介する. emacs-jupyterはorg-modeのcode blockをjupyterで評価可能にする.\n\n\ns=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\npythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\norg-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
-  },
-  {
-    "objectID": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
-    "href": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
-    "title": "use org-mode like jupyter",
-    "section": "",
-    "text": "s=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
-  },
-  {
-    "objectID": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
-    "href": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
-    "title": "use org-mode like jupyter",
-    "section": "",
-    "text": "pythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
-  },
-  {
-    "objectID": "posts/2022-01-11-org-jupyter.html#juliaを使う",
-    "href": "posts/2022-01-11-org-jupyter.html#juliaを使う",
-    "title": "use org-mode like jupyter",
-    "section": "",
-    "text": "org-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
-  },
-  {
     "objectID": "posts/2022-03-10-asdf.html",
     "href": "posts/2022-03-10-asdf.html",
     "title": "asdfのメモ",
@@ -61,104 +19,6 @@
     "title": "asdfのメモ",
     "section": "asdf-direnv",
     "text": "asdf-direnv\ninstall毎に上記を行うのは面倒なのでasdf-direnvを使う. zshなら\nasdf plugin-add direnv\nasdf direnv setup zsh\nでinstallできる. versionを切り替えたいlocal directoryに.envrcを書く. directoryへ行き\nasdf direnv local python 3.10.4\nでdirenvが設定してくれる. localだけでなく$HOME以下にも.envrcを作ってコマンドを追記するのを忘れずに."
-  },
-  {
-    "objectID": "posts/sagemaker.html",
-    "href": "posts/sagemaker.html",
-    "title": "Amazon Sagemakerの感想",
-    "section": "",
-    "text": "SagemakerとはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する."
-  },
-  {
-    "objectID": "posts/sagemaker.html#jupyter",
-    "href": "posts/sagemaker.html#jupyter",
-    "title": "Amazon Sagemakerの感想",
-    "section": "jupyter",
-    "text": "jupyter\n僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう."
-  },
-  {
-    "objectID": "posts/sagemaker.html#学習",
-    "href": "posts/sagemaker.html#学習",
-    "title": "Amazon Sagemakerの感想",
-    "section": "学習",
-    "text": "学習\njupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. チュートリアルはsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ."
-  },
-  {
-    "objectID": "posts/sagemaker.html#デプロイ",
-    "href": "posts/sagemaker.html#デプロイ",
-    "title": "Amazon Sagemakerの感想",
-    "section": "デプロイ",
-    "text": "デプロイ\n仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある."
-  },
-  {
-    "objectID": "posts/sagemaker.html#mlops",
-    "href": "posts/sagemaker.html#mlops",
-    "title": "Amazon Sagemakerの感想",
-    "section": "MLOps",
-    "text": "MLOps\nこの辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. SagemakerはMLOpsやプロジェクトで説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである."
-  },
-  {
-    "objectID": "posts/Julia-demo.html",
-    "href": "posts/Julia-demo.html",
-    "title": "Plots Demo",
-    "section": "",
-    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
-  },
-  {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html",
-    "title": "Julia setup & settings",
-    "section": "",
-    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる\n\n\n\n\nコマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)\n\n\n\nusing Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")\n\n\n\nMambaはPkgからインストールするとコケる. githubからインストールする場合は\n# ver 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
-  },
-  {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
-    "title": "Julia setup & settings",
-    "section": "",
-    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる"
-  },
-  {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
-    "title": "Julia setup & settings",
-    "section": "",
-    "text": "コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)"
-  },
-  {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
-    "title": "Julia setup & settings",
-    "section": "",
-    "text": "using Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")"
-  },
-  {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#package",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#package",
-    "title": "Julia setup & settings",
-    "section": "",
-    "text": "MambaはPkgからインストールするとコケる. githubからインストールする場合は\n# ver 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
-  },
-  {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html",
-    "href": "posts/2022-05-29-docker_from_scratch.html",
-    "title": "docker image from scratch",
-    "section": "",
-    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
-  },
-  {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "title": "docker image from scratch",
-    "section": "",
-    "text": "ドキュメント: ベース・イメージの作成"
-  },
-  {
-    "objectID": "posts/2022-01-21-great_expextations.html",
-    "href": "posts/2022-01-21-great_expextations.html",
-    "title": "great expectationsの紹介",
-    "section": "",
-    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
   },
   {
     "objectID": "posts/2021-07-12-ubuntu_memo.html",
@@ -259,116 +119,11 @@
     "text": "ログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html",
-    "href": "posts/2021-07-12-mac_memo.html",
-    "title": "Mac memo",
+    "objectID": "posts/Julia-demo.html",
+    "href": "posts/Julia-demo.html",
+    "title": "Plots Demo",
     "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "title": "Mac memo",
-    "section": "",
-    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "title": "Mac memo",
-    "section": "",
-    "text": "osxfuseを使う"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "title": "Mac memo",
-    "section": "",
-    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "title": "Mac memo",
-    "section": "",
-    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html",
-    "href": "posts/2021-07-12-database_memo.html",
-    "title": "Database memo",
-    "section": "",
-    "text": "データベース管理システム チュートリアル: tutorial\n\n\nbrew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する.\n\n\n\nSELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2\n\n\n\npsql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる.\n\n\n\npythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#install",
-    "href": "posts/2021-07-12-database_memo.html#install",
-    "title": "Database memo",
-    "section": "",
-    "text": "brew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する."
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#unique-index",
-    "href": "posts/2021-07-12-database_memo.html#unique-index",
-    "title": "Database memo",
-    "section": "",
-    "text": "SELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2"
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#データベースにアクセス",
-    "href": "posts/2021-07-12-database_memo.html#データベースにアクセス",
-    "title": "Database memo",
-    "section": "",
-    "text": "psql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる."
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
-    "href": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
-    "title": "Database memo",
-    "section": "",
-    "text": "pythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
-  },
-  {
-    "objectID": "posts/computations.html",
-    "href": "posts/computations.html",
-    "title": "Quarto Computations",
-    "section": "",
-    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
-  },
-  {
-    "objectID": "posts/computations.html#numpy",
-    "href": "posts/computations.html#numpy",
-    "title": "Quarto Computations",
-    "section": "",
-    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
-  },
-  {
-    "objectID": "posts/computations.html#matplotlib",
-    "href": "posts/computations.html#matplotlib",
-    "title": "Quarto Computations",
-    "section": "Matplotlib",
-    "text": "Matplotlib"
-  },
-  {
-    "objectID": "posts/computations.html#plotly",
-    "href": "posts/computations.html#plotly",
-    "title": "Quarto Computations",
-    "section": "Plotly",
-    "text": "Plotly"
+    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
   },
   {
     "objectID": "posts/security_of_cicd.html",
@@ -404,6 +159,125 @@
     "title": "OpenAPIとSchemathesisの紹介",
     "section": "Schemathesis",
     "text": "Schemathesis\n使い方は公式のドキュメントを読んで欲しいが\nschemathesis run http://localhost/openapi.json --hypothesis-phases=explicit -H 'hoge:foo'\nでexampleのリクエストを使ってtestを行ってくれる. また仕事ではalbの関係でheaderも付ける必要があったがそれも問題なかった. dockerのimageも提供されているのでci/cdに組み込んだりdocker-composeでtestを行うのも簡単だった."
+  },
+  {
+    "objectID": "posts/2022-01-10-post_org_files_via_fastpages.html",
+    "href": "posts/2022-01-10-post_org_files_via_fastpages.html",
+    "title": "post org-mode files via fastpages",
+    "section": "",
+    "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files"
+  },
+  {
+    "objectID": "posts/2022-05-29-docker_from_scratch.html",
+    "href": "posts/2022-05-29-docker_from_scratch.html",
+    "title": "docker image from scratch",
+    "section": "",
+    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
+  },
+  {
+    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "title": "docker image from scratch",
+    "section": "",
+    "text": "ドキュメント: ベース・イメージの作成"
+  },
+  {
+    "objectID": "posts/2022-01-11-org-jupyter.html",
+    "href": "posts/2022-01-11-org-jupyter.html",
+    "title": "use org-mode like jupyter",
+    "section": "",
+    "text": "emacsからjupyterを使用する方法はいくつかありeinが有名である. ここではorg-modeをnotebookのように使う方法を紹介する. emacs-jupyterはorg-modeのcode blockをjupyterで評価可能にする.\n\n\ns=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\npythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\norg-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
+  },
+  {
+    "objectID": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
+    "href": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
+    "title": "use org-mode like jupyter",
+    "section": "",
+    "text": "s=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
+  },
+  {
+    "objectID": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
+    "href": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
+    "title": "use org-mode like jupyter",
+    "section": "",
+    "text": "pythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
+  },
+  {
+    "objectID": "posts/2022-01-11-org-jupyter.html#juliaを使う",
+    "href": "posts/2022-01-11-org-jupyter.html#juliaを使う",
+    "title": "use org-mode like jupyter",
+    "section": "",
+    "text": "org-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
+  },
+  {
+    "objectID": "posts/sagemaker.html",
+    "href": "posts/sagemaker.html",
+    "title": "Amazon Sagemakerの感想",
+    "section": "",
+    "text": "SagemakerとはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する."
+  },
+  {
+    "objectID": "posts/sagemaker.html#jupyter",
+    "href": "posts/sagemaker.html#jupyter",
+    "title": "Amazon Sagemakerの感想",
+    "section": "jupyter",
+    "text": "jupyter\n僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう."
+  },
+  {
+    "objectID": "posts/sagemaker.html#学習",
+    "href": "posts/sagemaker.html#学習",
+    "title": "Amazon Sagemakerの感想",
+    "section": "学習",
+    "text": "学習\njupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. チュートリアルはsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ."
+  },
+  {
+    "objectID": "posts/sagemaker.html#デプロイ",
+    "href": "posts/sagemaker.html#デプロイ",
+    "title": "Amazon Sagemakerの感想",
+    "section": "デプロイ",
+    "text": "デプロイ\n仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある."
+  },
+  {
+    "objectID": "posts/sagemaker.html#mlops",
+    "href": "posts/sagemaker.html#mlops",
+    "title": "Amazon Sagemakerの感想",
+    "section": "MLOps",
+    "text": "MLOps\nこの辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. SagemakerはMLOpsやプロジェクトで説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである."
+  },
+  {
+    "objectID": "posts/computations.html",
+    "href": "posts/computations.html",
+    "title": "Quarto Computations",
+    "section": "",
+    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
+  },
+  {
+    "objectID": "posts/computations.html#numpy",
+    "href": "posts/computations.html#numpy",
+    "title": "Quarto Computations",
+    "section": "",
+    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
+  },
+  {
+    "objectID": "posts/computations.html#matplotlib",
+    "href": "posts/computations.html#matplotlib",
+    "title": "Quarto Computations",
+    "section": "Matplotlib",
+    "text": "Matplotlib"
+  },
+  {
+    "objectID": "posts/computations.html#plotly",
+    "href": "posts/computations.html#plotly",
+    "title": "Quarto Computations",
+    "section": "Plotly",
+    "text": "Plotly"
+  },
+  {
+    "objectID": "posts/2022-01-21-great_expextations.html",
+    "href": "posts/2022-01-21-great_expextations.html",
+    "title": "great expectationsの紹介",
+    "section": "",
+    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
   },
   {
     "objectID": "posts/2021-07-12-jupyter_settings.html",
@@ -455,39 +329,137 @@
     "text": "nohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
   },
   {
-    "objectID": "posts/2022-01-04-covid.html",
-    "href": "posts/2022-01-04-covid.html",
-    "title": "Covid in Japan",
+    "objectID": "posts/2021-07-12-database_memo.html",
+    "href": "posts/2021-07-12-database_memo.html",
+    "title": "Database memo",
     "section": "",
-    "text": "“コロナの新規陽性者数のデータを使った時系列データ分析の練習ノート. 日本のコロナの新規陽性者数のデータを使って統計学基礎 1.7.3節の時系列データの変動分解を試みる. 傾向変動として全国新規陽性者数y_tのデータで7日間移動平均を使ったもの, y_tの対数を取ったデータに対し7日間移動平均をとったもの, y_tの対数を取ったデータを線形回帰したものを使った変動分解を行い結果を考察する.” - toc: false - branch: master - badges: true - comments: true - categories: [julia, covid, statistics] - hide: false - search_exclude: true"
+    "text": "データベース管理システム チュートリアル: tutorial\n\n\nbrew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する.\n\n\n\nSELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2\n\n\n\npsql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる.\n\n\n\npythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
   },
   {
-    "objectID": "posts/2022-01-04-covid.html#グラフ所感",
-    "href": "posts/2022-01-04-covid.html#グラフ所感",
-    "title": "Covid in Japan",
-    "section": "3.1 グラフ所感",
-    "text": "3.1 グラフ所感\n\n2022/01/04現在では第6波の兆しが見える.\n2022/01/11現在では第6波が確定した."
+    "objectID": "posts/2021-07-12-database_memo.html#install",
+    "href": "posts/2021-07-12-database_memo.html#install",
+    "title": "Database memo",
+    "section": "",
+    "text": "brew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する."
   },
   {
-    "objectID": "posts/2022-01-04-covid.html#raw-dataと7日間移動平均",
-    "href": "posts/2022-01-04-covid.html#raw-dataと7日間移動平均",
-    "title": "Covid in Japan",
-    "section": "4.1 raw dataと7日間移動平均",
-    "text": "4.1 raw dataと7日間移動平均\nこのデータからTC_tを分離したい. まずは教科書に倣いTC_tとして移動平均を使ってみる. 日本の検査では休日(日曜)明けの検査では陽性者数が少なく, 木曜に陽性者数が多くでる傾向があることが知られている. そこで7日間の移動平均を取ってみる:\n\n\nCode\ndf.weekly_ave=sma(df.ALL, n=7);\n\n\n\n\nCode\nplot(df.Date, df.weekly_ave, seriestype = :scatter)\n\n\n\n\n\nraw dataから移動平均を引いたものをプロットしてみる:\n\n\nCode\nplot(df.ALL .- df.weekly_ave, seriestype = :scatter)\n\n\n\n\n\n教科書のやり方に倣えば次のステップでは曜日別に平均を取って季節変動を求めるが上記グラフからTC_tとして移動平均を用いるのは適していない. なぜなら傾向変動TC_tは大域的な寄与を表しているはずなのにその影響を除いたy_t-TC_tに山の影響が現れているからである."
+    "objectID": "posts/2021-07-12-database_memo.html#unique-index",
+    "href": "posts/2021-07-12-database_memo.html#unique-index",
+    "title": "Database memo",
+    "section": "",
+    "text": "SELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2"
   },
   {
-    "objectID": "posts/2022-01-04-covid.html#対数とその7日間移動平均",
-    "href": "posts/2022-01-04-covid.html#対数とその7日間移動平均",
-    "title": "Covid in Japan",
-    "section": "4.2 対数とその7日間移動平均",
-    "text": "4.2 対数とその7日間移動平均\n感染症は指数的に増減することが知られているので対数をとってプロットしてみる. データには新規陽性者数が0の日があり対数をとる際に不便なので微小な数\\epsilonを加えて回避する.\n\n\nCode\nϵ = 0.0000001;\n\n\n\n\nCode\ndf.log_all=log.(df.ALL .+ ϵ);\n\n\n\n\nCode\nplot(df.Date, df.log_all, seriestype = :scatter)\n\n\n\n\n\n対数をとってみると第6波の兆候がよりはっきり確認できる.\n対数の世界で移動平均を取り対数化したデータとの差分を見てみる:\n\n\nCode\ndf.log_weekly_ave = sma(df.log_all, n=7);\ndf.log_diff = df.log_all .- df.log_weekly_ave;\n\n\n\n\nCode\nplot((df.log_diff )[40:end], seriestype = :scatter)\n\n\n\n\n\n対数の世界では移動平均からの差分が大体-1.5~1の間に収まりピークの影響を受けづらくなったことがわかる. ここで最初の39日分は陽性者数が0のデータの影響を受け変動が激しいため捨てた. まだ若干の傾向があるようにも見えるが取り敢えず次に進む.\n次は季節変動S_tを計算したい. 上記の図からは曜日別の変動が目視では確認しずらいが曜日別の平均をとって季節変動S計算してみる.\n\n\nCode\nsum_n=zeros(7)\ncount_day_of_week=zeros(Int,7)\nfor (i, n) in enumerate((df.log_diff )[40:end])\n    sum_n[i%7+1]+=n\n    count_day_of_week[i%7+1]+=1\n end\n\n\n\n\nCode\nS = sum_n ./ count_day_of_week\n\n\n7-element Vector{Float64}:\n -0.0458947770756838\n -0.48588728064630987\n  0.055816830757215156\n  0.18126518762346477\n  0.1879316238881742\n  0.1451808639178051\n  0.15539502298303573\n\n\n\n\nCode\nDates.dayname(Date(df.Date[40], dateformat\"y/m/d\"))\n\n\n\"Monday\"\n\n\n40番目のデータに対応する曜日は月曜日なのでSの1番目は日曜日に対応する.\n\n\nCode\ndow=[Dates.dayname(Date(df.Date[40+i], dateformat\"y/m/d\")) for i=-1:5];\n\n\n\n\nCode\nplot(dow,S,seriestype = :bar)\n\n\n\n\n\n上図からも確かに曜日別の影響として月曜が少なく, 木曜が大きくでる傾向がわかる.\n最後にI_tを計算してみる.\n\n\nCode\nI=zeros(length(df.ALL)-39)\nfor (i,n) in enumerate((df.log_diff )[40:end])\n    I[i]=n-S[i%7+1]\nend\n\n\n\n\nCode\nplot(I, seriestype = :scatter)\n\n\n\n\n\n以上がTC_tとして移動平均を採用した場合の結果である. I_tは流行と曜日の影響を除外したものであることを期待しているが上図からは明らかにそれらが除外できていないことがわかる. 実際山が5つある.\n\n\nCode\nplot(df.Date[40:end], df.log_all[40:end], seriestype = :scatter)\nplot!(I, seriestype = :scatter)\n\n\n\n\n\nlog(y_t)とI_tを並べてみると位相のずれた波と似た挙動をしていることがわかる. すなわちコロナのデータに対しTC_tとして移動平均は適していない."
+    "objectID": "posts/2021-07-12-database_memo.html#データベースにアクセス",
+    "href": "posts/2021-07-12-database_memo.html#データベースにアクセス",
+    "title": "Database memo",
+    "section": "",
+    "text": "psql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる."
   },
   {
-    "objectID": "posts/2022-01-04-covid.html#対数と線形回帰",
-    "href": "posts/2022-01-04-covid.html#対数と線形回帰",
-    "title": "Covid in Japan",
-    "section": "4.3 対数と線形回帰",
-    "text": "4.3 対数と線形回帰\n次はTC_tとして各流行を線形回帰したものを採用してみる.\n\n4.3.1 区間の計算\nまずは流行の区間を計算する. (以下では流行の山と谷を計算しようとしているが上手に計算できなかった. 連続関数なら1階微分が0となる点を求めるが今のデータの場合このアイデアではうまく求めることができなかった. 代わりに全期間から最大の位置を求め, 順に適当な区間で最大最小を交互に計算した. それでも上手に計算できなかったので最後は目視で区間を設定した.)\n\n\nCode\nfunction minima(array,i,r)\n    res=i-r+findmin(array[max(i-r,1):i])[2]\n    while res!=i\n        i=res\n        res=i-r+findmin(array[max(i-r,1):i])[2]\n    end\n    return res\nend\n\n\nminima (generic function with 1 method)\n\n\n\n\nCode\nfunction maxima(array,i,r)\n    res=i-r+findmax(array[max(i-r,1):i])[2]\n    while res!=i\n        i=res\n        res=i-r+findmax(array[max(i-r,1):i])[2]\n    end\n    return res\nend\n\n\nmaxima (generic function with 1 method)\n\n\n\n\nCode\nfunction extremes(array,r)\n    i_max=findmax(array)[2]\n    res=[i_max]\n    i=i_max\n    i_min=1\n    while i-r&gt;0 && i !=i_min\n        i_min=minima(array,i_max,r)\n        println(i,\" \",i_min)\n        i_max=maxima(array,i_min,r)\n        push!(res,i_min)\n        push!(res,i_max)\n        i=i_min\n    end\n    return res\nend\n    \n\n\nextremes (generic function with 1 method)\n\n\n\n\nCode\nperiod=extremes(df.ALL, 20)\nappend!(period,extremes(df.ALL[1:480], 15))\nunique!(period)\npush!(period,minima(df.ALL,450,10))\nappend!(period,[30,90,140,680,length(df.ALL)])\nsort!(period)\n\n\n947 888\n359 253\n\n\n12-element Vector{Int64}:\n   30\n   90\n  140\n  206\n  253\n  359\n  419\n  680\n  847\n  888\n  947\n 1090\n\n\n\n\nCode\nplot(df.Date, df.weekly_ave,seriestype = :scatter)\nvline!(period)\n\n\n\n\n\n\n\nCode\nplot(df.Date, df.log_all, seriestype = :scatter)\nvline!(period)\n\n\n\n\n\n\n\n4.3.2 線形回帰\n最初の流行について対数の世界で線形回帰してみる. 回帰にはGLMパッケージを利用する.\n\n\nCode\nplot(period[1]:period[2],df.log_all[period[1]:period[2]], seriestype = :scatter)\n\n\n\n\n\n\n\nCode\ni=1\ndata = DataFrame(X=period[i]:period[i+1], Y=df.log_all[period[i]:period[i+1]])\nols = lm(@formula(Y ~ X), data)\n\n\nStatsModels.TableRegressionModel{LinearModel{GLM.LmResp{Vector{Float64}}, GLM.DensePredChol{Float64, LinearAlgebra.CholeskyPivoted{Float64, Matrix{Float64}, Vector{Int64}}}}, Matrix{Float64}}\n\nY ~ 1 + X\n\nCoefficients:\n────────────────────────────────────────────────────────────────────────────\n                  Coef.  Std. Error      t  Pr(&gt;|t|)   Lower 95%   Upper 95%\n────────────────────────────────────────────────────────────────────────────\n(Intercept)  -0.807003   0.22738     -3.55    0.0008  -1.26199    -0.352016\nX             0.0789489  0.00363634  21.71    &lt;1e-29   0.0716726   0.0862252\n────────────────────────────────────────────────────────────────────────────\n\n\n\n\nCode\nplot(period[i]:period[i+1]-1,df.log_all[period[i]:period[i+1]-1], seriestype = :scatter)\nplot!(data.X,predict(ols))\n\n\n\n\n\n同様に他の区間でも回帰する:\n\n\nCode\npred=predict(ols)\nfor i=2:length(period)-1\n    data = DataFrame(X=period[i]:period[i+1]-1, Y=df.log_all[period[i]:period[i+1]-1])\n    ols = lm(@formula(Y ~ X), data)\n    append!(pred,predict(ols))\nend\n\n\n\n\nCode\nplot(df.Date[period[1]:end], df.log_all[period[1]:end], seriestype = :scatter)\nplot!(df.Date[period[1]:end],pred,seriestype = :scatter)\n\n\n\n\n\nこれで各流行で回帰ができた.\nあとはこの回帰をTC_tとして先ほどと同じ手順でS_t, I_tを計算してみる.\n\n\nCode\ndiff= df.log_all[period[1]:end] .- pred;\n\n\n\n\nCode\nplot(diff, seriestype = :scatter)\n\n\n\n\n\n\n\nCode\nsum_n=zeros(7)\ncount_day_of_week=zeros(Int,7)\nfor (i, n) in enumerate(diff)\n    sum_n[i%7+1]+=n\n    count_day_of_week[i%7+1]+=1\n end\n\n\n\n\nCode\nS2 = sum_n ./ count_day_of_week\n\n\n7-element Vector{Float64}:\n  0.1597298156141544\n  0.1224051792494716\n  0.14164292461164305\n -0.07029766752689469\n -0.4973507234395729\n  0.03803188451298746\n  0.14337600662335104\n\n\n\n\nCode\nDates.dayname(Date(df.Date[period[1]], dateformat\"y/m/d\"))\n\n\n\"Friday\"\n\n\n\n\nCode\ndow=[Dates.dayname(Date(df.Date[period[1]+i], dateformat\"y/m/d\")) for i=-1:5];\n\n\n\n\nCode\nplot(dow,S2,seriestype = :bar)\n\n\n\n\n\n\n\nCode\nI2=zeros(length(df.ALL)-period[1]+1)\nfor (i,n) in enumerate((diff )[period[1]:end])\n    I2[i]=n-S2[i%7+1]\nend\n\n\n\n\nCode\nplot(I2, seriestype = :scatter)\n\n\n\n\n\n個人的な感覚ではこの結果からもまだ傾向のようなもの感じるがを移動平均を使った場合の結果と比べるとかなり改善はされた. コロナの新規陽性者のデータに対しTC_tとして安直に移動平均を使うのは不適切である."
+    "objectID": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
+    "href": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
+    "title": "Database memo",
+    "section": "",
+    "text": "pythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html",
+    "title": "Julia setup & settings",
+    "section": "",
+    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる\n\n\n\n\nコマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)\n\n\n\nusing Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")\n\n\n\nMambaはPkgからインストールするとコケる. githubからインストールする場合は\n# ver 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
+    "title": "Julia setup & settings",
+    "section": "",
+    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
+    "title": "Julia setup & settings",
+    "section": "",
+    "text": "コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
+    "title": "Julia setup & settings",
+    "section": "",
+    "text": "using Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#package",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#package",
+    "title": "Julia setup & settings",
+    "section": "",
+    "text": "MambaはPkgからインストールするとコケる. githubからインストールする場合は\n# ver 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
+  },
+  {
+    "objectID": "posts/stepci.html",
+    "href": "posts/stepci.html",
+    "title": "stepciのworkflow.yamlの上手かもしれない書き方",
+    "section": "",
+    "text": "Introduction\nREST APIのテストを作成してCI/CDで動かしたい. 以前紹介したschemathesisはopenapi.jsonがある場合にそれを利用して上手にテストしてくれるパッケージだった. 今回はstepciを試してみた. 実はstepciにもopenapiのintegration機能がありschemathesisより先に存在を知って一度試したことがあるがopneapiを利用するという形では思い通りのテストができなかったので一度断念した. ではなぜまたstepciを試したのかというとopenapi.jsonを使わないという方針が\"上\"によって決められたからである. APIの仕様はopenapiに沿って作られれば色々便利なことがあるがきちんと作るのはなかなか大変である. 実際のところは引き続きfastAPIを使うのでopenapi.jsonは存在するのだがそれは仕様ではないので仕様に沿ったテストを別途実施したいということだ. 当面はスプレッドシートで仕様が管理されるということなので我々はその仕様からjsonを生成してAPIのテストをするという話になった. jsonをいくつか用意してrequestを投げてstatus codeとresponseをチェックするだけなので自前で用意するより先人の知恵に頼ってgoogleで検索してみるとpostman+newmanが結果にでてくるので試してみたがPostmanが仕事のケースに合わなかったので保留した. Postmanが合わなかった部分はテストしたいPOST methodのrequest bodyの形が複雑なのでGUIの恩恵を受けられずraw dataとしてjsonをそのまま貼り付けなければならないこと, テストをjavascriptで書かなければならないことである. そこで再調査したとこと再びstepciに行き着いたので試してみた.\n\n\nStepci\n結論から言えばjsonを用意してrequestを行いresponseを検証するということはstepciで十分可能だった. しかしちょっと困った点はテストの項目1つに対し複数のrequest bodyを用意してfor loopのようなことがしたい場合にどうやって書くかがわからなかったことだ. data/以下にhoge1.json, hoge2.json …と用意してテストケースを分類してテストを行いたいと考えていたのだがloopに当たる機能はstepciにはなさそうで下のexample1のように助長になってしまう. なのでどうしたものかと思っていたがyamlの構文にアンカーやエイリアスがあるのでそれが使えるかもしれないと試してみたのがexample2である. この構文はstepciでも使えたので若干記述が楽になった. 更に調べてみるとstepci runnerというものもありこちらはjavascript(typescript?)でworkflowが作れるようでloopしたい場合はこちらの方が便利かもしれない. 残念ながらdocmentは貧弱なのでソースコードを読む必要がある.\nversion: \"1.1\"\nname: Demo of API tests\nenv:\n  host: http://foo\ncommon: &common\n  http:\n    url: ${{env.host}}/bar\n    method: POST\n    check:\n      status: 200\n\ntests:\n  example1:\n    steps:\n      - name: GET request(example)\n        http:\n          url: https://example.com\n          method: GET\n          check:\n            selectors:\n              title: Example Domain\n      - name: GET\n        http:\n          url: ${{env.host}}/healthcheck\n          method: GET\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge1.json\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge2.json\n          check:\n            status: 200\n  example2:\n    steps:\n      - &lt;&lt;:: *common\n        name: 1\n        body:\n          file: data/hoge1.json\n      - &lt;&lt;:: *common\n        name: 2\n        body:\n          file: data/hoge2.json"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html",
+    "href": "posts/2021-07-12-mac_memo.html",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "title": "Mac memo",
+    "section": "",
+    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "title": "Mac memo",
+    "section": "",
+    "text": "osxfuseを使う"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "title": "Mac memo",
+    "section": "",
+    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "title": "Mac memo",
+    "section": "",
+    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "notebooks2",
+    "section": "",
+    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\n\ndev ci/cd memo\n\n\n\n\nAPIのテストツール\n\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\nAWS MLOps\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
