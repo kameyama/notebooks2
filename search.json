@@ -1,5 +1,96 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "posts/2022-05-29-docker_from_scratch.html",
+    "href": "posts/2022-05-29-docker_from_scratch.html",
+    "title": "docker image from scratch",
+    "section": "",
+    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
+  },
+  {
+    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "title": "docker image from scratch",
+    "section": "",
+    "text": "ドキュメント: ベース・イメージの作成"
+  },
+  {
+    "objectID": "posts/sagemaker.html",
+    "href": "posts/sagemaker.html",
+    "title": "Amazon Sagemakerの感想",
+    "section": "",
+    "text": "SagemakerとはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する."
+  },
+  {
+    "objectID": "posts/sagemaker.html#jupyter",
+    "href": "posts/sagemaker.html#jupyter",
+    "title": "Amazon Sagemakerの感想",
+    "section": "jupyter",
+    "text": "jupyter\n僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう."
+  },
+  {
+    "objectID": "posts/sagemaker.html#学習",
+    "href": "posts/sagemaker.html#学習",
+    "title": "Amazon Sagemakerの感想",
+    "section": "学習",
+    "text": "学習\njupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. チュートリアルはsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ."
+  },
+  {
+    "objectID": "posts/sagemaker.html#デプロイ",
+    "href": "posts/sagemaker.html#デプロイ",
+    "title": "Amazon Sagemakerの感想",
+    "section": "デプロイ",
+    "text": "デプロイ\n仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある."
+  },
+  {
+    "objectID": "posts/sagemaker.html#mlops",
+    "href": "posts/sagemaker.html#mlops",
+    "title": "Amazon Sagemakerの感想",
+    "section": "MLOps",
+    "text": "MLOps\nこの辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. SagemakerはMLOpsやプロジェクトで説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである."
+  },
+  {
+    "objectID": "posts/security_of_cicd.html",
+    "href": "posts/security_of_cicd.html",
+    "title": "OpenAPIとSchemathesisの紹介",
+    "section": "",
+    "text": "SchemathesisとはREST APIのtest toolのひとつでopenapi.jsonが与えられた場合それをもとにtest caseを自動生成してリクエストを投げてテストを行ってくれる. 現在のプロジェクトではfastapiを使ってREST APIを開発しているのでopenapi.jsonも自動生成してくれる. APIをクラウドにdeployしたあとリクエストを投げてテストを行いたいがtestコードを書くのが面倒だったのでOpenAPI toolsからいくつか試して一番良かったのがこれである."
+  },
+  {
+    "objectID": "posts/security_of_cicd.html#参考",
+    "href": "posts/security_of_cicd.html#参考",
+    "title": "OpenAPIとSchemathesisの紹介",
+    "section": "参考",
+    "text": "参考\n\nOpenAPI wikipedia\nOpenAPI Specification wikipedia"
+  },
+  {
+    "objectID": "posts/security_of_cicd.html#fastapi",
+    "href": "posts/security_of_cicd.html#fastapi",
+    "title": "OpenAPIとSchemathesisの紹介",
+    "section": "fastAPI",
+    "text": "fastAPI\nチームで利用しているfastAPIにはopenAPIを利用した機能がいくつかあり, 例えばlocalでAPIを起動するとhttp://127.0.0.1:8000/docs にアクセスすることでswagger UIによってinteractiveなドキュメントを参照することができる.\n\nhttp://127.0.0.1:8000/docs でinteractiveなドキュメントを参照することができる.\nhttp://127.0.0.1:8000/redocs でinteractiveなドキュメントを参照することができる.\nhttp://localhost:8000/openapi.json でopenapi.jsonが得られる.\n\n現在fastAPIが利用しているOSAはversion 3.0.2である. またAPI経由でopenapi.josnが得られるのでこれを利用してAPIのテストを作成したい. ここではCI/CD用にAPIを起動すれば勝手にそのendpointからリクエスト例を取ってきてリクエストを投げるようにしたい. OpenAPI toolsからいくつか試してみた."
+  },
+  {
+    "objectID": "posts/security_of_cicd.html#step-ci",
+    "href": "posts/security_of_cicd.html#step-ci",
+    "title": "OpenAPIとSchemathesisの紹介",
+    "section": "step ci",
+    "text": "step ci\nAPIをtestするOSSのtool. OSAからtest用のworkflowを自動生成してtestを実行できる. step ciにはfastapiのintegration機能ある(が別にintegrationしていないと思う):\nstepci generate http://127.0.0.1:8000/openapi.json\nただしこうしてできるworkflow.ymlは文字列がラテン語で生成される箇所がある. これはopenapi.jsonの作りが悪いせいである.\nstepci runの実行:\nstepci run workflow.yml\n\nⓘ  Anonymous usage data collected. Learn more on https://step.ci/privacy\n\n PASS  Default\n\nTests: 0 failed, 1 passed, 1 total\nSteps: 0 failed, 0 skipped, 1 passed, 1 total\nTime:  7.16s, estimated 7s\n\nWorkflow passed after 7.16s\nGive us your feedback on https://step.ci/feedback\ngenerateのオプションでexampleを使う様に指定できるが機能しなかった."
+  },
+  {
+    "objectID": "posts/security_of_cicd.html#schemathesis",
+    "href": "posts/security_of_cicd.html#schemathesis",
+    "title": "OpenAPIとSchemathesisの紹介",
+    "section": "Schemathesis",
+    "text": "Schemathesis\n使い方は公式のドキュメントを読んで欲しいが\nschemathesis run http://localhost/openapi.json --hypothesis-phases=explicit -H 'hoge:foo'\nでexampleのリクエストを使ってtestを行ってくれる. また仕事ではalbの関係でheaderも付ける必要があったがそれも問題なかった. dockerのimageも提供されているのでci/cdに組み込んだりdocker-composeでtestを行うのも簡単だった."
+  },
+  {
     "objectID": "posts/2022-03-10-asdf.html",
     "href": "posts/2022-03-10-asdf.html",
     "title": "asdfのメモ",
@@ -19,6 +110,139 @@
     "title": "asdfのメモ",
     "section": "asdf-direnv",
     "text": "asdf-direnv\ninstall毎に上記を行うのは面倒なのでasdf-direnvを使う. zshなら\nasdf plugin-add direnv\nasdf direnv setup zsh\nでinstallできる. versionを切り替えたいlocal directoryに.envrcを書く. directoryへ行き\nasdf direnv local python 3.10.4\nでdirenvが設定してくれる. localだけでなく$HOME以下にも.envrcを作ってコマンドを追記するのを忘れずに."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html",
+    "href": "posts/2021-07-12-mac_memo.html",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "title": "Mac memo",
+    "section": "",
+    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "title": "Mac memo",
+    "section": "",
+    "text": "osxfuseを使う"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "title": "Mac memo",
+    "section": "",
+    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "title": "Mac memo",
+    "section": "",
+    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "posts/2021-07-12-database_memo.html",
+    "href": "posts/2021-07-12-database_memo.html",
+    "title": "Database memo",
+    "section": "",
+    "text": "データベース管理システム チュートリアル: tutorial\n\n\nbrew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する.\n\n\n\nSELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2\n\n\n\npsql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる.\n\n\n\npythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
+  },
+  {
+    "objectID": "posts/2021-07-12-database_memo.html#install",
+    "href": "posts/2021-07-12-database_memo.html#install",
+    "title": "Database memo",
+    "section": "",
+    "text": "brew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する."
+  },
+  {
+    "objectID": "posts/2021-07-12-database_memo.html#unique-index",
+    "href": "posts/2021-07-12-database_memo.html#unique-index",
+    "title": "Database memo",
+    "section": "",
+    "text": "SELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2"
+  },
+  {
+    "objectID": "posts/2021-07-12-database_memo.html#データベースにアクセス",
+    "href": "posts/2021-07-12-database_memo.html#データベースにアクセス",
+    "title": "Database memo",
+    "section": "",
+    "text": "psql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる."
+  },
+  {
+    "objectID": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
+    "href": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
+    "title": "Database memo",
+    "section": "",
+    "text": "pythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
+  },
+  {
+    "objectID": "posts/computations.html",
+    "href": "posts/computations.html",
+    "title": "Quarto Computations",
+    "section": "",
+    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
+  },
+  {
+    "objectID": "posts/computations.html#numpy",
+    "href": "posts/computations.html#numpy",
+    "title": "Quarto Computations",
+    "section": "",
+    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
+  },
+  {
+    "objectID": "posts/computations.html#matplotlib",
+    "href": "posts/computations.html#matplotlib",
+    "title": "Quarto Computations",
+    "section": "Matplotlib",
+    "text": "Matplotlib"
+  },
+  {
+    "objectID": "posts/computations.html#plotly",
+    "href": "posts/computations.html#plotly",
+    "title": "Quarto Computations",
+    "section": "Plotly",
+    "text": "Plotly"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "notebooks2",
+    "section": "",
+    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\n\ndev ci/cd memo\n\n\n\n\nAPIのテストツール\n\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\nAWS, MLOps\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2022-01-21-great_expextations.html",
+    "href": "posts/2022-01-21-great_expextations.html",
+    "title": "great expectationsの紹介",
+    "section": "",
+    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
+  },
+  {
+    "objectID": "posts/stepci.html",
+    "href": "posts/stepci.html",
+    "title": "stepciのworkflow.yamlの上手かもしれない書き方",
+    "section": "",
+    "text": "Introduction\nREST APIのテストを作成してCI/CDで動かしたい. 以前紹介したschemathesisはopenapi.jsonがある場合にそれを利用して上手にテストしてくれるパッケージだった. 今回はstepciを試してみた. 実はstepciにもopenapiのintegration機能がありschemathesisより先に存在を知って一度試したことがあるがopneapiを利用するという形では思い通りのテストができなかったので一度断念した. ではなぜまたstepciを試したのかというとopenapi.jsonを使わないという方針が\"上\"によって決められたからである. APIの仕様はopenapiに沿って作られれば色々便利なことがあるがきちんと作るのはなかなか大変である. 実際のところは引き続きfastAPIを使うのでopenapi.jsonは存在するのだがそれは仕様ではないので仕様に沿ったテストを別途実施したいということだ. 当面はスプレッドシートで仕様が管理されるということなので我々はその仕様からjsonを生成してAPIのテストをするという話になった. jsonをいくつか用意してrequestを投げてstatus codeとresponseをチェックするだけなので自前で用意するより先人の知恵に頼ってgoogleで検索してみるとpostman+newmanが結果にでてくるので試してみたがPostmanが仕事のケースに合わなかったので保留した. Postmanが合わなかった部分はテストしたいPOST methodのrequest bodyの形が複雑なのでGUIの恩恵を受けられずraw dataとしてjsonをそのまま貼り付けなければならないこと, テストをjavascriptで書かなければならないことである. そこで再調査したとこと再びstepciに行き着いたので試してみた.\n\n\nStepci\n結論から言えばjsonを用意してrequestを行いresponseを検証するということはstepciで十分可能だった. しかしちょっと困った点はテストの項目1つに対し複数のrequest bodyを用意してfor loopのようなことがしたい場合にどうやって書くかがわからなかったことだ. data/以下にhoge1.json, hoge2.json …と用意してテストケースを分類してテストを行いたいと考えていたのだがloopに当たる機能はstepciにはなさそうで下のexample1のように助長になってしまう. なのでどうしたものかと思っていたがyamlの構文にアンカーやエイリアスがあるのでそれが使えるかもしれないと試してみたのがexample2である. この構文はstepciでも使えたので若干記述が楽になった. 更に調べてみるとstepci runnerというものもありこちらはjavascript(typescript?)でworkflowが作れるようでloopしたい場合はこちらの方が便利かもしれない. 残念ながらdocmentは貧弱なのでソースコードを読む必要がある.\nversion: \"1.1\"\nname: Demo of API tests\nenv:\n  host: http://foo\ncommon: &common\n  http:\n    url: ${{env.host}}/bar\n    method: POST\n    check:\n      status: 200\n\ntests:\n  example1:\n    steps:\n      - name: GET request(example)\n        http:\n          url: https://example.com\n          method: GET\n          check:\n            selectors:\n              title: Example Domain\n      - name: GET\n        http:\n          url: ${{env.host}}/healthcheck\n          method: GET\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge1.json\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge2.json\n          check:\n            status: 200\n  example2:\n    steps:\n      - &lt;&lt;:: *common\n        name: 1\n        body:\n          file: data/hoge1.json\n      - &lt;&lt;:: *common\n        name: 2\n        body:\n          file: data/hoge2.json"
   },
   {
     "objectID": "posts/2021-07-12-ubuntu_memo.html",
@@ -119,48 +343,6 @@
     "text": "ログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
   },
   {
-    "objectID": "posts/Julia-demo.html",
-    "href": "posts/Julia-demo.html",
-    "title": "Plots Demo",
-    "section": "",
-    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
-  },
-  {
-    "objectID": "posts/security_of_cicd.html",
-    "href": "posts/security_of_cicd.html",
-    "title": "OpenAPIとSchemathesisの紹介",
-    "section": "",
-    "text": "SchemathesisとはREST APIのtest toolのひとつでopenapi.jsonが与えられた場合それをもとにtest caseを自動生成してリクエストを投げてテストを行ってくれる. 現在のプロジェクトではfastapiを使ってREST APIを開発しているのでopenapi.jsonも自動生成してくれる. APIをクラウドにdeployしたあとリクエストを投げてテストを行いたいがtestコードを書くのが面倒だったのでOpenAPI toolsからいくつか試して一番良かったのがこれである."
-  },
-  {
-    "objectID": "posts/security_of_cicd.html#参考",
-    "href": "posts/security_of_cicd.html#参考",
-    "title": "OpenAPIとSchemathesisの紹介",
-    "section": "参考",
-    "text": "参考\n\nOpenAPI wikipedia\nOpenAPI Specification wikipedia"
-  },
-  {
-    "objectID": "posts/security_of_cicd.html#fastapi",
-    "href": "posts/security_of_cicd.html#fastapi",
-    "title": "OpenAPIとSchemathesisの紹介",
-    "section": "fastAPI",
-    "text": "fastAPI\nチームで利用しているfastAPIにはopenAPIを利用した機能がいくつかあり, 例えばlocalでAPIを起動するとhttp://127.0.0.1:8000/docs にアクセスすることでswagger UIによってinteractiveなドキュメントを参照することができる.\n\nhttp://127.0.0.1:8000/docs でinteractiveなドキュメントを参照することができる.\nhttp://127.0.0.1:8000/redocs でinteractiveなドキュメントを参照することができる.\nhttp://localhost:8000/openapi.json でopenapi.jsonが得られる.\n\n現在fastAPIが利用しているOSAはversion 3.0.2である. またAPI経由でopenapi.josnが得られるのでこれを利用してAPIのテストを作成したい. ここではCI/CD用にAPIを起動すれば勝手にそのendpointからリクエスト例を取ってきてリクエストを投げるようにしたい. OpenAPI toolsからいくつか試してみた."
-  },
-  {
-    "objectID": "posts/security_of_cicd.html#step-ci",
-    "href": "posts/security_of_cicd.html#step-ci",
-    "title": "OpenAPIとSchemathesisの紹介",
-    "section": "step ci",
-    "text": "step ci\nAPIをtestするOSSのtool. OSAからtest用のworkflowを自動生成してtestを実行できる. step ciにはfastapiのintegration機能ある(が別にintegrationしていないと思う):\nstepci generate http://127.0.0.1:8000/openapi.json\nただしこうしてできるworkflow.ymlは文字列がラテン語で生成される箇所がある. これはopenapi.jsonの作りが悪いせいである.\nstepci runの実行:\nstepci run workflow.yml\n\nⓘ  Anonymous usage data collected. Learn more on https://step.ci/privacy\n\n PASS  Default\n\nTests: 0 failed, 1 passed, 1 total\nSteps: 0 failed, 0 skipped, 1 passed, 1 total\nTime:  7.16s, estimated 7s\n\nWorkflow passed after 7.16s\nGive us your feedback on https://step.ci/feedback\ngenerateのオプションでexampleを使う様に指定できるが機能しなかった."
-  },
-  {
-    "objectID": "posts/security_of_cicd.html#schemathesis",
-    "href": "posts/security_of_cicd.html#schemathesis",
-    "title": "OpenAPIとSchemathesisの紹介",
-    "section": "Schemathesis",
-    "text": "Schemathesis\n使い方は公式のドキュメントを読んで欲しいが\nschemathesis run http://localhost/openapi.json --hypothesis-phases=explicit -H 'hoge:foo'\nでexampleのリクエストを使ってtestを行ってくれる. また仕事ではalbの関係でheaderも付ける必要があったがそれも問題なかった. dockerのimageも提供されているのでci/cdに組み込んだりdocker-composeでtestを行うのも簡単だった."
-  },
-  {
     "objectID": "posts/2022-01-10-post_org_files_via_fastpages.html",
     "href": "posts/2022-01-10-post_org_files_via_fastpages.html",
     "title": "post org-mode files via fastpages",
@@ -168,18 +350,11 @@
     "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files"
   },
   {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html",
-    "href": "posts/2022-05-29-docker_from_scratch.html",
-    "title": "docker image from scratch",
+    "objectID": "posts/Julia-demo.html",
+    "href": "posts/Julia-demo.html",
+    "title": "Plots Demo",
     "section": "",
-    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
-  },
-  {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "title": "docker image from scratch",
-    "section": "",
-    "text": "ドキュメント: ベース・イメージの作成"
+    "text": "Code\nusing Pkg\n\n\n\n\nCode\nusing Plots\nPlots.gr(fmt = :png)\nplot(sin, \n     x-&gt;sin(2x), \n     0, \n     2π, \n     leg=false, \n     fill=(0,:lavender))\n\n\n\n\n\n\n\nCode\nPlots._current_plots_version\n\n\nv\"1.27.0\""
   },
   {
     "objectID": "posts/2022-01-11-org-jupyter.html",
@@ -208,76 +383,6 @@
     "title": "use org-mode like jupyter",
     "section": "",
     "text": "org-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
-  },
-  {
-    "objectID": "posts/sagemaker.html",
-    "href": "posts/sagemaker.html",
-    "title": "Amazon Sagemakerの感想",
-    "section": "",
-    "text": "SagemakerとはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する."
-  },
-  {
-    "objectID": "posts/sagemaker.html#jupyter",
-    "href": "posts/sagemaker.html#jupyter",
-    "title": "Amazon Sagemakerの感想",
-    "section": "jupyter",
-    "text": "jupyter\n僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう."
-  },
-  {
-    "objectID": "posts/sagemaker.html#学習",
-    "href": "posts/sagemaker.html#学習",
-    "title": "Amazon Sagemakerの感想",
-    "section": "学習",
-    "text": "学習\njupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. チュートリアルはsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ."
-  },
-  {
-    "objectID": "posts/sagemaker.html#デプロイ",
-    "href": "posts/sagemaker.html#デプロイ",
-    "title": "Amazon Sagemakerの感想",
-    "section": "デプロイ",
-    "text": "デプロイ\n仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある."
-  },
-  {
-    "objectID": "posts/sagemaker.html#mlops",
-    "href": "posts/sagemaker.html#mlops",
-    "title": "Amazon Sagemakerの感想",
-    "section": "MLOps",
-    "text": "MLOps\nこの辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. SagemakerはMLOpsやプロジェクトで説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである."
-  },
-  {
-    "objectID": "posts/computations.html",
-    "href": "posts/computations.html",
-    "title": "Quarto Computations",
-    "section": "",
-    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
-  },
-  {
-    "objectID": "posts/computations.html#numpy",
-    "href": "posts/computations.html#numpy",
-    "title": "Quarto Computations",
-    "section": "",
-    "text": "array([[ 0,  1,  2,  3,  4],\n       [ 5,  6,  7,  8,  9],\n       [10, 11, 12, 13, 14]])"
-  },
-  {
-    "objectID": "posts/computations.html#matplotlib",
-    "href": "posts/computations.html#matplotlib",
-    "title": "Quarto Computations",
-    "section": "Matplotlib",
-    "text": "Matplotlib"
-  },
-  {
-    "objectID": "posts/computations.html#plotly",
-    "href": "posts/computations.html#plotly",
-    "title": "Quarto Computations",
-    "section": "Plotly",
-    "text": "Plotly"
-  },
-  {
-    "objectID": "posts/2022-01-21-great_expextations.html",
-    "href": "posts/2022-01-21-great_expextations.html",
-    "title": "great expectationsの紹介",
-    "section": "",
-    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
   },
   {
     "objectID": "posts/2021-07-12-jupyter_settings.html",
@@ -329,41 +434,6 @@
     "text": "nohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
   },
   {
-    "objectID": "posts/2021-07-12-database_memo.html",
-    "href": "posts/2021-07-12-database_memo.html",
-    "title": "Database memo",
-    "section": "",
-    "text": "データベース管理システム チュートリアル: tutorial\n\n\nbrew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する.\n\n\n\nSELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2\n\n\n\npsql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる.\n\n\n\npythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#install",
-    "href": "posts/2021-07-12-database_memo.html#install",
-    "title": "Database memo",
-    "section": "",
-    "text": "brew install postgresql\n確認\npostgres\nこれでサーバーが起動する(jupyterと同じ). もし以下のように怒られたら\npostgres does not know where to find the server configuration file.\nYou must specify the --config-file or -D invocation option or set the PGDATA environment variable.\n.zshrcに\nexport PGDATA=/usr/local/var/postgres\nを追加する."
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#unique-index",
-    "href": "posts/2021-07-12-database_memo.html#unique-index",
-    "title": "Database memo",
-    "section": "",
-    "text": "SELECT * FROM pg_indexes\nreference\nhttps://github.com/Homebrew/legacy-homebrew/issues/21920 https://qiita.com/gooddoog/items/1f986c1a6c0f253bd4e2"
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#データベースにアクセス",
-    "href": "posts/2021-07-12-database_memo.html#データベースにアクセス",
-    "title": "Database memo",
-    "section": "",
-    "text": "psql mydbname\nでデータベースにアクセスし, 対話型で起動する.\npsql -l\nでデータベースの一覧が確認できる."
-  },
-  {
-    "objectID": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
-    "href": "posts/2021-07-12-database_memo.html#pythonやjuliaからremoteのpostgressql-queryを叩く方法",
-    "title": "Database memo",
-    "section": "",
-    "text": "pythonならpsycopg2 or sqlalchemy, juliaならLibPQを使う. pythonはsqlalchemyがおすすめ. 具体例はpython, juliaを参照. 以下はやや特殊な場合なので必要なら見る.\n\n\nimport psycopg2\nimport pandas as pd\nimport time\nfrom sshtunnel import SSHTunnelForwarder\n\n\ndef queryAurora(sql):\n    with SSHTunnelForwarder(\n        \"ssh_name\",\n        ssh_pkey=\"~/.ssh/id_rsa\",\n        remote_bind_address=(\"hogehoge\", 5432)\n    ) as server:\n        conn = psycopg2.connect(\n            host='localhost',\n            port=server.local_bind_port,\n            dbname='hogedb',\n            user='foo',\n            password='bar')\n        cur = conn.cursor()\n        cur.execute(sql)\n        result = cur.fetchall()\n        colnames = [col.name for col in cur.description]\n        # pandas.DataFrameで返す用の処理\n        new_result = [[one for one in one_result]  for one_result in result]\n        result = pd.DataFrame(new_result,columns=colnames)\n        cur.close()\n        conn.close()\n        # 連続で叩くと凄くヤバいので1秒待つ\n        time.sleep(1)\n        return resul\n\n\n\nusing LibPQ\n\nfunction sql(query)\n    conn = LibPQ.Connection(\"dbname='hogedb' host='localhost' user='foo' password='bar' port=45432\")\n    result =execute(conn,query)\n    df = DataFrame(result)\n    close(conn)\n    sleep(1)\n    return df\nend\nreference\n\n\n\npgconfig = {\n    'host': 'localhost',\n    'port': 45432,\n    'database': 'hoge',\n    'user': 'foo',\n    'password': 'bar',\n}\n\n%load_ext sql\ndsl = 'postgres://{user}:{password}@{host}:{port}/{database}'.format(**pgconfig)\n%sql $dsl\n\n%%sql\nselect *\nfrom companies c\nwhere name~'Apple'\n変数化したいときは以下のようにやる.\nhogehoge = 'Apple'\n\n%%sql\nselect *\nfrom companies c\nwhere name~hogehoge\n\nreference\nhttps://github.com/catherinedevlin/ipython-sql https://towardsdatascience.com/jupyter-magics-with-sql-921370099589"
-  },
-  {
     "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
     "href": "posts/2021-07-12-julia_setup_and_settings.html",
     "title": "Julia setup & settings",
@@ -397,75 +467,5 @@
     "title": "Julia setup & settings",
     "section": "",
     "text": "MambaはPkgからインストールするとコケる. githubからインストールする場合は\n# ver 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
-  },
-  {
-    "objectID": "posts/stepci.html",
-    "href": "posts/stepci.html",
-    "title": "stepciのworkflow.yamlの上手かもしれない書き方",
-    "section": "",
-    "text": "Introduction\nREST APIのテストを作成してCI/CDで動かしたい. 以前紹介したschemathesisはopenapi.jsonがある場合にそれを利用して上手にテストしてくれるパッケージだった. 今回はstepciを試してみた. 実はstepciにもopenapiのintegration機能がありschemathesisより先に存在を知って一度試したことがあるがopneapiを利用するという形では思い通りのテストができなかったので一度断念した. ではなぜまたstepciを試したのかというとopenapi.jsonを使わないという方針が\"上\"によって決められたからである. APIの仕様はopenapiに沿って作られれば色々便利なことがあるがきちんと作るのはなかなか大変である. 実際のところは引き続きfastAPIを使うのでopenapi.jsonは存在するのだがそれは仕様ではないので仕様に沿ったテストを別途実施したいということだ. 当面はスプレッドシートで仕様が管理されるということなので我々はその仕様からjsonを生成してAPIのテストをするという話になった. jsonをいくつか用意してrequestを投げてstatus codeとresponseをチェックするだけなので自前で用意するより先人の知恵に頼ってgoogleで検索してみるとpostman+newmanが結果にでてくるので試してみたがPostmanが仕事のケースに合わなかったので保留した. Postmanが合わなかった部分はテストしたいPOST methodのrequest bodyの形が複雑なのでGUIの恩恵を受けられずraw dataとしてjsonをそのまま貼り付けなければならないこと, テストをjavascriptで書かなければならないことである. そこで再調査したとこと再びstepciに行き着いたので試してみた.\n\n\nStepci\n結論から言えばjsonを用意してrequestを行いresponseを検証するということはstepciで十分可能だった. しかしちょっと困った点はテストの項目1つに対し複数のrequest bodyを用意してfor loopのようなことがしたい場合にどうやって書くかがわからなかったことだ. data/以下にhoge1.json, hoge2.json …と用意してテストケースを分類してテストを行いたいと考えていたのだがloopに当たる機能はstepciにはなさそうで下のexample1のように助長になってしまう. なのでどうしたものかと思っていたがyamlの構文にアンカーやエイリアスがあるのでそれが使えるかもしれないと試してみたのがexample2である. この構文はstepciでも使えたので若干記述が楽になった. 更に調べてみるとstepci runnerというものもありこちらはjavascript(typescript?)でworkflowが作れるようでloopしたい場合はこちらの方が便利かもしれない. 残念ながらdocmentは貧弱なのでソースコードを読む必要がある.\nversion: \"1.1\"\nname: Demo of API tests\nenv:\n  host: http://foo\ncommon: &common\n  http:\n    url: ${{env.host}}/bar\n    method: POST\n    check:\n      status: 200\n\ntests:\n  example1:\n    steps:\n      - name: GET request(example)\n        http:\n          url: https://example.com\n          method: GET\n          check:\n            selectors:\n              title: Example Domain\n      - name: GET\n        http:\n          url: ${{env.host}}/healthcheck\n          method: GET\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge1.json\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge2.json\n          check:\n            status: 200\n  example2:\n    steps:\n      - &lt;&lt;:: *common\n        name: 1\n        body:\n          file: data/hoge1.json\n      - &lt;&lt;:: *common\n        name: 2\n        body:\n          file: data/hoge2.json"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html",
-    "href": "posts/2021-07-12-mac_memo.html",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "title": "Mac memo",
-    "section": "",
-    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "title": "Mac memo",
-    "section": "",
-    "text": "osxfuseを使う"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "title": "Mac memo",
-    "section": "",
-    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "title": "Mac memo",
-    "section": "",
-    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "notebooks2",
-    "section": "",
-    "text": "Quarto Computations\n\n\n\n\n\n\n\n\n\n\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\n\ndev ci/cd memo\n\n\n\n\nAPIのテストツール\n\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\nAWS MLOps\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nPlots Demo\n\n\n\n\n\n\n\n\n\n\n\n\nMay 22, 2021\n\n\nNorah Jones\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this blog"
   }
 ]
