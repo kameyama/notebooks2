@@ -1,0 +1,41 @@
+#+TITLE: manimのメモ
+#+description: manim
+#+date: 2022-03-10
+#+categories: memo manim
+
+#+PROPERTY: header-args:python :results output
+#+PROPERTY: header-args:jupyter :session hello
+#+PROPERTY: header-args:jupyter+ :async yes
+
+* tutorial
+
+** 実行方法
+  fileを作成したら以下のコマンドでmp4が作成できる.
+  #+begin_src shell
+    manim scene.py
+  #+end_src
+sceneが複数ある場合は選べる.
+
+次のように指定もできる.
+  #+begin_src shell
+    manim scene.py CreateCircle
+  #+end_src
+
+  
+  オプションも存在する.
+  #+begin_src shell
+    manim -pql scene.py CreateCircle
+  #+end_src
+  
+-pはplay, -qlはlow quality, -qhはhigh quality, -sは最後のframeをpngで出すオプション.
+
+
+**  [[https://docs.manim.community/en/stable/tutorials/using_text.html][texで日本語を使う方法]]
+  #+begin_src python
+from manim import *
+
+class LaTeXTemplateLibrary(Scene):
+    def construct(self):
+        tex = Tex('Hello 你好 \\LaTeX 日本語でおk', tex_template=TexTemplateLibrary.ctex, font_size=144)
+        self.add(tex)
+  #+end_src
