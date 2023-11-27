@@ -217,8 +217,8 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 </section>
 <section id="package" class="level2">
 <h2 class="anchored" data-anchor-id="package">Package</h2>
-<p>MambaはPkgからインストールするとコケる. githubからインストールする場合は</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ver 1.0</span></span>
+<p>packageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verんsたl 1.0</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">clone</span>(<span class="st">"https://github.com/JuliaData/DataFramesMeta.jl"</span>) </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ver 1.4</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(<span class="fu">PackageSpec</span>(url<span class="op">=</span><span class="st">"https://github.com/JuliaDatabases/DBInterface.jl"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
