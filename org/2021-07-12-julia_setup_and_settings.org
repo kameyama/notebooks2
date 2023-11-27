@@ -34,10 +34,10 @@ Pkg.build("IJulia")
 
 ** Package
 
-MambaはPkgからインストールするとコケる. githubからインストールする場合は
+packageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は
 
 #+begin_src julia
-# ver 1.0
+# verんsたl 1.0
 Pkg.clone("https://github.com/JuliaData/DataFramesMeta.jl") 
 # ver 1.4
 Pkg.add(PackageSpec(url="https://github.com/JuliaDatabases/DBInterface.jl"))
