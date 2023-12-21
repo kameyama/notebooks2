@@ -1,0 +1,543 @@
+#+TITLE: uvicorn vs gunicorn
+#+description: fastapiを使う際のuvicornとgunicornの違い
+#+date: 2023-12-22
+#+categories: fastapi
+
+
+
+* Introduction
+
+筆者が現在所属している株式会社FLINRTERSは2024年1月で10周年を迎え, その記念企画として全社員でブログリレーを行っている. この記事は133日間ブログを書き続けるチャレンジの105日目の記事である(1日目の記事は[[https://blog.flinters.co.jp/entry/2023/09/09/120000][こちら]]).
+当サイトは筆者の個人サイトとして公開しているが今回の記事に限り会社の企画の一環として作成した.
+
+筆者はDeep Laerningを利用した機械学習サービスの開発に2年程参加している. 機械学習サービスはコンテナ化されたREST APIとして開発を行いAWSのECSを利用してデプロイしている. 
+コンテナは[[https://fastapi.tiangolo.com/][FastAPI]]を利用してREST APIを開発している. FastAPIはpythonで開発できるwebフレームワークで筆者が開発に参加した時に既に採用されていて現在も使用している. 以下で筆者がFastAPIを利用する際にハマった点を紹介する.
+ここで考えたいのは複数のリクエストを捌くためにREST APIの構成をどのようにするかという問題である.
+
+1. uvicorn vs gunicorn
+2. workers vs container replication
+
+よく考えれば([[https://fastapi.tiangolo.com/deployment/concepts/#deployments-concepts][FastAPIのドキュメント]]をきちんと読めば)悩むことはないのだが迷走してしまった.
+
+** uvicorn vs gunicorn
+
+FastAPIをサーバーとして起動する場合uvicorn, hypercorn, daphneそしてgunicornを選択できる. 例えばuvicornの場合は
+#+begin_src python
+uvicorn main:app --host 0.0.0.0 --port 80  
+#+end_src
+gunicornの場合は
+#+begin_src python
+gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80
+#+end_src
+等である.
+さて[[https://www.uvicorn.org/#running-with-gunicorn:~:text=(main())-,Running%20with%20Gunicorn,-%C2%B6][uviconrのドキュメント]]を読むと以下の様な記述がある:
+#+begin_quote
+For production deployments we recommend using gunicorn with the uvicorn worker class.
+#+end_quote
+一方でFastAPIのドキュメントには以下のような説明がある.
+#+begin_quote
+Gunicorn is mainly an application server using the WSGI standard. That means that Gunicorn can serve applications like Flask and Django. Gunicorn by itself is not compatible with FastAPI, as FastAPI uses the newest ASGI standard.
+
+But Gunicorn supports working as a process manager and allowing users to tell it which specific worker process class to use. Then Gunicorn would start one or more worker processes using that class.
+
+And Uvicorn has a Gunicorn-compatible worker class.
+
+Using that combination, Gunicorn would act as a process manager, listening on the port and the IP. And it would transmit the communication to the worker processes running the Uvicorn class.
+
+And then the Gunicorn-compatible Uvicorn worker class would be in charge of converting the data sent by Gunicorn to the ASGI standard for FastAPI to use it.
+#+end_quote
+WSGI(Web Server Gateway Interface)は同期的なAPIの規格, ASGI（Asynchronous Server Gateway Interface)は非同期的なAPIの規格という意味である.
+([[https://fastapi.tiangolo.com/async/][同期/非同期の違いと並列/並行の違い]]もFastAPIのドキュメントで説明されているので一読するとよい.)
+ドキュメントによればgunicornはWSGIで同期的, uvicorn, hypercornそしてdaphneは非同期的ということだそうだ. 
+uvicornもFastAPIもmultiple workersでAPIを起動したい場合はgunicornによる起動を推奨している.
+しかしAPIをコンテナとして開発しkubernetesやECSのようなコンテナをスケールできるクラウドサービスを利用している場合はsingle processとしてコンテナを作りクラスターレベルでコンテナを複製するやり方を推奨している.
+プロジェクトではGPUを使い, ちょうどよいAWSのインスタンスはGPUが1つである.
+GPUが1つなので1つのコンテナに同時に複数のリクエストがきた場合1つのGPUを取り合ってしまうため(全体の処理時間はほとんど変わらないが)リクエストあたりの処理時間が伸びてしまう.
+よって1つのコンテナでは1つずつリクエストを同期的なAPIを選択すれば良いからgunicornで1つのworkerにすれば良いと考えた.
+
+** 実際の挙動
+ところが実際に負荷テストをしてみると次の様な結果になった:
+
+- Concurrency=1で2リクエスト
+#+begin_src shell
+hey -n 2 -c 1 -t 2000 -m POST -D ./test_1.json -H 'accept: application/json'  -H 'Content-Type: application/json' $endpoint
+
+Summary:
+  Total:	1334.9580 secs
+  Slowest:	677.1068 secs
+  Fastest:	657.8511 secs
+  Average:	667.4790 secs
+  Requests/sec:	0.0015
+
+  Total data:	18864 bytes
+  Size/request:	9432 bytes
+
+Response time histogram:
+  657.851 [1]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  659.777 [0]	|
+  661.702 [0]	|
+  663.628 [0]	|
+  665.553 [0]	|
+  667.479 [0]	|
+  669.405 [0]	|
+  671.330 [0]	|
+  673.256 [0]	|
+  675.181 [0]	|
+  677.107 [1]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+Latency distribution:
+  10% in 677.1068 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0006 secs, 657.8511 secs, 677.1068 secs
+  DNS-lookup:	0.0004 secs, 0.0000 secs, 0.0008 secs
+  req write:	0.0001 secs, 0.0000 secs, 0.0001 secs
+  resp wait:	667.4661 secs, 657.8509 secs, 677.0813 secs
+  resp read:	0.0121 secs, 0.0002 secs, 0.0241 secs
+
+Status code distribution:
+  [200]	2 responses
+#+end_src
+
+- Concurrency=2で2リクエスト
+#+begin_src shell
+hey -n 2 -c 2 -t 2000 -m POST -D ./test_1.json -H 'accept: application/json'  -H 'Content-Type: application/json' $endpoint
+
+Summary:
+  Total:	1349.7194 secs
+  Slowest:	1349.7193 secs
+  Fastest:	1349.6560 secs
+  Average:	1349.6877 secs
+  Requests/sec:	0.0015
+
+  Total data:	18860 bytes
+  Size/request:	9430 bytes
+
+Response time histogram:
+  1349.656 [1]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1349.662 [0]	|
+  1349.669 [0]	|
+  1349.675 [0]	|
+  1349.681 [0]	|
+  1349.688 [0]	|
+  1349.694 [0]	|
+  1349.700 [0]	|
+  1349.707 [0]	|
+  1349.713 [0]	|
+  1349.719 [1]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+Latency distribution:
+  10% in 1349.7193 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0012 secs, 1349.6560 secs, 1349.7193 secs
+  DNS-lookup:	0.0007 secs, 0.0007 secs, 0.0007 secs
+  req write:	0.0001 secs, 0.0001 secs, 0.0001 secs
+  resp wait:	1349.6736 secs, 1349.6293 secs, 1349.7178 secs
+  resp read:	0.0127 secs, 0.0001 secs, 0.0253 secs
+
+Status code distribution:
+  [200]	2 responses
+#+end_src
+
+ここで[[https://github.com/rakyll/hey][hey]]は並行リクエストを行うためのパッケージである.
+このように1つずつのリクエストは660秒程度でレスポンスされるが同時に2リクエストされると1349秒程度となってしまった.
+totalのレスポンス時間はほとんど変わらないが各レスポンスでは1つずつリクエストをした場合の倍程度の時間がかかっている.
+この挙動はgunicornで起動しているのに非同期的な挙動をしているということだ.
+どうなっているんだろうか？
+
+
+
+** 答え
+
+結論から言うとFastAPIをgunicornで動かす時gunicornはuvicorn workerのプロセスマネージャーとして動作し全体としては非同期的なAPIとなる. 同期的なAPIとなる場合はFlaskやDjangoをgunicornで動かした場合である.
+
+** 検証
+
+以下では[[https://github.com/kameyama/practices/tree/main/gunicorn_vs_uvicorn][検証用コード]]を用意して検証する.
+
+ - docker-compose.yml
+
+#+begin_src 
+version: "3.9"  
+services:
+  fastapi-uvicorn:
+    build:
+      context: fastapi
+      dockerfile: Dockerfile
+    environment:
+      - MODEL=wait
+      - WAITING_TIME=1
+    tty: true
+    healthcheck:
+      test: curl http://localhost:8000/healthcheck
+    command: uvicorn --workers ${WORKERS:-1} --timeout-keep-alive 60 --host 0.0.0.0 --port 8000 src.main:app
+
+  fastapi-gunicorn:
+    build:
+      context: fastapi
+      dockerfile: Dockerfile
+    environment:
+      - MODEL=wait
+      - WAITING_TIME=1      
+    tty: true
+    healthcheck:
+      test: curl http://localhost:8000/healthcheck
+    command: gunicorn -w ${WORKERS:-1} -t 60 --keep-alive=60 --bind=0000:8000 -k uvicorn.workers.UvicornWorker src.main:app
+
+  flask:
+    build:
+      context: flask
+      dockerfile: Dockerfile
+    environment:
+      - WAITING_TIME=1      
+    tty: true
+    command: gunicorn -w ${WORKERS:-1} -b 0.0.0.0:8000 app:app
+
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/src:/workspace/
+    tty: true
+
+networks:
+  app-net:
+    driver: bridge    
+#+end_src
+
+server用にFastAPIをuvicornとgunicornでそれぞれ起動したコンテナとFlaskをgunicornで起動したコンテナを用意した. どのエンドポイントも1秒待つだけのものである. 以下ではclientに接続してserverへリクエストする.
+
+- main.py
+
+  このスクリプトではそれぞれのエンドポイントにそれぞれ非同期的に10リクエストを行う. FastAPIではさらに内部で同期的な処理(sync)と非同期的な処理(async)を用意した.
+
+#+begin_src python
+import httpx as requests
+from asyncio import run, gather
+
+from functools import wraps
+import time
+
+
+def stop_watch(func) :
+    @wraps(func)
+    def wrapper(*args, **kargs) :
+        start = time.time()
+        result = func(*args,**kargs)
+        elapsed_time =  time.time() - start
+        print(f"{func.__name__} is {elapsed_time} sec")
+        return result
+    return wrapper
+
+n=10
+        
+urls1 = ["http://fastapi-uvicorn:8000/sync"] * n
+urls2 = ["http://fastapi-uvicorn:8000/async"] * n
+urls3 = ["http://fastapi-gunicorn:8000/sync"] * n
+urls4 = ["http://fastapi-gunicorn:8000/async"] * n
+urls5 = ["http://flask:8000/wait"] * n
+
+@stop_watch
+def req(url):
+    return requests.get(url).json()["wait"]
+
+def sync_func(urls):
+    res=sorted([float(req(u)) for u in urls])
+
+def main(urls):
+    start = time.time()
+    sync_func(urls)
+    elapsed_time =  time.time() - start
+    print(f"tolal time: {elapsed_time} sec.")
+
+# print("sync")
+# main(urls1)
+# main(urls2)
+# main(urls3)
+# main(urls4)
+
+async def async_request(client,url):
+    start = time.time()
+    r = await client.get(url)
+    j = r.json()
+    elapsed_time =  time.time() - start
+    #return float(j["wait"])
+    return elapsed_time
+
+async def async_func(urls):
+    async with requests.AsyncClient(timeout=requests.Timeout(50.0, read=100.0)) as client:
+        tasks = [async_request(client,u) for u in urls]
+        res=await gather(*tasks, return_exceptions=True)
+        print(sorted(res))
+
+
+def main2(urls):
+    print(urls[0])
+    start = time.time()
+    run(async_func(urls))
+    elapsed_time =  time.time() - start
+    print(f"total time: {elapsed_time} sec.")
+    print("")
+
+print("")
+print("async")
+main2(urls1)
+main2(urls2)
+main2(urls3)
+main2(urls4)
+main2(urls5)
+#+end_src
+
+- main.pyの実行結果
+
+#+begin_src shell
+>python main.py
+
+async
+http://fastapi-uvicorn:8000/sync
+[1.024996042251587, 1.026745080947876, 1.0276827812194824, 1.0283920764923096, 1.0295100212097168, 1.0298545360565186, 1.0308914184570312, 1.0322017669677734, 1.0322880744934082, 1.0322985649108887]
+total time: 1.0637059211730957 sec.
+
+http://fastapi-uvicorn:8000/async
+[1.0175724029541016, 1.018122911453247, 1.0189146995544434, 1.0196821689605713, 1.020909309387207, 1.0213782787322998, 1.0219099521636963, 1.0230631828308105, 1.0235424041748047, 1.0240747928619385]
+total time: 1.0593938827514648 sec.
+
+http://fastapi-gunicorn:8000/sync
+[1.0269830226898193, 1.027055263519287, 1.0285744667053223, 1.0295593738555908, 1.0305025577545166, 1.0309679508209229, 1.03269624710083, 1.0332932472229004, 1.0338554382324219, 1.0339922904968262]
+total time: 1.0705046653747559 sec.
+
+http://fastapi-gunicorn:8000/async
+[1.0173935890197754, 1.017953872680664, 1.0187129974365234, 1.0193700790405273, 1.020677089691162, 1.021491527557373, 1.0224878787994385, 1.0230729579925537, 1.0231189727783203, 1.0231926441192627]
+total time: 1.060159683227539 sec.
+
+http://flask:8000/wait
+[1.0182826519012451, 2.021609306335449, 3.0245327949523926, 4.027919054031372, 5.02778172492981, 6.030719518661499, 7.033880949020386, 8.036886215209961, 9.039915323257446, 10.04302167892456]
+total time: 10.079250574111938 sec.
+#+end_src
+
+FastAPIにリクエストをするとuvicorn, gunicornの違いや内部コードが同期/非同期に関わらず1秒程度でレスポンスされることがわかる. サーバー側に十分な処理能力があるのでworkerが1つでも全体の処理時間も1秒程度である.
+一方Flaskにリクエストすると同期的にリクエストが処理されるので1番目のリクエストは1秒で返ってくるが10番目のリクエストは処理まで待たされるためレスポンスに10秒程度かかっていることがわかる.
+
+
+** 大量リクエストによるパフォーマンスの低下
+
+[[https://fastapi.tiangolo.com/async/][FastAPI内部でのdefとasync defの使い分け]]にあるように内部で更に非同期処理を行っている場合はパフォーマンスの最適化ができる.
+ここでは大量のリクエストを行いパフォーマンスの違いを確認する.
+各エンドポイントに1000リクエストを並行で行うと同期処理の場合はどんどんレスポンスが遅くなるのに対し非同期処理の場合はほとんどレスポンスが遅くならない:
+
+*** uvicorn-sync
+#+begin_src shell
+root@6fbcaa856ca9:/workspace# hey -n 1000 -c 1000 http://fastapi-uvicorn:8000/sync
+
+Summary:
+  Total:	9.1911 secs
+  Slowest:	9.1805 secs
+  Fastest:	1.0084 secs
+  Average:	3.5174 secs
+  Requests/sec:	108.8007
+
+  Total data:	28754 bytes
+  Size/request:	28 bytes
+
+Response time histogram:
+  1.008 [1]	|
+  1.826 [199]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  2.643 [200]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  3.460 [186]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  4.277 [157]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  5.094 [28]	|■■■■■■
+  5.912 [75]	|■■■■■■■■■■■■■■■
+  6.729 [50]	|■■■■■■■■■■
+  7.546 [40]	|■■■■■■■■
+  8.363 [40]	|■■■■■■■■
+  9.180 [24]	|■■■■■
+
+
+Latency distribution:
+  10% in 1.0897 secs
+  25% in 2.0721 secs
+  50% in 3.1144 secs
+  75% in 5.0093 secs
+  90% in 7.1048 secs
+  95% in 8.1422 secs
+  99% in 9.1499 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0326 secs, 1.0084 secs, 9.1805 secs
+  DNS-lookup:	0.0281 secs, 0.0000 secs, 0.0755 secs
+  req write:	0.0021 secs, 0.0000 secs, 0.0567 secs
+  resp wait:	3.4776 secs, 1.0031 secs, 9.1080 secs
+  resp read:	0.0002 secs, 0.0000 secs, 0.0023 secs
+
+Status code distribution:
+  [200]	1000 responses
+#+end_src
+
+*** uvicorn-async
+#+begin_src shell
+root@6fbcaa856ca9:/workspace# hey -n 1000 -c 1000 http://fastapi-uvicorn:8000/async
+
+Summary:
+  Total:	1.2514 secs
+  Slowest:	1.2316 secs
+  Fastest:	1.0523 secs
+  Average:	1.1256 secs
+  Requests/sec:	799.1115
+
+  Total data:	28714 bytes
+  Size/request:	28 bytes
+
+Response time histogram:
+  1.052 [1]	|
+  1.070 [51]	|■■■■■■■■■■■■
+  1.088 [166]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.106 [160]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.124 [157]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.142 [129]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.160 [93]	|■■■■■■■■■■■■■■■■■■■■■■
+  1.178 [106]	|■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.196 [85]	|■■■■■■■■■■■■■■■■■■■■
+  1.214 [50]	|■■■■■■■■■■■■
+  1.232 [2]	|
+
+
+Latency distribution:
+  10% in 1.0765 secs
+  25% in 1.0920 secs
+  50% in 1.1195 secs
+  75% in 1.1580 secs
+  90% in 1.1851 secs
+  95% in 1.1965 secs
+  99% in 1.2086 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0618 secs, 1.0523 secs, 1.2316 secs
+  DNS-lookup:	0.0344 secs, 0.0005 secs, 0.0650 secs
+  req write:	0.0031 secs, 0.0000 secs, 0.0487 secs
+  resp wait:	1.0588 secs, 1.0023 secs, 1.1469 secs
+  resp read:	0.0001 secs, 0.0000 secs, 0.0007 secs
+
+Status code distribution:
+  [200]	1000 responses
+#+end_src
+
+
+*** gunicorn-sync
+#+begin_src shell
+root@6fbcaa856ca9:/workspace# hey -n 1000 -c 1000 http://fastapi-gunicorn:8000/sync
+
+Summary:
+  Total:	7.0586 secs
+  Slowest:	7.0112 secs
+  Fastest:	1.0307 secs
+  Average:	3.2303 secs
+  Requests/sec:	141.6702
+
+  Total data:	28739 bytes
+  Size/request:	28 bytes
+
+Response time histogram:
+  1.031 [1]	|
+  1.629 [199]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  2.227 [200]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  2.825 [0]	|
+  3.423 [200]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  4.021 [40]	|■■■■■■■■
+  4.619 [124]	|■■■■■■■■■■■■■■■■■■■■■■■■■
+  5.217 [150]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  5.815 [0]	|
+  6.413 [82]	|■■■■■■■■■■■■■■■■
+  7.011 [4]	|■
+
+
+Latency distribution:
+  10% in 1.1207 secs
+  25% in 2.0946 secs
+  50% in 3.1330 secs
+  75% in 4.1489 secs
+  90% in 5.1593 secs
+  95% in 6.1270 secs
+  99% in 6.1581 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0530 secs, 1.0307 secs, 7.0112 secs
+  DNS-lookup:	0.0285 secs, 0.0000 secs, 0.0688 secs
+  req write:	0.0045 secs, 0.0000 secs, 0.0916 secs
+  resp wait:	3.1651 secs, 1.0026 secs, 6.9203 secs
+  resp read:	0.0002 secs, 0.0000 secs, 0.0021 secs
+
+Status code distribution:
+  [200]	1000 responses
+#+end_src
+
+*** gunicorn-async
+
+#+begin_src shell
+root@6fbcaa856ca9:/workspace# hey -n 1000 -c 1000 http://fastapi-gunicorn:8000/async
+
+Summary:
+  Total:	1.2252 secs
+  Slowest:	1.2068 secs
+  Fastest:	1.0091 secs
+  Average:	1.0905 secs
+  Requests/sec:	816.1771
+
+  Total data:	28749 bytes
+  Size/request:	28 bytes
+
+Response time histogram:
+  1.009 [1]	|
+  1.029 [20]	|■■■
+  1.049 [115]	|■■■■■■■■■■■■■■■■■■■
+  1.068 [247]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.088 [165]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  1.108 [125]	|■■■■■■■■■■■■■■■■■■■■
+  1.128 [123]	|■■■■■■■■■■■■■■■■■■■■
+  1.147 [108]	|■■■■■■■■■■■■■■■■■
+  1.167 [36]	|■■■■■■
+  1.187 [52]	|■■■■■■■■
+  1.207 [8]	|■
+
+
+Latency distribution:
+  10% in 1.0466 secs
+  25% in 1.0568 secs
+  50% in 1.0803 secs
+  75% in 1.1210 secs
+  90% in 1.1463 secs
+  95% in 1.1695 secs
+  99% in 1.1858 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0351 secs, 1.0091 secs, 1.2068 secs
+  DNS-lookup:	0.0257 secs, 0.0000 secs, 0.0862 secs
+  req write:	0.0037 secs, 0.0000 secs, 0.0570 secs
+  resp wait:	1.0453 secs, 1.0023 secs, 1.1422 secs
+  resp read:	0.0001 secs, 0.0000 secs, 0.0012 secs
+
+Status code distribution:
+  [200]	1000 responses
+#+end_src
+
+* summary
+
+- FastAPIは非同期なRESR API
+- gunicornでuvonorn workerを指定するとgunicornはプロセスマネージャーの役割をする(WSGIは気にする必要がない)
+- FastAPI内部でも同期/非同期を意識するとパフォーマンスの効率化が可能
+- コンテナをスケールさせるようなクラウドサービスを利用する場合は基本的にworkerは1でよい
