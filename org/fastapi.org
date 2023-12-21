@@ -12,7 +12,7 @@
 
 筆者はDeep Laerningを利用した機械学習サービスの開発に2年程参加している. 機械学習サービスはコンテナ化されたREST APIとして開発を行いAWSのECSを利用してデプロイしている. 
 コンテナは[[https://fastapi.tiangolo.com/][FastAPI]]を利用してREST APIを開発している. FastAPIはpythonで開発できるwebフレームワークで筆者が開発に参加した時に既に採用されていて現在も使用している. 以下で筆者がFastAPIを利用する際にハマった点を紹介する.
-ここで考えたいのは複数のリクエストを捌くためにREST APIの構成をどのようにするかという問題である.
+ここで考えたいのは複数のリクエストを捌くためにREST APIの構成をどのようにするかという問題である. APIを動かすサーバーの構成やアプリケーション自信の性質によって選択肢は様々あるがここでは以下を考える:
 
 1. uvicorn vs gunicorn
 2. workers vs container replication
