@@ -198,7 +198,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>筆者が現在所属している株式会社FLINRTERSは2024年1月で10周年を迎え, その記念企画として全社員でブログリレーを行っている. この記事は133日間ブログを書き続けるチャレンジの105日目の記事である(1日目の記事は<a href="https://blog.flinters.co.jp/entry/2023/09/09/120000">こちら</a>). 当サイトは筆者の個人サイトとして公開しているが今回の記事に限り会社の企画の一環として作成した.</p>
-<p>筆者はDeep Laerningを利用した機械学習サービスの開発に2年程参加している. 機械学習サービスはコンテナ化されたREST APIとして開発を行いAWSのECSを利用してデプロイしている. コンテナは<a href="https://fastapi.tiangolo.com/">FastAPI</a>を利用してREST APIを開発している. FastAPIはpythonで開発できるwebフレームワークで筆者が開発に参加した時に既に採用されていて現在も使用している. 以下で筆者がFastAPIを利用する際にハマった点を紹介する. ここで考えたいのは複数のリクエストを捌くためにREST APIの構成をどのようにするかという問題である.</p>
+<p>筆者はDeep Laerningを利用した機械学習サービスの開発に2年程参加している. 機械学習サービスはコンテナ化されたREST APIとして開発を行いAWSのECSを利用してデプロイしている. コンテナは<a href="https://fastapi.tiangolo.com/">FastAPI</a>を利用してREST APIを開発している. FastAPIはpythonで開発できるwebフレームワークで筆者が開発に参加した時に既に採用されていて現在も使用している. 以下で筆者がFastAPIを利用する際にハマった点を紹介する. ここで考えたいのは複数のリクエストを捌くためにREST APIの構成をどのようにするかという問題である. APIを動かすサーバーの構成やアプリケーション自信の性質によって選択肢は様々あるがここでは以下を考える:</p>
 <ol type="1">
 <li>uvicorn vs gunicorn</li>
 <li>workers vs container replication</li>
