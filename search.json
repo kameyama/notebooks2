@@ -105,102 +105,102 @@
     "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html",
-    "href": "posts/2021-07-12-mac_memo.html",
-    "title": "Mac memo",
+    "objectID": "posts/2022-01-11-org-jupyter.html",
+    "href": "posts/2022-01-11-org-jupyter.html",
+    "title": "use org-mode like jupyter",
     "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+    "text": "emacsからjupyterを使用する方法はいくつかありeinが有名である. ここではorg-modeをnotebookのように使う方法を紹介する. emacs-jupyterはorg-modeのcode blockをjupyterで評価可能にする.\n\n\ns=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\npythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\norg-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "title": "Mac memo",
+    "objectID": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
+    "href": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
+    "title": "use org-mode like jupyter",
     "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
+    "text": "s=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "title": "Mac memo",
+    "objectID": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
+    "href": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
+    "title": "use org-mode like jupyter",
     "section": "",
-    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
+    "text": "pythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "title": "Mac memo",
+    "objectID": "posts/2022-01-11-org-jupyter.html#juliaを使う",
+    "href": "posts/2022-01-11-org-jupyter.html#juliaを使う",
+    "title": "use org-mode like jupyter",
     "section": "",
-    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
+    "text": "org-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "title": "Mac memo",
+    "objectID": "posts/2022-05-29-docker_from_scratch.html",
+    "href": "posts/2022-05-29-docker_from_scratch.html",
+    "title": "docker image from scratch",
     "section": "",
-    "text": "osxfuseを使う"
+    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "title": "Mac memo",
+    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
+    "title": "docker image from scratch",
     "section": "",
-    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
+    "text": "ドキュメント: ベース・イメージの作成"
   },
   {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "title": "Mac memo",
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html",
+    "title": "Julia setup & settings",
     "section": "",
-    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる\n\n\n\n\nコマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)\n\n\n\nusing Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")\n\n\n\npackageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は\n# verんsたl 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html",
-    "href": "posts/2021-07-12-jupyter_settings.html",
-    "title": "jupyter settings",
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
+    "title": "Julia setup & settings",
     "section": "",
-    "text": "from notebook.services.config import ConfigManager\n\nc = ConfigManager()\nc.update('notebook',\n         {\"CodeCell\": {\"cm_config\": {\"autoCloseBrackets\": False}}})\n\n\n\nviewの項目から変更できる.\n\n注意 2019/12/2現在nbextensionとjupyterthemesを同時に使うと行番号の表示がおかしくなる.\n\n\n\n\npip install jupyterthemes\nhttps://github.com/dunovank/jupyter-themes\n現在のお気に入り\njt -t chesterish -f hack -fs 120 -ofs 100 -tfs 11 -nfs 115 -cellw 100% -T -N -kl\n\n注意 テーマを変えると=.jupyter/custom=が上書きされる.\n\n\n\n\nhttps://github.com/jupyter/jupyter/wiki/Jupyter-kernels\n\n\n\nsshでリモート先へ接続しjupyterを起動する. その際ポートフォワードする:\nssh $user@$ip-address -L 8989:localhost:8888\njupyter notebook & \nこれでブラウザからlocalhost:8889とすればjupyterに繋がる. 8890:localhost:8888とするとmac側でブラウザに入力するときにlocalhost:8890となる. nohupでjupyterを立ち上げた場合はポートフォワーディングから再開できる. jupyter labを使いたい場合は\njupyter lab --no-browser\nで起動する.\n\n\n\nnohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
+    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#括弧補完をオフにする",
-    "href": "posts/2021-07-12-jupyter_settings.html#括弧補完をオフにする",
-    "title": "jupyter settings",
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
+    "title": "Julia setup & settings",
     "section": "",
-    "text": "from notebook.services.config import ConfigManager\n\nc = ConfigManager()\nc.update('notebook',\n         {\"CodeCell\": {\"cm_config\": {\"autoCloseBrackets\": False}}})"
+    "text": "コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#行番号をデフォルトで表示する",
-    "href": "posts/2021-07-12-jupyter_settings.html#行番号をデフォルトで表示する",
-    "title": "jupyter settings",
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
+    "title": "Julia setup & settings",
     "section": "",
-    "text": "viewの項目から変更できる.\n\n注意 2019/12/2現在nbextensionとjupyterthemesを同時に使うと行番号の表示がおかしくなる."
+    "text": "using Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#見た目を変える",
-    "href": "posts/2021-07-12-jupyter_settings.html#見た目を変える",
-    "title": "jupyter settings",
+    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#package",
+    "href": "posts/2021-07-12-julia_setup_and_settings.html#package",
+    "title": "Julia setup & settings",
     "section": "",
-    "text": "pip install jupyterthemes\nhttps://github.com/dunovank/jupyter-themes\n現在のお気に入り\njt -t chesterish -f hack -fs 120 -ofs 100 -tfs 11 -nfs 115 -cellw 100% -T -N -kl\n\n注意 テーマを変えると=.jupyter/custom=が上書きされる."
+    "text": "packageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は\n# verんsたl 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#kernel一覧",
-    "href": "posts/2021-07-12-jupyter_settings.html#kernel一覧",
-    "title": "jupyter settings",
+    "objectID": "posts/2022-01-21-great_expextations.html",
+    "href": "posts/2022-01-21-great_expextations.html",
+    "title": "great expectationsの紹介",
     "section": "",
-    "text": "https://github.com/jupyter/jupyter/wiki/Jupyter-kernels"
+    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#shhでのjupyter利用法",
-    "href": "posts/2021-07-12-jupyter_settings.html#shhでのjupyter利用法",
-    "title": "jupyter settings",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "sshでリモート先へ接続しjupyterを起動する. その際ポートフォワードする:\nssh $user@$ip-address -L 8989:localhost:8888\njupyter notebook & \nこれでブラウザからlocalhost:8889とすればjupyterに繋がる. 8890:localhost:8888とするとmac側でブラウザに入力するときにlocalhost:8890となる. nohupでjupyterを立ち上げた場合はポートフォワーディングから再開できる. jupyter labを使いたい場合は\njupyter lab --no-browser\nで起動する."
+    "text": "About this blog"
   },
   {
-    "objectID": "posts/2021-07-12-jupyter_settings.html#ssh接続を切っても計算を続けさせる方法",
-    "href": "posts/2021-07-12-jupyter_settings.html#ssh接続を切っても計算を続けさせる方法",
-    "title": "jupyter settings",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "notebooks2",
     "section": "",
-    "text": "nohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
+    "text": "uvicorn vs gunicorn\n\n\n\n\n\n\n\nfastapi\n\n\n\n\nfastapiを使う際のuvicornとgunicornの違い\n\n\n\n\n\n\nDec 22, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\n\ndev ci/cd memo\n\n\n\n\nAPIのテストツール\n\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\n: AWS\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nmanimのメモ\n\n\n\n\n\n\n\nmemo manim\n\n\n\n\nmanim\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njulia memo\n\n\n\n\n\n\n\njulia\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\n\n(自分が)よく間違えるjuliaの構文をまとめる\n\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngolangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする\n\n\n\n\n\n\n\ngolang\n\n\n\n\nThe first post\n\n\n\n\n\n\nJul 4, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2021-07-12-ubuntu_memo.html",
@@ -301,102 +301,123 @@
     "text": "ログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "notebooks2",
+    "objectID": "posts/2021-07-12-jupyter_settings.html",
+    "href": "posts/2021-07-12-jupyter_settings.html",
+    "title": "jupyter settings",
     "section": "",
-    "text": "uvicorn vs gunicorn\n\n\n\n\n\n\n\nfastapi\n\n\n\n\nfastapiを使う際のuvicornとgunicornの違い\n\n\n\n\n\n\nDec 22, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\n\ndev ci/cd memo\n\n\n\n\nAPIのテストツール\n\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\n\ndev openapi\n\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\n\n: AWS\n\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\njupyter settings\n\n\n\n\n\n\n\nmemo jupyter\n\n\n\n\nJupyter settings for myself\n\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\n\ndocker\n\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nasdfのメモ\n\n\n\n\n\n\n\nmemo\n\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nmanimのメモ\n\n\n\n\n\n\n\nmemo manim\n\n\n\n\nmanim\n\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\n\npython\n\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\n\njupyter emacs\n\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\n\nmemo\n\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nUbuntu memo\n\n\n\n\n\n\n\nmemo ubuntu\n\n\n\n\nUbuntu memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\n\njulia\n\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nMac memo\n\n\n\n\n\n\n\nmemo mac\n\n\n\n\nMac memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\nDatabase memo\n\n\n\n\n\n\n\nmemo database\n\n\n\n\nA DB memo for myself\n\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n  \n\n\n\n\ngolangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする\n\n\n\n\n\n\n\ngolang\n\n\n\n\nThe first post\n\n\n\n\n\n\nJul 4, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\nNo matching items"
+    "text": "from notebook.services.config import ConfigManager\n\nc = ConfigManager()\nc.update('notebook',\n         {\"CodeCell\": {\"cm_config\": {\"autoCloseBrackets\": False}}})\n\n\n\nviewの項目から変更できる.\n\n注意 2019/12/2現在nbextensionとjupyterthemesを同時に使うと行番号の表示がおかしくなる.\n\n\n\n\npip install jupyterthemes\nhttps://github.com/dunovank/jupyter-themes\n現在のお気に入り\njt -t chesterish -f hack -fs 120 -ofs 100 -tfs 11 -nfs 115 -cellw 100% -T -N -kl\n\n注意 テーマを変えると=.jupyter/custom=が上書きされる.\n\n\n\n\nhttps://github.com/jupyter/jupyter/wiki/Jupyter-kernels\n\n\n\nsshでリモート先へ接続しjupyterを起動する. その際ポートフォワードする:\nssh $user@$ip-address -L 8989:localhost:8888\njupyter notebook & \nこれでブラウザからlocalhost:8889とすればjupyterに繋がる. 8890:localhost:8888とするとmac側でブラウザに入力するときにlocalhost:8890となる. nohupでjupyterを立ち上げた場合はポートフォワーディングから再開できる. jupyter labを使いたい場合は\njupyter lab --no-browser\nで起動する.\n\n\n\nnohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#括弧補完をオフにする",
+    "href": "posts/2021-07-12-jupyter_settings.html#括弧補完をオフにする",
+    "title": "jupyter settings",
     "section": "",
-    "text": "About this blog"
+    "text": "from notebook.services.config import ConfigManager\n\nc = ConfigManager()\nc.update('notebook',\n         {\"CodeCell\": {\"cm_config\": {\"autoCloseBrackets\": False}}})"
   },
   {
-    "objectID": "posts/2022-01-21-great_expextations.html",
-    "href": "posts/2022-01-21-great_expextations.html",
-    "title": "great expectationsの紹介",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#行番号をデフォルトで表示する",
+    "href": "posts/2021-07-12-jupyter_settings.html#行番号をデフォルトで表示する",
+    "title": "jupyter settings",
     "section": "",
-    "text": "はじめに\ngreatexpectationsはデータのvalidating, documenting, profilingのためのpythonライブラリ. pythonのライブラリなのでpythonのコードに組み込みやすいのでpythonユーザーにおすすめ. 又, shellコマンドも充実しているのでshell scriptで上記の処理を行いたい人にもおすすめ.\ngreat expectationsは大雑把に\n\ndata context (great expectations全体の設定)\ndata source (validation data用のディレクトリ)\nexpectation suite (validationの設定)\ncheckpoint (validationの実行とその結果の保存)\ndata docs (expectation suiteやcheckpointの結果の可視化)\n\nから構成されておりこれらがtutorialで概要が把握できる. なのでまずはをやるとよい."
+    "text": "viewの項目から変更できる.\n\n注意 2019/12/2現在nbextensionとjupyterthemesを同時に使うと行番号の表示がおかしくなる."
   },
   {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html",
-    "title": "Julia setup & settings",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#見た目を変える",
+    "href": "posts/2021-07-12-jupyter_settings.html#見た目を変える",
+    "title": "jupyter settings",
     "section": "",
-    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる\n\n\n\n\nコマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)\n\n\n\nusing Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")\n\n\n\npackageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は\n# verんsたl 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
+    "text": "pip install jupyterthemes\nhttps://github.com/dunovank/jupyter-themes\n現在のお気に入り\njt -t chesterish -f hack -fs 120 -ofs 100 -tfs 11 -nfs 115 -cellw 100% -T -N -kl\n\n注意 テーマを変えると=.jupyter/custom=が上書きされる."
   },
   {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#インストール",
-    "title": "Julia setup & settings",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#kernel一覧",
+    "href": "posts/2021-07-12-jupyter_settings.html#kernel一覧",
+    "title": "jupyter settings",
     "section": "",
-    "text": "公式からdmgをダウンロードする.\nbrewで入れる or version管理がしたかったらasdfで入れる"
+    "text": "https://github.com/jupyter/jupyter/wiki/Jupyter-kernels"
   },
   {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#コマンドライン",
-    "title": "Julia setup & settings",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#shhでのjupyter利用法",
+    "href": "posts/2021-07-12-jupyter_settings.html#shhでのjupyter利用法",
+    "title": "jupyter settings",
     "section": "",
-    "text": "コマンドラインで使えるようにするにはエイリアスを作成するかpathを通す. (何故かv1.3のpathが通っているがzshrcには書いていない… エイリアスでもシンボリックリンクでもないのでどういう設定にしたのか?)"
+    "text": "sshでリモート先へ接続しjupyterを起動する. その際ポートフォワードする:\nssh $user@$ip-address -L 8989:localhost:8888\njupyter notebook & \nこれでブラウザからlocalhost:8889とすればjupyterに繋がる. 8890:localhost:8888とするとmac側でブラウザに入力するときにlocalhost:8890となる. nohupでjupyterを立ち上げた場合はポートフォワーディングから再開できる. jupyter labを使いたい場合は\njupyter lab --no-browser\nで起動する."
   },
   {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#jupyter-jupyterで使うためにはjulia起動後",
-    "title": "Julia setup & settings",
+    "objectID": "posts/2021-07-12-jupyter_settings.html#ssh接続を切っても計算を続けさせる方法",
+    "href": "posts/2021-07-12-jupyter_settings.html#ssh接続を切っても計算を続けさせる方法",
+    "title": "jupyter settings",
     "section": "",
-    "text": "using Pkg\nPkg.add(\"IJulia\")\n何故かversion1.4では以下が必要だった.\nPkg.build(\"IJulia\")"
+    "text": "nohupを使う. 例えば\nnohup jupyter notebook --no-browser &\nで接続を切って再接続ができる.\n\n追記\n\njupyter notebook &\nでもOK.\nプロセスを終了するには\njupyter notebook list\nでportを調べる.\njupyter notebook stop\nで終了するか\nnetstat -tulpn\nでpidを確認し\nkill $pid\nでプロセスを終了.\nwolfram kernel等はプロセスとして生き残っている可能性がある.\n\n\nhttps://blog.amedama.jp/entry/jupyter-nb-ssh-port-forwardin https://gist.github.com/33eyes/e1da2d78979dc059433849c466ff5996"
   },
   {
-    "objectID": "posts/2021-07-12-julia_setup_and_settings.html#package",
-    "href": "posts/2021-07-12-julia_setup_and_settings.html#package",
-    "title": "Julia setup & settings",
+    "objectID": "posts/2021-07-12-mac_memo.html",
+    "href": "posts/2021-07-12-mac_memo.html",
+    "title": "Mac memo",
     "section": "",
-    "text": "packageをgithubから直接installしたい場合がある. 例えばMambaはPkgからインストールするとコケたので最新版をgithubからinstallしたい. githubからinstallする場合は\n# verんsたl 1.0\nPkg.clone(\"https://github.com/JuliaData/DataFramesMeta.jl\") \n# ver 1.4\nPkg.add(PackageSpec(url=\"https://github.com/JuliaDatabases/DBInterface.jl\"))\nなどとする. 念のためパッケージはテストする.\nPkg.test(\"Queryverse\")\n削除は\nPkg.rm(hoge)\nPkg.resolve()\n\n\n~/Library/Jupyter/kernels/julia-1.2/kernel.jsonのenvを編集する.\nref https://ki-chi.jp/?p=992"
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
   },
   {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html",
-    "href": "posts/2022-05-29-docker_from_scratch.html",
-    "title": "docker image from scratch",
+    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "title": "Mac memo",
     "section": "",
-    "text": "世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:\n\nDockerfile\n\n\nFROM python:3\nCOPY hello.py /\nCMD [\"python\", \"hello.py\"]\n\nhello.py\n\nprint(\"hello\")\ndocker build -t python-hello .\ndocker container run python-hello\nhello\nubuntu 18のimageが欲しければ\ndocker image pull ubuntu:18.04\nでimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.\n所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのがscratch imageだ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.\n\n\nドキュメント: ベース・イメージの作成"
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
   },
   {
-    "objectID": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "href": "posts/2022-05-29-docker_from_scratch.html#参考",
-    "title": "docker image from scratch",
+    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "title": "Mac memo",
     "section": "",
-    "text": "ドキュメント: ベース・イメージの作成"
+    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
   },
   {
-    "objectID": "posts/2022-01-11-org-jupyter.html",
-    "href": "posts/2022-01-11-org-jupyter.html",
-    "title": "use org-mode like jupyter",
+    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "title": "Mac memo",
     "section": "",
-    "text": "emacsからjupyterを使用する方法はいくつかありeinが有名である. ここではorg-modeをnotebookのように使う方法を紹介する. emacs-jupyterはorg-modeのcode blockをjupyterで評価可能にする.\n\n\ns=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\npythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])\n\n\n\norg-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
+    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
   },
   {
-    "objectID": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
-    "href": "posts/2022-01-11-org-jupyter.html#org-modeのcode-blockでpythonを使う一般的なやり方",
-    "title": "use org-mode like jupyter",
+    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "title": "Mac memo",
     "section": "",
-    "text": "s=1+1\nprint('Hello world!')\nファイルの先頭に\n\n\n\nと書いておけば以下のように書ける:\ns=1+1\nprint('Hello world!')\nただし標準入力(今の場合標準入力とは言わないかも)は使えない:\nname = input('Name: ')\nprint(f'Hello, {name}!')\nplotも使えない:\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
+    "text": "osxfuseを使う"
   },
   {
-    "objectID": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
-    "href": "posts/2022-01-11-org-jupyter.html#jupyter経由でpythonを使う",
-    "title": "use org-mode like jupyter",
+    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "title": "Mac memo",
     "section": "",
-    "text": "pythonと同様に先頭に\n\n\n\nを書いておく. pythonと違って入力ができるようになる.\nname = input('Name: ')\nprint(f'Hello, {name}!')\n画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)\nimport matplotlib.pyplot as plt\nfig, ax = plt.subplots()\nax.plot([1, 2, 3, 4], [1, 4, 2, 3])"
+    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
   },
   {
-    "objectID": "posts/2022-01-11-org-jupyter.html#juliaを使う",
-    "href": "posts/2022-01-11-org-jupyter.html#juliaを使う",
-    "title": "use org-mode like jupyter",
+    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "title": "Mac memo",
     "section": "",
-    "text": "org-modeiでjuliaを使うパッケージにはob-juliaがある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:\nusing Plots\nprintln(\"hello\")\nplot(sin)"
+    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_memo.html",
+    "href": "posts/2021-07-12-julia_memo.html",
+    "title": "julia memo",
+    "section": "",
+    "text": "Code\nversioninfo()\n\n\nJulia Version 1.6.1\nCommit 6aaedecc44 (2021-04-23 05:59 UTC)\nPlatform Info:\n  OS: macOS (x86_64-apple-darwin18.7.0)\n  CPU: Intel(R) Core(TM) i7-8557U CPU @ 1.70GHz\n  WORD_SIZE: 64\n  LIBM: libopenlibm\n  LLVM: libLLVM-11.0.1 (ORCJIT, skylake)\nEnvironment:\n  JULIA_NUM_THREADS = 8"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_memo.html#配列のfor文",
+    "href": "posts/2021-07-12-julia_memo.html#配列のfor文",
+    "title": "julia memo",
+    "section": "配列のfor文",
+    "text": "配列のfor文\n多次元配列と配列の配列を混同してfor文を間違えることがある. 適当な多次元配列\\(x\\)があるとする.\n\n\nCode\nx = rand(1:5, 10, 3)\n\n\n10×3 Matrix{Int64}:\n 2  1  3\n 1  1  5\n 5  1  1\n 4  1  2\n 3  5  5\n 5  4  3\n 4  4  4\n 5  4  2\n 1  5  5\n 3  5  2\n\n\nfor文で多次元配列を回そうとすると全ての要素を縦になめる:\n\n\nCode\nfor e in x\n    println(e)\nend\n\n\n2\n1\n5\n4\n3\n5\n4\n5\n1\n3\n1\n1\n1\n1\n5\n4\n4\n4\n5\n5\n3\n5\n1\n2\n5\n3\n4\n2\n5\n2\n\n\n行ごとに回したければeachrowを使う:\n\n\nCode\nfor row in eachrow(x)\n    println(row)\nend\n\n\n[2, 1, 3]\n[1, 1, 5]\n[5, 1, 1]\n[4, 1, 2]\n[3, 5, 5]\n[5, 4, 3]\n[4, 4, 4]\n[5, 4, 2]\n[1, 5, 5]\n[3, 5, 2]\n\n\n\n\nCode\nfor col in eachcol(x)\n    println(col)\nend\n\n\n[2, 1, 5, 4, 3, 5, 4, 5, 1, 3]\n[1, 1, 1, 1, 5, 4, 4, 4, 5, 5]\n[3, 5, 1, 2, 5, 3, 4, 2, 5, 2]"
+  },
+  {
+    "objectID": "posts/2021-07-12-julia_memo.html#listをつなげて文字列にして出力する場合はjoinの方が早い",
+    "href": "posts/2021-07-12-julia_memo.html#listをつなげて文字列にして出力する場合はjoinの方が早い",
+    "title": "julia memo",
+    "section": "listをつなげて文字列にして出力する場合はjoinの方が早い",
+    "text": "listをつなげて文字列にして出力する場合はjoinの方が早い\nと以前atcoderでハマったのでメモしようと思ったが試してみるとなぜかfor文ベタ書きが一番早い.\n\n\nCode\nl=rand(0:9,100);\n\n\n\n\nCode\n@time println(join(l))\n\n\n9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317\n  0.001320 seconds (228 allocations: 10.438 KiB)\n\n\n\n\nCode\ns=\"\"\nfor n in l\n    s*=string(n)\nend\n@time println(s)\n\n\n9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317\n  0.000147 seconds (21 allocations: 640 bytes)\n\n\n\n\nCode\nfunction j(l)\n println(join(l))\nend\n@time j(l)\n\n\n9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317\n  0.004714 seconds (1.05 k allocations: 59.887 KiB, 93.06% compilation time)\n\n\n\n\nCode\nfunction jj(l)\ns=\"\"\nfor n in l\n    s*=string(n)\nend\nprintln(s)\nend\n@time jj(l)\n\n\n9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317\n  0.012173 seconds (4.91 k allocations: 249.832 KiB, 96.46% compilation time)\n\n\n\n\n\n\n\nCode\n@time begin\ns=\"\"\nfor n in l\n    s*=string(n)\nend\n println(s)\nend\n\n\n9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317\n  0.000244 seconds (421 allocations: 20.469 KiB)"
   },
   {
     "objectID": "posts/security_of_cicd.html",
