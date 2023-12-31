@@ -6,10 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Norah Jones">
-<meta name="dcterms.date" content="2021-05-22">
+<meta name="author" content="Masaya Kameyama">
+<meta name="dcterms.date" content="2021-07-04">
+<meta name="description" content="The first post">
 
-<title>notebooks2 - Plots Demo</title>
+<title>notebooks2 - golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,8 +152,16 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Plots Demo</h1>
-                      </div>
+      <h1 class="title">golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする</h1>
+                  <div>
+        <div class="description">
+          The first post
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">golang</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -161,14 +170,14 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Norah Jones </p>
+               <p>Masaya Kameyama </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 22, 2021</p>
+        <p class="date">July 4, 2021</p>
       </div>
     </div>
     
@@ -181,46 +190,101 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Julia-demo.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="2021-07-04-upload_file_to_google_shared_drive.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-<div class="cell" data-execution_count="9">
+<p>google drive apiを使ってファイルをアップロードする方法は<a href="https://developers.google.com/drive/api/v3/quickstart/go">公式</a>の解説ではgolangのドキュメントが貧弱だ. golangからサービスアカウントで認証し, 共有ドライブ(shared drive)へファイルのアップロードを行おうとすると<a href="https://pkg.go.dev/google.golang.org/api#section-readme">Google APIs Client Library for Go</a>を解読する必要がある. quickstartではOAuth 2.0認証を使ってマイドライブ(mydrive)のファイル一覧を表示するサンプルがある. 少し検索するとOAuth 2.0認証やサービスアカウントでマイドライブへファイルをアップロードする方法が見つかるが, 共有ドライブへのアップロード方法は見つけることができなかったのでその方法を紹介する.</p>
+<section id="準備" class="level2">
+<h2 class="anchored" data-anchor-id="準備">準備</h2>
+<ol type="1">
+<li>shared driveにdirectoryを作成する(driveIdはhttps://drive.google.com/drive/folders/XXX のXXX部分)</li>
+<li>サービスアカウントを発行しcredential.jsonを保存する</li>
+<li>google driveの画面 &gt; メンバーを管理 でサービスアカウントを追加し投稿者権限を付与する</li>
+</ol>
+</section>
+<section id="サンプルコード" class="level2">
+<h2 class="anchored" data-anchor-id="サンプルコード">サンプルコード</h2>
+<p>以下のコードはsample.txtをshared driveへアップロードする. driveIdを上の説明を参考に書き換えた後sample.txt, credential.jsonを同じディレクトリに置いて実行する. shared driveへファイルをアップロードするには<code>SupportsAllDrives(true)</code>とする必要があり, ここに辿り着くまでに時間がかかり面倒だった.</p>
+<div class="cell" data-scrolled="true">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode go code-with-copy"><code class="sourceCode go"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> main</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="op">(</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"encoding/json"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"io/ioutil"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"log"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"net/http"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"os"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"google.golang.org/api/drive/v3"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"golang.org/x/oauth2"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"golang.org/x/oauth2/google"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"golang.org/x/oauth2/jwt"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">// ServiceAccount : Use Service account</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> ServiceAccount<span class="op">(</span>credentialFile <span class="dt">string</span><span class="op">)</span> <span class="op">*</span>http<span class="op">.</span>Client <span class="op">{</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    b<span class="op">,</span> err <span class="op">:=</span> ioutil<span class="op">.</span>ReadFile<span class="op">(</span>credentialFile<span class="op">)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> err <span class="op">!=</span> <span class="ot">nil</span> <span class="op">{</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        log<span class="op">.</span>Fatal<span class="op">(</span>err<span class="op">)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> c <span class="op">=</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        Email      <span class="dt">string</span> <span class="st">`json:"client_email"`</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        PrivateKey <span class="dt">string</span> <span class="st">`json:"private_key"`</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}{}</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    json<span class="op">.</span>Unmarshal<span class="op">(</span>b<span class="op">,</span> <span class="op">&amp;</span>c<span class="op">)</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    config <span class="op">:=</span> <span class="op">&amp;</span>jwt<span class="op">.</span>Config<span class="op">{</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        Email<span class="op">:</span>      c<span class="op">.</span>Email<span class="op">,</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        PrivateKey<span class="op">:</span> <span class="op">[]</span><span class="dt">byte</span><span class="op">(</span>c<span class="op">.</span>PrivateKey<span class="op">),</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        Scopes<span class="op">:</span> <span class="op">[]</span><span class="dt">string</span><span class="op">{</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>            drive<span class="op">.</span>DriveScope<span class="op">,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="op">},</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        TokenURL<span class="op">:</span> google<span class="op">.</span>JWTTokenURL<span class="op">,</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    client <span class="op">:=</span> config<span class="op">.</span>Client<span class="op">(</span>oauth2<span class="op">.</span>NoContext<span class="op">)</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> client</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    filePath <span class="op">:=</span> <span class="st">"sample.txt"</span>     <span class="co">// file path </span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    driveId <span class="op">:=</span> <span class="st">"XXX"</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="co">//use survice account</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    client <span class="op">:=</span> ServiceAccount<span class="op">(</span><span class="st">"credential.json"</span><span class="op">)</span> <span class="co">// Please set the json file of Service account.</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    srv<span class="op">,</span> err <span class="op">:=</span> drive<span class="op">.</span>New<span class="op">(</span>client<span class="op">)</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> err <span class="op">!=</span> <span class="ot">nil</span> <span class="op">{</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        log<span class="op">.</span>Fatalf<span class="op">(</span><span class="st">"Unable to retrieve drive Client %v"</span><span class="op">,</span> err<span class="op">)</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    uploadFile<span class="op">,</span> err <span class="op">:=</span> os<span class="op">.</span>Open<span class="op">(</span>filePath<span class="op">)</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> err <span class="op">!=</span> <span class="ot">nil</span> <span class="op">{</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        log<span class="op">.</span>Fatalf<span class="op">(</span><span class="st">"Cannot find such file %v"</span><span class="op">,</span> err<span class="op">)</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    folderIdList <span class="op">:=</span> <span class="op">[]</span> <span class="dt">string</span><span class="op">{</span>driveId<span class="op">}</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    f <span class="op">:=</span> <span class="op">&amp;</span>drive<span class="op">.</span>File<span class="op">{</span>Name<span class="op">:</span> filePath<span class="op">,</span> Parents<span class="op">:</span> folderIdList<span class="op">}</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    _<span class="op">,</span> err <span class="op">=</span> srv<span class="op">.</span>Files<span class="op">.</span>Create<span class="op">(</span>f<span class="op">).</span>SupportsAllDrives<span class="op">(</span><span class="ot">true</span><span class="op">).</span>Media<span class="op">(</span>uploadFile<span class="op">).</span>Do<span class="op">()</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> err <span class="op">!=</span> <span class="ot">nil</span> <span class="op">{</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        log<span class="op">.</span>Fatalf<span class="op">(</span><span class="st">"Upload Failed %v"</span><span class="op">,</span> err<span class="op">)</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</div>
-<div class="cell" data-execution_count="12">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Plots.<span class="fu">gr</span>(fmt <span class="op">=</span> <span class="op">:</span>png)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sin, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>     <span class="fu">x-&gt;sin</span>(<span class="fl">2</span>x), </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>     <span class="fl">0</span>, </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     <span class="fl">2</span>π, </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>     leg<span class="op">=</span><span class="cn">false</span>, </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>     fill<span class="op">=</span>(<span class="fl">0</span>,<span class="op">:</span>lavender))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<p><img src="Julia-demo_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="6">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Plots._current_plots_version</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>v"1.27.0"</code></pre>
-</div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

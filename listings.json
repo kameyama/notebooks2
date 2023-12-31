@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/computations.html",
       "/posts/fastapi.html",
       "/posts/stepci.html",
       "/posts/security_of_cicd.html",
@@ -18,7 +17,7 @@
       "/posts/2021-07-12-julia_setup_and_settings.html",
       "/posts/2021-07-12-mac_memo.html",
       "/posts/2021-07-12-database_memo.html",
-      "/posts/Julia-demo.html"
+      "/posts/2021-07-04-upload_file_to_google_shared_drive.html"
     ]
   }
 ]
