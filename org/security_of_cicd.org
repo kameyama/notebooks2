@@ -1,7 +1,7 @@
 #+TITLE: OpenAPIとSchemathesisの紹介
 #+description: OpenAPIに従ってrest apiへリクエストを投げるパッケージ
 #+date: 2023-05-21
-#+categories: dev openapi
+#+categories: dev, openapi
 
 * Introduction
 

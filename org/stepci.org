@@ -1,7 +1,7 @@
 #+TITLE: stepciのworkflow.yamlの上手かもしれない書き方
 #+description: APIのテストツール
 #+date: 2023-06-05
-#+categories: dev ci/cd memo
+#+categories: dev, ci/cd, memo
 
 * Introduction
 

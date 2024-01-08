@@ -1,7 +1,7 @@
 #+TITLE: Database memo
 #+description: A DB memo for myself
 #+date: 2021-07-12
-#+categories: memo database
+#+categories: memo, database
 
 
 #+PROPERTY: header-args:python :results output

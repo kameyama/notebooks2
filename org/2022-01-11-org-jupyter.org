@@ -1,7 +1,7 @@
 #+TITLE: use org-mode like jupyter
 #+description: org-modeをjupyterのように使う方法
 #+date: 2022-01-11
-#+categories: jupyter emacs
+#+categories: jupyter, emacs
 
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:jupyter-python :session py

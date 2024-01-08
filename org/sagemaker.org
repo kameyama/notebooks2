@@ -1,14 +1,14 @@
 #+TITLE: Amazon Sagemakerの感想
 #+description: 1週間くらい調査してみた感想
 #+date: 2023-05-08
-#+categories:: AWS
+#+categories: GCP, AWS
+
 
 * Introduction
-
 [[https://aws.amazon.com/jp/sagemaker/][Sagemaker]]とはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する. 
  
 
-* Sagemekerの勝手な概要説明
+* Sagemekerの勝手な概要説明                                           
 
 AWSあるあるだが[[https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html][Sagemekerの概要]]はintorodictionに載せたリンクよりdevelopper guideの方が良い +それでもわかりづらい+. AWSはクラウドサービスを提供しているのでSagemekerもその例に漏れずクラウドサービスであり, 一言で言えばフルマネージド機械学習開発向けクラウドサービスとでも言うべきものだ. クラウドサービスの特徴はやはり自分のコンピュータ以外のリソースを利用できるという点にありSagemekerもそのコンセプトでできている.
 

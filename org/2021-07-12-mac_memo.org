@@ -1,7 +1,7 @@
 #+TITLE: Mac memo
 #+description: Mac memo for myself
 #+date: 2021-07-12
-#+categories: memo mac
+#+categories: memo, mac
 
 #+PROPERTY: header-args:jupyter+ :async yes
 
