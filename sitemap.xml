@@ -2,86 +2,86 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-03-10-manim.html</loc>
-    <lastmod>2024-01-08T19:14:11.180Z</lastmod>
+    <lastmod>2024-01-08T19:23:33.544Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-04-upload_file_to_google_shared_drive.html</loc>
-    <lastmod>2024-01-08T19:14:10.496Z</lastmod>
+    <lastmod>2024-01-08T19:23:32.860Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-database_memo.html</loc>
-    <lastmod>2024-01-08T19:14:05.932Z</lastmod>
+    <lastmod>2024-01-08T19:23:28.172Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-03-10-asdf.html</loc>
-    <lastmod>2024-01-08T19:14:05.176Z</lastmod>
+    <lastmod>2024-01-08T19:23:27.408Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/security_of_cicd.html</loc>
-    <lastmod>2024-01-08T19:14:00.308Z</lastmod>
+    <lastmod>2024-01-08T19:23:22.412Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-julia_memo.html</loc>
-    <lastmod>2024-01-08T19:13:59.620Z</lastmod>
+    <lastmod>2024-01-08T19:23:21.699Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-mac_memo.html</loc>
-    <lastmod>2024-01-08T19:13:54.148Z</lastmod>
+    <lastmod>2024-01-08T19:23:16.155Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-jupyter_settings.html</loc>
-    <lastmod>2024-01-08T19:13:53.224Z</lastmod>
+    <lastmod>2024-01-08T19:23:15.219Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-14-examples_to_connect_dbs_in_julia.html</loc>
-    <lastmod>2024-01-08T19:13:52.500Z</lastmod>
+    <lastmod>2024-01-08T19:23:14.463Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-21-great_expextations.html</loc>
-    <lastmod>2024-01-08T19:13:47.748Z</lastmod>
+    <lastmod>2024-01-08T19:23:09.699Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/about.html</loc>
-    <lastmod>2024-01-08T19:13:45.692Z</lastmod>
+    <lastmod>2024-01-08T19:23:07.671Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/index.html</loc>
-    <lastmod>2024-01-08T19:13:47.464Z</lastmod>
+    <lastmod>2024-01-08T19:23:09.451Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-ubuntu_memo.html</loc>
-    <lastmod>2024-01-08T19:13:48.292Z</lastmod>
+    <lastmod>2024-01-08T19:23:10.243Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-12-julia_setup_and_settings.html</loc>
-    <lastmod>2024-01-08T19:13:52.788Z</lastmod>
+    <lastmod>2024-01-08T19:23:14.731Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-05-29-docker_from_scratch.html</loc>
-    <lastmod>2024-01-08T19:13:53.684Z</lastmod>
+    <lastmod>2024-01-08T19:23:15.691Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-11-org-jupyter.html</loc>
-    <lastmod>2024-01-08T19:13:54.600Z</lastmod>
+    <lastmod>2024-01-08T19:23:16.619Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2022-01-10-post_org_files_via_fastpages.html</loc>
-    <lastmod>2024-01-08T19:13:59.872Z</lastmod>
+    <lastmod>2024-01-08T19:23:21.964Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/2021-07-29-examples_to_connect_dbs_in_python.html</loc>
-    <lastmod>2024-01-08T19:14:04.728Z</lastmod>
+    <lastmod>2024-01-08T19:23:26.960Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/stepci.html</loc>
-    <lastmod>2024-01-08T19:14:05.456Z</lastmod>
+    <lastmod>2024-01-08T19:23:27.704Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/fastapi.html</loc>
-    <lastmod>2024-01-08T19:14:06.472Z</lastmod>
+    <lastmod>2024-01-08T19:23:28.704Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/kameyama/notebooks2/posts/sagemaker.html</loc>
-    <lastmod>2024-01-08T19:14:10.752Z</lastmod>
+    <lastmod>2024-01-08T19:23:33.116Z</lastmod>
   </url>
 </urlset>
