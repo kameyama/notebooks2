@@ -165,7 +165,8 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">jupyter, emacs</div>
+                <div class="quarto-category">jupyter</div>
+                <div class="quarto-category">emacs</div>
               </div>
                   </div>
   </div>
@@ -230,19 +231,19 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 </div>
 <p>を書いておく. pythonと違って入力ができるようになる.</p>
-<pre class="jupyter-python"><code>name = input('Name: ')
-print(f'Hello, {name}!')</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> <span class="bu">input</span>(<span class="st">'Name: '</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Hello, </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">!'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>画像も見れるようになる. (M-x org-toggle-inline-images(C-c C-x C-v)でインライン表示できる.)</p>
-<pre class="jupyter-python"><code>import matplotlib.pyplot as plt
-fig, ax = plt.subplots()
-ax.plot([1, 2, 3, 4], [1, 4, 2, 3])</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="juliaを使う" class="level2">
 <h2 class="anchored" data-anchor-id="juliaを使う">juliaを使う</h2>
 <p>org-modeiでjuliaを使うパッケージには<a href="https://github.com/gjkerns/ob-julia/blob/master/ob-julia-doc.org">ob-julia</a>がある. ob-juliaは長年メンテナンスされていないので代わりにemacs-jupyterを使う方が良いだろう. emacs-jupyterはメンテナンスされている:</p>
-<pre class="jupyter-julia"><code>using Plots
-println("hello")
-plot(sin)</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode julia code code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"hello"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
