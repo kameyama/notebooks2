@@ -25,7 +25,7 @@ jobs:
           sudo apt update
           sudo apt install -y pandoc
           ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown org/XXX.org -o posts/XXX.qmd --lua-filter ./convert_categories_in_org_metadata.lua
-          cat post/stepci.qmd
+          cat posts/stepci.qmd
               
       # To publish to Netlify, RStudio Connect, or GitHub Pages, uncomment
       # the appropriate block below
