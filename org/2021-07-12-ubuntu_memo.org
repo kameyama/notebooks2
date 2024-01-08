@@ -1,7 +1,7 @@
 #+TITLE: Ubuntu memo
 #+description: Ubuntu memo for myself
 #+date: 2021-07-12
-#+categories: memo ubuntu
+#+categories: memo, ubuntu
 
 * Ubuntu 18.04
 

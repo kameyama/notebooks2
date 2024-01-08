@@ -1,7 +1,7 @@
 #+TITLE: manimのメモ
 #+description: manim
 #+date: 2022-03-10
-#+categories: memo manim
+#+categories: memo, manim
 
 #+PROPERTY: header-args:python :results output
 #+PROPERTY: header-args:jupyter :session hello
