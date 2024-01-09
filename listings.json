@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/quarto_with_org_mode.html",
       "/posts/fastapi.html",
       "/posts/stepci.html",
       "/posts/security_of_cicd.html",
