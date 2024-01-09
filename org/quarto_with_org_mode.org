@@ -1,0 +1,109 @@
+#+TITLE: org-modeをquartoで扱う方法
+#+description: pandocのfilterを使ってqmdのmetadataに変換する
+#+date: 2024-01-09
+#+categories: ci/cd, memo, quarto, emacs
+
+* Introduction
+
+このブログは[[https://quarto.org][Quarto]]を利用して作成している. 以前は[[https://github.com/fastai/fastpages][Fastpages]]を利用していたがdeprecateされてしまった. Fastpagesの作者もQuartoを推奨していたので乗り換えることにした.
+どちらもmarkdownやjupyter notebookで記事を作成するといい感じでブログを作成してくれる. github pagesを利用すれば無料かつ簡単にこのブログのようなページが作成できる.
+特に気に入っている点はjupyterのnotebookがそのまま記事が作成できる所でコードを動かしながら文章を作成できるのはとても便利だ.
+一方でコードを動かさない場合はmarkdownで記事を書くのがquartoの標準なのだが僕はemacsのorg-modeで文章を作成している.
+org-modeはとてもリッチな機能を沢山備えているので使いこなしていればjupyterのように使うこともできる(僕はemacsと同様に使いこなしているとは言えないレベルだがそれでも使っている).
+Fastpagesでブログを作成していたときも[[https://kameyama.github.io/notebooks2/posts/2022-01-10-post_org_files_via_fastpages.html][fastpagesをちょっと改造してorg-modeを扱えるようにした]]のだがquartoでもorg-modeを扱えるように少し改造して利用している.
+今回はその方法を紹介する.
+
+* Strategy
+
+org-modeを使わずにquarto + github pagesでブログを作る場合は[[https://quarto.org/docs/publishing/github-pages.html][公式のドキュメント]]を参照すれば簡単に作成できるだろう. このブログのソースコードは[[https://github.com/kameyama/notebooks2][ここ]]で確認できる. 
+今回紹介するorg-modeをquartoのシステムに組み込む戦略はorg-modeで作成した文章をpandocを使ってqmdに変換するというだけだ.
+ここでqmdはquarto用のmarkdownの方言, pandocを利用した理由はquartoが裏でpandocを利用しているためだ.
+[[https://pandoc.org/org.html][pandocはorg-modeをmarkdownに変換してくれる]]のでgithub actionsの最初の方でorg-modeのfileをqmdに変換する処理を追加すれば良い. 
+ただしmetadataに注意が必要だ. quartoでは文章のmetadataにcategoriesという項目を設定できる. categoriesを設定しておけばブログのトップページで記事をフィルタリングが可能となる.
+しかしorg-modeでmetadataにcategoriesを設定してもpandocのorg-modeではそれをmetadataをして扱ってくれない(author, dateなどは扱ってくれる).
+具体的にはorg-modeでは文頭で
+#+begin_src
+#+TITLE: org-modeをquartoで扱う方法
+#+description: 調査中
+#+date: 2024-01-09
+#+categories: ci/cd, memo, quarto, emacs
+#+end_src
+のようにmetadataを設定するが, これをpandocで変換(`pandoc -s -f org -t this_file.org`)すると
+#+begin_src
+---
+date: 2024-01-09
+description: 調査中
+title: org-modeをquartoで扱う方法
+---
+
+```{=org}
+#+categories: ci/cd, memo, quarto, emacs
+```
+#+end_src
+のようになってしまう. これをなんとかして
+#+begin_src
+---
+date: 2024-01-09
+description: 調査中
+title: org-modeをquartoで扱う方法
+categories:
+- ci/cd
+- memo
+- quarto
+- emacs
+---
+#+end_src
+となるようにしたい.
+
+* やり方
+
+上記の目的を達成するために今回[[https://pandoc.org/filters.html][pandocのfilter機能]]を利用することにした. pandocは内部で入力となるファイルを解析して抽象木構文を作成してから出力となるファイル形式へ変換するという動作をしているようで自前でfilterを用意すれば抽象木構文を操作できる.
+filterは様々な言語を利用できるようになっているが[[https://pandoc.org/org.html#directives-as-metadata][pandocのドキュメントにlua言語で書かれたfilter]]がほとんど欲しいものだったので次のように改造した:
+#+begin_src
+-- intermediate store for variables and their values
+local variables = {}
+
+--- Function called for each raw block element.
+function RawBlock (raw)
+  -- Don't do anything unless the block contains *org* markup.
+  if raw.format ~= 'org' then return nil end
+
+  -- extract variable name and value
+  local name, value = raw.text:match '#%+(%w+):%s*(.+)$'
+  if name and value then
+    variables[name] = value
+    return {}
+  end
+end
+
+-- Add the extracted variables to the document's metadata.
+function Meta (meta)
+  for name, value in pairs(variables) do
+    str = value:gsub("%[", ""):gsub("%]", "")
+    local list = {}
+    for v in str:gmatch("[^, ]+") do
+        table.insert(list, v)
+    end
+    meta[name] = list
+  end
+  return meta
+end
+#+end_src
+
+これをfilterに指定すると上記のmetadataが生成される.
+最終的には[[https://github.com/kameyama/notebooks2/blob/ff9b6b25501119840dd39be295c241167fbcfd48/.github/workflows/quarto-publish.yml#L23][github actionsに次のstepを追加]]してorg-modeのファイルをqmdに変換することにした:
+#+begin_src
+      - name: Convert org to markdown via Pandoc
+        run: |
+          sudo apt update
+          sudo apt install -y wget
+          wget https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb
+          sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb
+          ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown org/XXX.org -o posts/XXX.qmd --lua-filter ./convert_categories_in_org_metadata.lua
+
+#+end_src
+
+ここでちょっとした罠があってapt installでpandocをinstallすると古いライブラリが入ってしまう. なので直接最新版をインストールした. 
+
+
+

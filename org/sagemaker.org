@@ -1,7 +1,7 @@
 #+TITLE: Amazon Sagemakerの感想
 #+description: 1週間くらい調査してみた感想
 #+date: 2023-05-08
-#+categories: GCP, AWS
+#+categories: gcp, aws
 
 
 * Introduction
