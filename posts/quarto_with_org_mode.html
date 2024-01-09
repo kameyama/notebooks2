@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Masaya Kameyama">
-<meta name="dcterms.date" content="2023-05-08">
-<meta name="description" content="1週間くらい調査してみた感想">
+<meta name="dcterms.date" content="2024-01-09">
+<meta name="description" content="pandocのfilterを使ってqmdのmetadataに変換する">
 
-<title>notebooks2 - Amazon Sagemakerの感想</title>
+<title>notebooks2 - org-modeをquartoで扱う方法</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -74,11 +74,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="notebooks2 - Amazon Sagemakerの感想">
-<meta property="og:description" content="1週間くらい調査してみた感想">
+<meta property="og:title" content="notebooks2 - org-modeをquartoで扱う方法">
+<meta property="og:description" content="pandocのfilterを使ってqmdのmetadataに変換する">
 <meta property="og:site-name" content="notebooks2">
-<meta name="twitter:title" content="notebooks2 - Amazon Sagemakerの感想">
-<meta name="twitter:description" content="1週間くらい調査してみた感想">
+<meta name="twitter:title" content="notebooks2 - org-modeをquartoで扱う方法">
+<meta name="twitter:description" content="pandocのfilterを使ってqmdのmetadataに変換する">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -124,15 +124,17 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Amazon Sagemakerの感想</h1>
+      <h1 class="title">org-modeをquartoで扱う方法</h1>
                   <div>
         <div class="description">
-          1週間くらい調査してみた感想
+          pandocのfilterを使ってqmdのmetadataに変換する
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">gcp</div>
-                <div class="quarto-category">aws</div>
+                <div class="quarto-category">ci/cd</div>
+                <div class="quarto-category">memo</div>
+                <div class="quarto-category">quarto</div>
+                <div class="quarto-category">emacs</div>
               </div>
                   </div>
   </div>
@@ -150,7 +152,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 8, 2023</p>
+        <p class="date">January 9, 2024</p>
       </div>
     </div>
     
@@ -170,44 +172,82 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p><a href="https://aws.amazon.com/jp/sagemaker/">Sagemaker</a>とはAWSのクラウドサービスの1つで機械学習の機能を多数備えている. 今回仕事の都合でSagemakerの調査を行ったのでその感想を書く. Sagemeker自体は良く考えられた微妙なサービスだという感想を持った. 悪いサービスではなく良く考えられたサービスで感心したのだがそのコンセプトがわかりづらく利用者にも刺さりづらそうであったので勝手な視点で紹介してみる. どんなサービスであるかの説明と個人, チームとしての利用者の視点で解説する.</p>
+<p>このブログは<a href="https://quarto.org">Quarto</a>を利用して作成している. 以前は<a href="https://github.com/fastai/fastpages">Fastpages</a>を利用していたがdeprecateされてしまった. Fastpagesの作者もQuartoを推奨していたので乗り換えることにした. どちらもmarkdownやjupyter notebookで記事を作成するといい感じでブログを作成してくれる. github pagesを利用すれば無料かつ簡単にこのブログのようなページが作成できる. 特に気に入っている点はjupyterのnotebookがそのまま記事が作成できる所でコードを動かしながら文章を作成できるのはとても便利だ. 一方でコードを動かさない場合はmarkdownで記事を書くのがquartoの標準なのだが僕はemacsのorg-modeで文章を作成している. org-modeはとてもリッチな機能を沢山備えているので使いこなしていればjupyterのように使うこともできる(僕はemacsと同様に使いこなしているとは言えないレベルだがそれでも使っている). Fastpagesでブログを作成していたときも<a href="https://kameyama.github.io/notebooks2/posts/2022-01-10-post_org_files_via_fastpages.html">fastpagesをちょっと改造してorg-modeを扱えるようにした</a>のだがquartoでもorg-modeを扱えるように少し改造して利用している. 今回はその方法を紹介する.</p>
 </section>
-<section id="sagemekerの勝手な概要説明" class="level1">
-<h1>Sagemekerの勝手な概要説明</h1>
-<p>AWSあるあるだが<a href="https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html">Sagemekerの概要</a>はintorodictionに載せたリンクよりdevelopper guideの方が良い <del>それでもわかりづらい</del>. AWSはクラウドサービスを提供しているのでSagemekerもその例に漏れずクラウドサービスであり, 一言で言えばフルマネージド機械学習開発向けクラウドサービスとでも言うべきものだ. クラウドサービスの特徴はやはり自分のコンピュータ以外のリソースを利用できるという点にありSagemekerもそのコンセプトでできている.</p>
-<section id="jupyter" class="level2">
-<h2 class="anchored" data-anchor-id="jupyter">jupyter</h2>
-<p>僕はSagemakerはjupyterを中心に機能提供するサービスであるという印象を持っていたがこれはひどい誤解であった. その機能のひとつとしてクラウド上にjupyterを立ち上げて利用することができるが全体からみるとこの機能はおまけみたいなものだ. 例えばjupyterの例ではスペックの良いマシンを利用して試行錯誤したい場合に高価なマシンを自前で用意するより時間あたりで借りる方が合理的である. notebookは共通で後ろのインスタンス(マシン)をその都度変更するという機能も備えているので自前でEC2インスタンスを立ち上げてjupyterを利用する場合より便利に利用できる. jupyterを利用している場合, 個人でもチームでもマシンのスペックや台数を柔軟に変更したい場合はこのサービスは便利だろう.</p>
-</section>
-<section id="学習" class="level2">
-<h2 class="anchored" data-anchor-id="学習">学習</h2>
-<p>jupyter機能は機械学習のモデル開発者や開発チームにとっては便利だが学習の際に微妙な点がある. notebookは立ち上げ時間で料金がかかるのでちょっと学習して試行錯誤する分には便利だが長時間の学習では学習が終了した場合にはモデルをどこかに保存してjupyterを停止したい. こんな場合にはモデルの保存処理を書いたり, 学習が終了したら通知したり等いろんな工夫でなんとかできるが工夫が必要な時点でやはりどこかおかしいし面倒だ. 学習では学習時間だけクラウドを利用してモデルの管理もクラウドで面倒を見てくれた方が楽でSagemakerにはその機能がある. <a href="https://docs.aws.amazon.com/sagemaker/latest/dg/gs-console.html">チュートリアル</a>はsagemakerのnotebookを利用しつつ学習はsagemaker上で更に別建てのインスタンスで学習しているので非常にわかりづらいがnotebookでは学習は行っていない. この際にはpythonのsagemakerライブラリを利用しているのでnotebook上で素直に学習する場合と勝手が違うのはそのためだ.</p>
-</section>
-<section id="デプロイ" class="level2">
-<h2 class="anchored" data-anchor-id="デプロイ">デプロイ</h2>
-<p>仕事で機械学習のモデル開発を行っている場合最終的にはユーザーにそのモデルを利用してもらう必要がある. もちろんその提供方法には無限のやり方がある. 個人レベルではnotebookやコードをgithub公開するというやり方でも良いかもしれないがチームやプロジェクトで最終的にサービスとして提供する場合はモデルをどこかのコンピュータ上に載せて利用可能なサービスとして公開すると言う形になるだろう. 例えばREST APIとしてサービスを提供する場合, 物によるが, 機械学習は軽量なサービスにならない場合がほとんどなのでインフラのスケールなども考慮する必要があり自前で行うにはハードルが高い. SageMakerはこの辺りも考えられていて推論エンドポイントを公開する機能がある.</p>
-</section>
-<section id="mlops" class="level2">
-<h2 class="anchored" data-anchor-id="mlops">MLOps</h2>
-<p>この辺りの事情が今回僕がSagemakerを調査した理由でもある. 僕は博死して以来機械学習エンジニア→データサイエンティスト→MLOpsエンジニア(現在)という変遷で仕事をしているが所謂モデル開発者の時には僕自身にサービスをREST APIとして公開する能力はなかったし自分の経験した範囲ではモデル開発者でクラウド上にサービスを公開までできる人はいなかった. 今はモデルの開発をせずサービスの提供業務を仕事としているがやはりこれらは別の専門領域でありプロジェクトの体制としても人やチームが専門別に別れがちである. 事実現在のプロジェクトではデータサイエンティストとエンジニアのチームが会社レベルで別れている. 組織が別れていると所謂コンウェイの法則に関連する組織間のコミュニケーションのマネジメントやエンジアリングの課題に直面する. 現職のケースでは僕が参加した当時はデータサイエンティストが機械学習モデルを開発しコードをgitlabに, モデルをS3に置く. そしてその後エンジニアがREST APIに整形して公開するという体制であった. この場合データサイエンティストのモデル開発期間に加えて開発したモデルの変更に追随するREST APIの変更を行う必要があり開発期間が伸びるという課題があった. モデルが変更されるとドキュメントやテスト, インフラ, 仕様など様々な理由でデータサイエンティストとエンジニア間でコミュニケーションが発生する. このコミュニケーションを楽にするという目的のための候補がSagemakerというわけである. Sagemakerは<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-why.html">MLOps</a>や<a href="https://docs.aws.amazon.com/ja_jp/sagemaker/latest/dg/sagemaker-projects-whatis.html">プロジェクト</a>で説明にされるように機械学習サービスのMLOpsの哲学がクラウドサービスという形で提供されているのだ. この視点でSagemakerを見てみるとAWSがMLOpsを良く考えた上で機械学習クラウドサービスを提供しているのが伝わるのだが, 恐らくこの目玉であるこの哲学がなかなかわかりづらいのが微妙な所だ. データサイエンティストからみると(少なくとも僕の当初の理解では)サイエンス上の魅力的な機能はほとんど無いのも微妙に見えてしまう. この意味でsagemakerは良く考えられた微妙なサービスというわけである.</p>
-</section>
-</section>
-<section id="sagemakerが便利そうなケース" class="level1">
-<h1>Sagemakerが便利そうなケース</h1>
-<p>最後にどういう場合にsagemakerが便利そうかを個人的な視点で書いてみようと思う.</p>
-<section id="個人利用" class="level3">
-<h3 class="anchored" data-anchor-id="個人利用">個人利用</h3>
-<p>一時的にパワーのいるマシンを使いたい場合はとても便利だろう. 個人で機械学習サービスを作りたい場合もAPIを作る部分まではSagemakerに乗っかると楽だと思う.</p>
-</section>
-<section id="チーム利用" class="level3">
-<h3 class="anchored" data-anchor-id="チーム利用">チーム利用</h3>
-<ol type="1">
-<li>組織に十分な資金が無い場合開発環境としてSagemakerは良い選択かもしれない.</li>
-<li>現在開発体制にMLOps的課題がある場合Sagemakerが提案するMLOpsに従ってみるのは良い試みだと思う.</li>
-</ol>
+<section id="strategy" class="level1">
+<h1>Strategy</h1>
+<p>org-modeを使わずにquarto + github pagesでブログを作る場合は<a href="https://quarto.org/docs/publishing/github-pages.html">公式のドキュメント</a>を参照すれば簡単に作成できるだろう. このブログのソースコードは<a href="https://github.com/kameyama/notebooks2">ここ</a>で確認できる. 今回紹介するorg-modeをquartoのシステムに組み込む戦略はorg-modeで作成した文章をpandocを使ってqmdに変換するというだけだ. ここでqmdはquarto用のmarkdownの方言, pandocを利用した理由はquartoが裏でpandocを利用しているためだ. <a href="https://pandoc.org/org.html">pandocはorg-modeをmarkdownに変換してくれる</a>のでgithub actionsの最初の方でorg-modeのfileをqmdに変換する処理を追加すれば良い. ただしmetadataに注意が必要だ. quartoでは文章のmetadataにcategoriesという項目を設定できる. categoriesを設定しておけばブログのトップページで記事をフィルタリングが可能となる. しかしorg-modeでmetadataにcategoriesを設定してもpandocのorg-modeではそれをmetadataをして扱ってくれない(author, dateなどは扱ってくれる). 具体的にはorg-modeでは文頭で</p>
+<pre><code>#+TITLE: org-modeをquartoで扱う方法
+#+description: 調査中
+#+date: 2024-01-09
+#+categories: ci/cd, memo, quarto, emacs</code></pre>
+<p>のようにmetadataを設定するが, これをpandocで変換(`pandoc -s -f org -t this<sub>file</sub>.org`)すると</p>
+<pre><code>---
+date: 2024-01-09
+description: 調査中
+title: org-modeをquartoで扱う方法
+---
 
 
+
+```{=org}
+#+categories: ci/cd, memo, quarto, emacs
+```</code></pre>
+<p>のようになってしまう. これをなんとかして</p>
+<pre><code>---
+date: 2024-01-09
+description: 調査中
+title: org-modeをquartoで扱う方法
+categories:
+- ci/cd
+- memo
+- quarto
+- emacs
+---</code></pre>
+<p>となるようにしたい.</p>
 </section>
+<section id="やり方" class="level1">
+<h1>やり方</h1>
+<p>上記の目的を達成するために今回<a href="https://pandoc.org/filters.html">pandocのfilter機能</a>を利用することにした. pandocは内部で入力となるファイルを解析して抽象木構文を作成してから出力となるファイル形式へ変換するという動作をしているようで自前でfilterを用意すれば抽象木構文を操作できる. filterは様々な言語を利用できるようになっているが<a href="https://pandoc.org/org.html#directives-as-metadata">pandocのドキュメントにlua言語で書かれたfilter</a>がほとんど欲しいものだったので次のように改造した:</p>
+<pre><code>-- intermediate store for variables and their values
+local variables = {}
+
+--- Function called for each raw block element.
+function RawBlock (raw)
+  -- Don't do anything unless the block contains *org* markup.
+  if raw.format ~= 'org' then return nil end
+
+  -- extract variable name and value
+  local name, value = raw.text:match '#%+(%w+):%s*(.+)$'
+  if name and value then
+    variables[name] = value
+    return {}
+  end
+end
+
+-- Add the extracted variables to the document's metadata.
+function Meta (meta)
+  for name, value in pairs(variables) do
+    str = value:gsub("%[", ""):gsub("%]", "")
+    local list = {}
+    for v in str:gmatch("[^, ]+") do
+        table.insert(list, v)
+    end
+    meta[name] = list
+  end
+  return meta
+end</code></pre>
+<p>これをfilterに指定すると上記のmetadataが生成される. 最終的には<a href="https://github.com/kameyama/notebooks2/blob/ff9b6b25501119840dd39be295c241167fbcfd48/.github/workflows/quarto-publish.yml#L23">github actionsに次のstepを追加</a>してorg-modeのファイルをqmdに変換することにした:</p>
+<pre><code>- name: Convert org to markdown via Pandoc
+  run: |
+    sudo apt update
+    sudo apt install -y wget
+    wget https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb
+    sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb
+    ls org | sed 's/\..*//' | xargs -IXXX pandoc --standalone -f org -t markdown org/XXX.org -o posts/XXX.qmd --lua-filter ./convert_categories_in_org_metadata.lua</code></pre>
+<p>ここでちょっとした罠があってapt installでpandocをinstallすると古いライブラリが入ってしまう. なので直接最新版をインストールした.</p>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
