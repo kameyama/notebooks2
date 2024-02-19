@@ -1,0 +1,185 @@
+#+toc: true
+#+TITLE: HTMLとjavascriptなどのメモ
+#+date: 2024-02-20
+#+description: 勉強メモ
+#+categories: memo, html, javascript
+
+
+* ブラウザとNode.js
+
+html+javascript+cssを用意すればブラウザで画面が見れる.
+Node.jsはjavascriptの実行環境. サーバーサイドの開発に利用される. 
+
+この手のプログラミングをするということは最終的に作った画面を公開するということだ.
+公開する場合は自分のPCのポートを解放して..., ということもできるが現実的にはgithub pagesなどの無料のホスティングサービスを使う, レンタルサーバーを借りる, クラウドを利用するなどをするだろう.
+github pagesでは静的サイトしか作れない. このブログもgithub pagesで作っている静的サイトだ.
+一方クラウドサービスを利用する場合は静的サイトも動的サイトも作成できる. 
+どういうwebサイトを作るかによって選択することになるだろう. 
+
+* フレームワーク
+
+フロントのフレームワークは流行り廃りが激しいらしい. 
+
+** jQuery
+ひと昔前にはjQueryが流行っていたらしい. ただし今でもブラウザ側だけで利用できるのでサーバーを立てないのであれば役にたつ.
+
+** React
+
+Reactは現在流行っているフロントのフレームワークらしい. 他にはvue.jsやangular.jsも人気のよう.
+Reactはシングルページアプリの開発に便利な上, Webアプリとしてもデスクトップアプリとしてもスマホ用アプリもこれひとつでできる. 
+サーバーを立てるのであればとりこれで始めるのもよいかもしれない. 
+
+
+
+
+* localファイルの読み込み
+
+次の様にhtmlと同じ階層にjpgやjsonファイルをおいてjavascriptで読み込んで処理したい場合を考える.
+#+begin_src
+ tree
+.
+├── boxes.json
+├── cat.jpg
+├── index.html
+└── script.js
+
+#+end_src
+
+このとき
+1. vscodeのpreviewでは問題なく読み込みができる
+2. ブラウザでindex.htmlを開くとfetchして読み込んだboxes.jsonはCORSエラーで読み込めない
+3. githubにホスティングすると読み込める
+という結果になった.
+2.で失敗する原因はセキュリティ上の問題でブラウザからlocalのファイルにアクセスを制限しているためである.
+開発の際に面倒なのでlocalでもnginxなどを利用してhtmlの確認をしたほうが良いかもしれない.
+
+
+* onload
+
+onloadは要素（通常はページ全体または画像）が完全に読み込まれたときに発生するイベント. `onload`イベントは, HTML要素がブラウザによって解釈され, その内容が完全にダウンロードおよび処理されたときに発生する. 
+使用方法は
+1. HTML要素に直接イベントハンドラを追加する:
+
+```html
+<img src="image.jpg" onload="myFunction()">
+```
+
+2. JavaScriptコードでイベントハンドラを追加する:
+
+```javascript
+window.onload = function() {
+  // 要素が完全に読み込まれた後に実行される処理
+};
+```
+
+1.ではHTML要素（通常は`<body>`要素または`<iframe>`要素など）が完全に読み込まれたときに発生するイベントを指定している. これは, 特定のHTML要素の読み込み完了時に直接イベントハンドラを実行するための方法である.
+2.ではJavaScriptコード内で特定のオブジェクト（通常は`window`オブジェクト）の`onload`プロパティに関数を代入することを指しています. これにより, 指定したオブジェクトが完全に読み込まれたときに関数が実行されるようになる. 
+
+注意点として, HTMLに直接`onload`と書いた場合はイベントハンドラとして実行されるため, 関数を呼び出すだけだが, JavaScriptの`onload`はプロパティに関数を代入する形式なのでイベントが発生した際に関数が自動的に実行される. 
+
+
+
+** 無名関数vs関数の上書き
+
+#+begin_src javascript
+ image.onload = function(){
+        drawImage(image,context,canvas);
+    };
+function drawImage(image, context, canvas) {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+#+end_src
+と
+#+begin_src javascript
+ image.onload = drawImage(image,context,canvas);
+   
+function drawImage(image, context, canvas) {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+#+end_src
+で前者はimageを描画するが後者はしない. 理由がわからなかったのでGPTに聞いてみた.
+結果:
+#+begin_src
+最初の例：
+
+```javascript
+image.onload = function(){
+    drawImage(image, context, canvas);
+};
+
+function drawImage(image, context, canvas) {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+```
+
+ここでは、`image.onload`への代入に無名関数（またはアロー関数）を使用しています。この方法から、JavaScriptはこの関数を`onload`イベントが発生したときに実行します。つまり、画像が完全に読み込まれた時点で関数が呼び出されます。
+
+二番目の例：
+
+```javascript
+image.onload = drawImage(image, context, canvas);
+   
+function drawImage(image, context, canvas) {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+```
+
+ここでは、`drawImage`関数の評価がすぐに実行されます。つまり、`image.onload`には`drawImage`関数の戻り値が代入されます。しかし、この`drawImage`関数には戻り値がありません（undefinedを返します）。そのため、`image.onload`はundefinedになります。これではイベントハンドラとして機能しません。
+
+`drawImage`はイベントが発生するまで待つ必要があるため、関数自体をアサインする必要があります。つまり、関数を呼び出すのではなく、関数自体（または無名関数）を代入するべきです。
+
+そのため、次のように書くべきです：
+
+```javascript
+image.onload = function() {
+    drawImage(image, context, canvas); 
+};
+```
+
+あるいは、引数を含まない関数を作り、その関数を代入することもできます：
+
+```javascript
+image.onload = drawImage;
+
+function drawImage() {
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+};
+```
+#+end_src
+
+
+* vscode
+
+live previewが便利. ブラウザで開かなくてもvs code内で即時結果を反映してくれる.
+live previewを使う場合run&debugはlaunch.jsonを
+#+begin_src 
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://127.0.0.1:3000",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
+#+end_src
+などとする. (urlの部分をlive previewのアドレスに変更する.)
+
+
+* 参考
+
+- https://developer.mozilla.org/ja/
+  公式ドキュメントとして使える.
+
+- https://st.jmooc.jp/javascript/index.html
+  関数の作り方, 使い方などが気に入らない部分が多いがとりあえず動かす分にはよかった.
+  jQuery, reactの解説はとてもよかった. 
+
+- https://ics.media/entry/11356/
+  vs codeのデバッガの使い方. 

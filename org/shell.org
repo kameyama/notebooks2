@@ -1,0 +1,85 @@
+
+#+toc: true
+#+categories: memo shell
+#+TITLE: Shellのメモ
+#+date: 2024-02-20
+#+description: shell芸人への道
+
+
+* xargsを使ってコマンドを実行後ファイルを書き出す
+
+
+** パイプ(|)とリダイレクト(>)
+
+次のような形でlsで表示したファイルを全てcurlでpostできる:
+#+begin_src shell
+ls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H "Authorization: Bearer ${BEARER_TOKEN}"
+#+end_src
+
+そこでそれぞれの結果をres_XXXXという名前のファイルに保存したいのでリダイレクト(>)を使ってみるのだが次のコードだとうまく行かない:
+#+begin_src shell
+ls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H "Authorization: Bearer ${BEARER_TOKEN}" > res_XXXX
+#+end_src
+
+思いついた解法:
+#+begin_src shell
+ls | xargs -IXXXX  bash -c "curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \"Authorization: Bearer ${BEARER_TOKEN}\" > res_XXXX"
+#+end_src
+
+
+
+
+* jqコマンド
+
+次のコマンドは何も返ってこない:
+#+begin_src shell
+ls | grep json | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H "Authorization: Bearer ${BEARER_TOKEN}" | jq . | echo
+#+end_src
+
+しかしechoの代わりにcatにするとjsonが返ってくる:
+#+begin_src shell
+ls | grep json | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H "Authorization: Bearer ${BEARER_TOKEN}" | jq . | cat
+#+end_src
+
+
+[[https://qiita.com/ko1nksm/items/55a86f95fdf790f863cc][解説]]
+
+
+* echo
+
+[[https://teratail.com/questions/36922][echoは標準入力を受け取らない]]
+
+#+begin_src shell
+echo "hoge" | echo
+#+end_src
+
+#+RESULTS:
+
+#+begin_src shell
+echo "hoge" | cat
+#+end_src
+
+#+RESULTS:
+: hoge
+
+#+begin_src shell
+echo "hoge" | echo -e
+#+end_src
+
+#+RESULTS:
+
+
+* awscliでECSのクラスターの全てのサービスを1にするコマンド
+
+#+begin_src shell
+aws ecs list-services --cluster $cluseter | jq '.serviceArns[]' | sed 's/arn:aws:ecs:hogehoge:service\/cluster\///g' | sed 's/"//g' |xargs -IXXX aws ecs update-service --cluster $cluster--service XXX --desired-count 1 | cat
+#+end_src
+
+
+* shell scriptでエラーがあった時に中断させる
+
+#+begin_src shell
+set -e
+#+end_src
+
+[[https://qiita.com/youcune/items/fcfb4ad3d7c1edf9dc96][参考]]
