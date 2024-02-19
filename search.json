@@ -70,18 +70,179 @@
     "text": "Introduction\nREST APIのテストを作成してCI/CDで動かしたい. 以前紹介したschemathesisはopenapi.jsonがある場合にそれを利用して上手にテストしてくれるパッケージだった. 今回はstepciを試してみた. 実はstepciにもopenapiのintegration機能がありschemathesisより先に存在を知って一度試したことがあるがopneapiを利用するという形では思い通りのテストができなかったので一度断念した. ではなぜまたstepciを試したのかというとopenapi.jsonを使わないという方針が\"上\"によって決められたからである. APIの仕様はopenapiに沿って作られれば色々便利なことがあるがきちんと作るのはなかなか大変である. 実際のところは引き続きfastAPIを使うのでopenapi.jsonは存在するのだがそれは仕様ではないので仕様に沿ったテストを別途実施したいということだ. 当面はスプレッドシートで仕様が管理されるということなので我々はその仕様からjsonを生成してAPIのテストをするという話になった. jsonをいくつか用意してrequestを投げてstatus codeとresponseをチェックするだけなので自前で用意するより先人の知恵に頼ってgoogleで検索してみるとpostman+newmanが結果にでてくるので試してみたがPostmanが仕事のケースに合わなかったので保留した. Postmanが合わなかった部分はテストしたいPOST methodのrequest bodyの形が複雑なのでGUIの恩恵を受けられずraw dataとしてjsonをそのまま貼り付けなければならないこと, テストをjavascriptで書かなければならないことである. そこで再調査したとこと再びstepciに行き着いたので試してみた.\n\n\nStepci\n結論から言えばjsonを用意してrequestを行いresponseを検証するということはstepciで十分可能だった. しかしちょっと困った点はテストの項目1つに対し複数のrequest bodyを用意してfor loopのようなことがしたい場合にどうやって書くかがわからなかったことだ. data/以下にhoge1.json, hoge2.json …と用意してテストケースを分類してテストを行いたいと考えていたのだがloopに当たる機能はstepciにはなさそうで下のexample1のように助長になってしまう. なのでどうしたものかと思っていたがyamlの構文にアンカーやエイリアスがあるのでそれが使えるかもしれないと試してみたのがexample2である. この構文はstepciでも使えたので若干記述が楽になった. 更に調べてみるとstepci runnerというものもありこちらはjavascript(typescript?)でworkflowが作れるようでloopしたい場合はこちらの方が便利かもしれない. 残念ながらdocmentは貧弱なのでソースコードを読む必要がある.\nversion: \"1.1\"\nname: Demo of API tests\nenv:\n  host: http://foo\ncommon: &common\n  http:\n    url: ${{env.host}}/bar\n    method: POST\n    check:\n      status: 200\n\ntests:\n  example1:\n    steps:\n      - name: GET request(example)\n        http:\n          url: https://example.com\n          method: GET\n          check:\n            selectors:\n              title: Example Domain\n      - name: GET\n        http:\n          url: ${{env.host}}/healthcheck\n          method: GET\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge1.json\n          check:\n            status: 200\n      - name: POST request\n        http:\n          url: ${{env.host}}/var\n          method: POST\n          body:\n            file: data/hoge2.json\n          check:\n            status: 200\n  example2:\n    steps:\n      - &lt;&lt;:: *common\n        name: 1\n        body:\n          file: data/hoge1.json\n      - &lt;&lt;:: *common\n        name: 2\n        body:\n          file: data/hoge2.json  \n\n\n\n\n Back to top"
   },
   {
-    "objectID": "posts/2022-01-10-post_org_files_via_fastpages.html",
-    "href": "posts/2022-01-10-post_org_files_via_fastpages.html",
-    "title": "post org-mode files via fastpages",
+    "objectID": "posts/2021-07-12-mac_memo.html",
+    "href": "posts/2021-07-12-mac_memo.html",
+    "title": "Mac memo",
     "section": "",
-    "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files \n\n\n\n\n Back to top"
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
   },
   {
-    "objectID": "posts/emacs.html",
-    "href": "posts/emacs.html",
-    "title": "emacsメモ",
+    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
+    "title": "Mac memo",
     "section": "",
-    "text": "Introduction\nemacsは僕が大学の講義で最初に見たエディタでその頃から使っている. 最近はvscodeが流行っていてとても簡単で便利なのでemacsを使おうと思う. 意味不明な文だがvscodeは便利だがemacsを使いたいのでemacsを使いこんでより便利に使うという意味である. 僕のemacsの設定はここに置いてある.\n\n\nref\n\nM-x help-with-tutorial-spec-language Japanese\n\nで日本語チュートリアルが見れる\n\n\nバックグラウンド起動\nemacs --deamon\nでバックグラウンドでemacsを起動しておくとそれ以降はemacsclientで高速に起動できる.\nこの機能をもっと便利に使うために以下を行う.\n\nMac起動時にemacs deamonを自動で起動させる\n\nhttps://qiita.com/radixm46/items/da819ad074feb6ef4f81\n\nemacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする.\n\nhttps://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x\n\nAutomatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する\n\nhttps://linkerdesign.github.io/journal/2012/02/automator-1.html\n\n\n\n\n日本語入力\n\nMac側で日本語にする場合とemacsの中で日本語入力にする(c-\\)2通りの方法がある.\n\n\n\nカーソル移動\nm-f: 1単語前に移動 m-b: 1単語後に移動\n&lt;Delback&gt; カーソルの直前の文字を削除（delete） C-d カーソルのある文字を削除（delete）\nM-&lt;Delback&gt; カーソルの直前の単語を消去（kill） M-d カーソル位置の後ろにある単語を消去（kill）\nC-k カーソル位置から行末までを消去（kill） M-k カーソル位置から文末までを消去（kill）\n\n\n\n\n Back to top"
+    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
+    "title": "Mac memo",
+    "section": "",
+    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
+    "title": "Mac memo",
+    "section": "",
+    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
+    "title": "Mac memo",
+    "section": "",
+    "text": "osxfuseを使う"
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
+    "title": "Mac memo",
+    "section": "",
+    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
+  },
+  {
+    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
+    "title": "Mac memo",
+    "section": "",
+    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html",
+    "href": "posts/2021-07-12-ubuntu_memo.html",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "インストール用DVDを突っ込んでインストール以下の２点に気をつける\n\nGPUの設定のためInstall Ubuntuにカーソルをあわせてe quiet splash --- を quiet splash nomodeset --- に変更しctrl + x\n自動ログイン https://forums.ubuntulinux.jp/viewtopic.php?id=19823\n\n\n\nUbuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2. インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3. 端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。 sudo gedit /etc/gdm3/custom.conf 4. コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5. 「設定」を起動し、左ペインの項目から「詳細」→「ユーザー 」と辿り、「自動ログイン」を「オフ」にします。 6. PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。\n\n最初にapt(macOSでのhomebrewみたいな奴)を更新しておく\nsudo apt update\nsudo apt upgrade\nsudo apt-get update\nsudo apt-get upgrade\n\n\n\n重要\n\nhttps://www.tensorflow.org/install/source#common_installation_problems の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する\n\n\n\n\nnouveau(デフォルトドライバ?)の停止.\n\nsudo lsmod | grep nouveau\nでnouveauの確認.\nsudo emacs /etc/modprobe.d/blacklist-nouveau.conf\nに\nblacklist nouveau\noptions nouveau modeset=0\nを書き込む.\nsudo update-initramfs -u\nsudo ubuntu-drivers autoinstall\nを叩いた後\nsudo reboot\nで再起動.\nnvidia-smi\nで動作確認. 念の為\nsudo lsmod | grep nouveau\n確認し反応なければok.\n\n\n\nくどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems でバージョン確認.\n\nCUDA\nhttps://developer.nvidia.com/cuda-toolkit-archive で必要なCUDAをダウンロードする. バージョンを選択するとインストール方法を教えてくれるのでそれに従う.\nインストール後\nsudo emacs .bashrc\nしてから\nexport PATH=/usr/local/cuda/bin:${PATH}\nexport LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}\nでpathを追加.\n再起動して\nnvcc -V\nでバージョン確認\ncuDNN\n公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9 でバージョンを選択し\n\ncuDNN Library for Linux\ncuDNN Runtime Library for Ubuntu18.04 (Deb)\ncuDNN Developer Library for Ubuntu18.04 (Deb)\ncuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)\n\nをダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に\nsudo dpkg -i $file_name\nとする. 一番上は\ntar xvf $file_name\nsudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/\nsudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/\nsudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*\ncp -r /usr/src/cudnn_samples_v7/ $HOME\ncd $HOME/cudnn_samples_v7/mnistCUDNN\nmake clean && make\nを叩く. pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).\n\n\n\n\n\nhttps://soinn.esa.io/posts/840\nhttps://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed\nhttps://qiita.com/yukoba/items/4733e8602fa4acabcc35\nhttps://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651\n\n\n\n\n\nsudo apt install build-essential libbz2-dev libdb-dev \\\nlibreadline-dev libffi-dev libgdbm-dev liblzma-dev \\\nlibncursesw5-dev libsqlite3-dev libssl-dev \\\nzlib1g-dev uuid-dev tk-dev\ni の後\n\npyenvの入れ方(好み) https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee\n\nあとは好きにpipで色々入れる.\n\n\n\n結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた. sshで繋げばよい\n\n左commandで検索画面が出る場合の対処法 https://forums.ubuntulinux.jp/viewtopic.php?id=19987\n\n\ngsettings set org.gnome.mutter overlay-key ''\ngsettings set org.gnome.desktop.wm.keybindings switch-input-source \"['Super_L']\"\n\nmacのcommandキーやwinのwindowsキーはlinuxではsuperキー\nusキーボードで日本語を使うための設定 1(fcitixとtweakで管理する) https://www.shujima.work/entry/2018/08/16/174352 https://qiita.com/tokida/items/a89b981680a1ce4523fa\n困ったらfcitixとtweakの設定を見直す\nctrlキーとsuperキーの入れ替え https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c\n\n\n\n\n\nhttps://hermemo.com/218/ ここを見てやる\n\n\n\n\nchrome, slack, emacs等を入れる.\n\n\n\n公式をみて入れる. activation回数に限りがあるので注意. (linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)\n\n\n\ngoogle-drive-ocamlfuseを使う (デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)\n\n\n\nOSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要. ホームディレクトリに適当な名前のディレクトリ(例えば=mountvol=)を作り\nsudo mount $マウントしたいhhdのパス $マウント先のディレクトリ\nとする. 自分の場合\nsudo mount /dev/sdb2 mount_vol\nとやる.\n\n\nhttps://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/\n\n\n\n\nターミナルで\nssh $user_id@$ip_adress\nリモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば\nssh $host_name\nで繋がる.\n\n\n\n自分の場合\nssh kameyama@ip_adress\n設定しておけば\nssh gpu1\n\n\ngit clone等でdockerを用意\n\n4.1.1. 旧バージョン\nターミナルで\nsudo docker-compose build\nで環境構築.\n新バージョン\nターミナルで\nsh build.sh\nで環境構築.\nJupyter\nsudo docker-compose up\nでdocker環境のjuputer notebook起動,\nその後ブラウザからアドレスに\n&lt;ip adress&gt;:&lt;port number&gt;\nでアクセス.\n例えば\n192.xxx.xx.xxx:8899\nなど. port番号は\nsudo emacs docker-compose.yml\nで確認/変更もできる. トークンは入力=dockerfile=内の=Notebook.App.token==を見る.\n\n\n\n\n\n\n\nhttps://qiita.com/mukoya/items/f20def019e25dc162ca8\nssh先をmac finder上にマウント\nbrewでsshfsとosxfuseを入れる.\nsshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号\n例えば\nsshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22\n\n\n\nhttps://techracho.bpsinc.jp/hachi8833/2019_02_05/66454\n\n\n\n\nサーバー側に公開鍵を渡しておいて、macの=.ssh/config=に\nHost *\n  ForwardAgent yes\n  ServerAliveInterval 60\n  GSSAPIAuthentication no\n  UseKeychain yes\n  AddKeysToAgent yes\n\n\nHost ubuntu\n    HostName &lt;ip address&gt;\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\n\nHost gpu1\n    HostName hogehoge\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\nと書いておけば\nssh ubuntu\nで手元のubuntu計算機に繋がる. 一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.\n\n\nhttps://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1\n\n\n\n\n\n\nログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#インストール間違えると起動がおかしくなる",
+    "href": "posts/2021-07-12-ubuntu_memo.html#インストール間違えると起動がおかしくなる",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "インストール用DVDを突っ込んでインストール以下の２点に気をつける\n\nGPUの設定のためInstall Ubuntuにカーソルをあわせてe quiet splash --- を quiet splash nomodeset --- に変更しctrl + x\n自動ログイン https://forums.ubuntulinux.jp/viewtopic.php?id=19823\n\n\n\nUbuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2. インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3. 端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。 sudo gedit /etc/gdm3/custom.conf 4. コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5. 「設定」を起動し、左ペインの項目から「詳細」→「ユーザー 」と辿り、「自動ログイン」を「オフ」にします。 6. PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。\n\n最初にapt(macOSでのhomebrewみたいな奴)を更新しておく\nsudo apt update\nsudo apt upgrade\nsudo apt-get update\nsudo apt-get upgrade"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#gpu-の設定nvidia-diriver-cuda-cudnn",
+    "href": "posts/2021-07-12-ubuntu_memo.html#gpu-の設定nvidia-diriver-cuda-cudnn",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "重要\n\nhttps://www.tensorflow.org/install/source#common_installation_problems の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する\n\n\n\n\nnouveau(デフォルトドライバ?)の停止.\n\nsudo lsmod | grep nouveau\nでnouveauの確認.\nsudo emacs /etc/modprobe.d/blacklist-nouveau.conf\nに\nblacklist nouveau\noptions nouveau modeset=0\nを書き込む.\nsudo update-initramfs -u\nsudo ubuntu-drivers autoinstall\nを叩いた後\nsudo reboot\nで再起動.\nnvidia-smi\nで動作確認. 念の為\nsudo lsmod | grep nouveau\n確認し反応なければok.\n\n\n\nくどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems でバージョン確認.\n\nCUDA\nhttps://developer.nvidia.com/cuda-toolkit-archive で必要なCUDAをダウンロードする. バージョンを選択するとインストール方法を教えてくれるのでそれに従う.\nインストール後\nsudo emacs .bashrc\nしてから\nexport PATH=/usr/local/cuda/bin:${PATH}\nexport LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}\nでpathを追加.\n再起動して\nnvcc -V\nでバージョン確認\ncuDNN\n公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9 でバージョンを選択し\n\ncuDNN Library for Linux\ncuDNN Runtime Library for Ubuntu18.04 (Deb)\ncuDNN Developer Library for Ubuntu18.04 (Deb)\ncuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)\n\nをダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に\nsudo dpkg -i $file_name\nとする. 一番上は\ntar xvf $file_name\nsudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/\nsudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/\nsudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*\ncp -r /usr/src/cudnn_samples_v7/ $HOME\ncd $HOME/cudnn_samples_v7/mnistCUDNN\nmake clean && make\nを叩く. pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).\n\n\n\n\n\nhttps://soinn.esa.io/posts/840\nhttps://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed\nhttps://qiita.com/yukoba/items/4733e8602fa4acabcc35\nhttps://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#python環境構築",
+    "href": "posts/2021-07-12-ubuntu_memo.html#python環境構築",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "sudo apt install build-essential libbz2-dev libdb-dev \\\nlibreadline-dev libffi-dev libgdbm-dev liblzma-dev \\\nlibncursesw5-dev libsqlite3-dev libssl-dev \\\nzlib1g-dev uuid-dev tk-dev\ni の後\n\npyenvの入れ方(好み) https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee\n\nあとは好きにpipで色々入れる."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#usキーボード設定",
+    "href": "posts/2021-07-12-ubuntu_memo.html#usキーボード設定",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた. sshで繋げばよい\n\n左commandで検索画面が出る場合の対処法 https://forums.ubuntulinux.jp/viewtopic.php?id=19987\n\n\ngsettings set org.gnome.mutter overlay-key ''\ngsettings set org.gnome.desktop.wm.keybindings switch-input-source \"['Super_L']\"\n\nmacのcommandキーやwinのwindowsキーはlinuxではsuperキー\nusキーボードで日本語を使うための設定 1(fcitixとtweakで管理する) https://www.shujima.work/entry/2018/08/16/174352 https://qiita.com/tokida/items/a89b981680a1ce4523fa\n困ったらfcitixとtweakの設定を見直す\nctrlキーとsuperキーの入れ替え https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#macbuntumac風レイアウト-sshで繋げば良いのでいらない",
+    "href": "posts/2021-07-12-ubuntu_memo.html#macbuntumac風レイアウト-sshで繋げば良いのでいらない",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "https://hermemo.com/218/ ここを見てやる"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#アプリケーション",
+    "href": "posts/2021-07-12-ubuntu_memo.html#アプリケーション",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "chrome, slack, emacs等を入れる."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#wolfram-engine",
+    "href": "posts/2021-07-12-ubuntu_memo.html#wolfram-engine",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "公式をみて入れる. activation回数に限りがあるので注意. (linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#google-drive",
+    "href": "posts/2021-07-12-ubuntu_memo.html#google-drive",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "google-drive-ocamlfuseを使う (デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#ハードディスクマウント",
+    "href": "posts/2021-07-12-ubuntu_memo.html#ハードディスクマウント",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "OSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要. ホームディレクトリに適当な名前のディレクトリ(例えば=mountvol=)を作り\nsudo mount $マウントしたいhhdのパス $マウント先のディレクトリ\nとする. 自分の場合\nsudo mount /dev/sdb2 mount_vol\nとやる.\n\n\nhttps://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#ssh",
+    "href": "posts/2021-07-12-ubuntu_memo.html#ssh",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "ターミナルで\nssh $user_id@$ip_adress\nリモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば\nssh $host_name\nで繋がる."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#gpuサーバー使い方",
+    "href": "posts/2021-07-12-ubuntu_memo.html#gpuサーバー使い方",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "自分の場合\nssh kameyama@ip_adress\n設定しておけば\nssh gpu1\n\n\ngit clone等でdockerを用意\n\n4.1.1. 旧バージョン\nターミナルで\nsudo docker-compose build\nで環境構築.\n新バージョン\nターミナルで\nsh build.sh\nで環境構築.\nJupyter\nsudo docker-compose up\nでdocker環境のjuputer notebook起動,\nその後ブラウザからアドレスに\n&lt;ip adress&gt;:&lt;port number&gt;\nでアクセス.\n例えば\n192.xxx.xx.xxx:8899\nなど. port番号は\nsudo emacs docker-compose.yml\nで確認/変更もできる. トークンは入力=dockerfile=内の=Notebook.App.token==を見る."
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#公開鍵の登録",
+    "href": "posts/2021-07-12-ubuntu_memo.html#公開鍵の登録",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "https://qiita.com/mukoya/items/f20def019e25dc162ca8\nssh先をmac finder上にマウント\nbrewでsshfsとosxfuseを入れる.\nsshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号\n例えば\nsshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22\n\n\n\nhttps://techracho.bpsinc.jp/hachi8833/2019_02_05/66454"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#sshconfig設定mac側",
+    "href": "posts/2021-07-12-ubuntu_memo.html#sshconfig設定mac側",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "サーバー側に公開鍵を渡しておいて、macの=.ssh/config=に\nHost *\n  ForwardAgent yes\n  ServerAliveInterval 60\n  GSSAPIAuthentication no\n  UseKeychain yes\n  AddKeysToAgent yes\n\n\nHost ubuntu\n    HostName &lt;ip address&gt;\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\n\nHost gpu1\n    HostName hogehoge\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\nと書いておけば\nssh ubuntu\nで手元のubuntu計算機に繋がる. 一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.\n\n\nhttps://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1"
+  },
+  {
+    "objectID": "posts/2021-07-12-ubuntu_memo.html#shellterminal関連",
+    "href": "posts/2021-07-12-ubuntu_memo.html#shellterminal関連",
+    "title": "Ubuntu memo",
+    "section": "",
+    "text": "ログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
+  },
+  {
+    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html",
+    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html",
+    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
+    "section": "",
+    "text": "google drive apiを使ってファイルをアップロードする方法は公式の解説ではgolangのドキュメントが貧弱だ. golangからサービスアカウントで認証し, 共有ドライブ(shared drive)へファイルのアップロードを行おうとするとGoogle APIs Client Library for Goを解読する必要がある. quickstartではOAuth 2.0認証を使ってマイドライブ(mydrive)のファイル一覧を表示するサンプルがある. 少し検索するとOAuth 2.0認証やサービスアカウントでマイドライブへファイルをアップロードする方法が見つかるが, 共有ドライブへのアップロード方法は見つけることができなかったのでその方法を紹介する."
+  },
+  {
+    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html#準備",
+    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html#準備",
+    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
+    "section": "準備",
+    "text": "準備\n\nshared driveにdirectoryを作成する(driveIdはhttps://drive.google.com/drive/folders/XXX のXXX部分)\nサービスアカウントを発行しcredential.jsonを保存する\ngoogle driveの画面 &gt; メンバーを管理 でサービスアカウントを追加し投稿者権限を付与する"
+  },
+  {
+    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html#サンプルコード",
+    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html#サンプルコード",
+    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
+    "section": "サンプルコード",
+    "text": "サンプルコード\n以下のコードはsample.txtをshared driveへアップロードする. driveIdを上の説明を参考に書き換えた後sample.txt, credential.jsonを同じディレクトリに置いて実行する. shared driveへファイルをアップロードするにはSupportsAllDrives(true)とする必要があり, ここに辿り着くまでに時間がかかり面倒だった.\n\n\nCode\npackage main\n\nimport (\n\n    \"encoding/json\"\n    \"io/ioutil\"\n    \"log\"\n    \"net/http\"\n    \"os\"\n    \"google.golang.org/api/drive/v3\"\n    \"golang.org/x/oauth2\"\n    \"golang.org/x/oauth2/google\"\n    \"golang.org/x/oauth2/jwt\"\n)\n\n// ServiceAccount : Use Service account\nfunc ServiceAccount(credentialFile string) *http.Client {\n    b, err := ioutil.ReadFile(credentialFile)\n    if err != nil {\n        log.Fatal(err)\n    }\n    var c = struct {\n        Email      string `json:\"client_email\"`\n        PrivateKey string `json:\"private_key\"`\n    }{}\n    json.Unmarshal(b, &c)\n    config := &jwt.Config{\n        Email:      c.Email,\n        PrivateKey: []byte(c.PrivateKey),\n        Scopes: []string{\n            drive.DriveScope,\n        },\n        TokenURL: google.JWTTokenURL,\n    }\n    client := config.Client(oauth2.NoContext)\n    return client\n}\n\n\nfunc main() {\n\n\n    filePath := \"sample.txt\"     // file path \n    driveId := \"XXX\"\n    \n    //use survice account\n    client := ServiceAccount(\"credential.json\") // Please set the json file of Service account.\n    \n    srv, err := drive.New(client)\n    if err != nil {\n        log.Fatalf(\"Unable to retrieve drive Client %v\", err)\n    }\n\n    uploadFile, err := os.Open(filePath)\n    if err != nil {\n        log.Fatalf(\"Cannot find such file %v\", err)\n    }\n\n    folderIdList := [] string{driveId}\n    f := &drive.File{Name: filePath, Parents: folderIdList}\n\n    _, err = srv.Files.Create(f).SupportsAllDrives(true).Media(uploadFile).Do()\n    if err != nil {\n        log.Fatalf(\"Upload Failed %v\", err)\n    }\n\n}"
   },
   {
     "objectID": "posts/2021-07-12-julia_setup_and_settings.html",
@@ -221,7 +382,7 @@
     "href": "index.html",
     "title": "notebooks2",
     "section": "",
-    "text": "emacsメモ\n\n\n\n\n\n\nemacs\n\n\nmemo\n\n\n\nemacsのメモ書き\n\n\n\n\n\nFeb 18, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\norg-modeをquartoで扱う方法\n\n\n\n\n\n\nci/cd\n\n\nmemo\n\n\nquarto\n\n\nemacs\n\n\n\npandocのfilterを使ってqmdのmetadataに変換する\n\n\n\n\n\nJan 9, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nuvicorn vs gunicorn\n\n\n\n\n\n\nfastapi\n\n\n\nfastapiを使う際のuvicornとgunicornの違い\n\n\n\n\n\nDec 22, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\ndev\n\n\nci/cd\n\n\nmemo\n\n\n\nAPIのテストツール\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\ndev\n\n\nopenapi\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\ngcp\n\n\naws\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\njupyter settings\n\n\n\n\n\n\nmemo\n\n\njupyter\n\n\n\nJupyter settings for myself\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\ndocker\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nmanimのメモ\n\n\n\n\n\n\nmemo\n\n\nmanim\n\n\n\nmanim\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nasdfのメモ\n\n\n\n\n\n\nmemo\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\npython\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\njupyter\n\n\nemacs\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\nmemo\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nConnect databses in Python\n\n\n\n\n\n\npython\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\nExamples to connect db in Python\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nConnect databses in Julia\n\n\n\n\n\n\njulia\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\nExamples to connect db in Julia\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\njulia memo\n\n\n\n\n\n\njulia\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\n(自分が)よく間違えるjuliaの構文をまとめる\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\njulia\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nUbuntu memo\n\n\n\n\n\n\nmemo\n\n\nubuntu\n\n\n\nUbuntu memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nMac memo\n\n\n\n\n\n\nmemo\n\n\nmac\n\n\n\nMac memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nDatabase memo\n\n\n\n\n\n\nmemo\n\n\ndatabase\n\n\n\nA DB memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ngolangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする\n\n\n\n\n\n\ngolang\n\n\n\nThe first post\n\n\n\n\n\nJul 4, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\nNo matching items\n\n Back to top"
+    "text": "HTMLとjavascriptなどのメモ\n\n\n\n\n\n\nmemo\n\n\nhtml\n\n\njavascript\n\n\n\n勉強メモ\n\n\n\n\n\nFeb 20, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nShellのメモ\n\n\n\n\n\n\nmemo\n\n\nshell\n\n\n\nshell芸人への道\n\n\n\n\n\nFeb 20, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nemacsメモ\n\n\n\n\n\n\nemacs\n\n\nmemo\n\n\n\nemacsのメモ書き\n\n\n\n\n\nFeb 18, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\norg-modeをquartoで扱う方法\n\n\n\n\n\n\nci/cd\n\n\nmemo\n\n\nquarto\n\n\nemacs\n\n\n\npandocのfilterを使ってqmdのmetadataに変換する\n\n\n\n\n\nJan 9, 2024\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nuvicorn vs gunicorn\n\n\n\n\n\n\nfastapi\n\n\n\nfastapiを使う際のuvicornとgunicornの違い\n\n\n\n\n\nDec 22, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nstepciのworkflow.yamlの上手かもしれない書き方\n\n\n\n\n\n\ndev\n\n\nci/cd\n\n\nmemo\n\n\n\nAPIのテストツール\n\n\n\n\n\nJun 5, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nOpenAPIとSchemathesisの紹介\n\n\n\n\n\n\ndev\n\n\nopenapi\n\n\n\nOpenAPIに従ってrest apiへリクエストを投げるパッケージ\n\n\n\n\n\nMay 21, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nAmazon Sagemakerの感想\n\n\n\n\n\n\ngcp\n\n\naws\n\n\n\n1週間くらい調査してみた感想\n\n\n\n\n\nMay 8, 2023\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\njupyter settings\n\n\n\n\n\n\nmemo\n\n\njupyter\n\n\n\nJupyter settings for myself\n\n\n\n\n\nJul 12, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ndocker image from scratch\n\n\n\n\n\n\ndocker\n\n\n\ndocker imageをscratchから作る\n\n\n\n\n\nJun 29, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nmanimのメモ\n\n\n\n\n\n\nmemo\n\n\nmanim\n\n\n\nmanim\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nasdfのメモ\n\n\n\n\n\n\nmemo\n\n\n\npyenvからasdfへ移行を例に\n\n\n\n\n\nMar 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ngreat expectationsの紹介\n\n\n\n\n\n\npython\n\n\n\nグレートですよこいつはァ\n\n\n\n\n\nJan 21, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nuse org-mode like jupyter\n\n\n\n\n\n\njupyter\n\n\nemacs\n\n\n\norg-modeをjupyterのように使う方法\n\n\n\n\n\nJan 11, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\npost org-mode files via fastpages\n\n\n\n\n\n\nmemo\n\n\n\nA guide of posting org-mode files\n\n\n\n\n\nJan 10, 2022\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nConnect databses in Python\n\n\n\n\n\n\npython\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\nExamples to connect db in Python\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nConnect databses in Julia\n\n\n\n\n\n\njulia\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\nExamples to connect db in Julia\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\njulia memo\n\n\n\n\n\n\njulia\n\n\ndatabase\n\n\naws\n\n\ngcp\n\n\nbigquery\n\n\n\n(自分が)よく間違えるjuliaの構文をまとめる\n\n\n\n\n\nJul 29, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nJulia setup & settings\n\n\n\n\n\n\njulia\n\n\n\nJulia setup & settings for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nUbuntu memo\n\n\n\n\n\n\nmemo\n\n\nubuntu\n\n\n\nUbuntu memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nMac memo\n\n\n\n\n\n\nmemo\n\n\nmac\n\n\n\nMac memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\nDatabase memo\n\n\n\n\n\n\nmemo\n\n\ndatabase\n\n\n\nA DB memo for myself\n\n\n\n\n\nJul 12, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\n\n\n\n\n\n\ngolangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする\n\n\n\n\n\n\ngolang\n\n\n\nThe first post\n\n\n\n\n\nJul 4, 2021\n\n\nMasaya Kameyama\n\n\n\n\n\n\nNo matching items\n\n Back to top"
   },
   {
     "objectID": "posts/2021-07-29-examples_to_connect_dbs_in_python.html",
@@ -343,179 +504,60 @@
     "text": "可変なn重ループはCartesianIndicesで上手にできる\n\n\nCode\n\nn=3\nfor c in CartesianIndices(ntuple(d-&gt;0:2, n))\n    # vectorにする\n    x=collect(c.I)\n    println(x)\nend\n\n\n[0, 0, 0]\n[1, 0, 0]\n[2, 0, 0]\n[0, 1, 0]\n[1, 1, 0]\n[2, 1, 0]\n[0, 2, 0]\n[1, 2, 0]\n[2, 2, 0]\n[0, 0, 1]\n[1, 0, 1]\n[2, 0, 1]\n[0, 1, 1]\n[1, 1, 1]\n[2, 1, 1]\n[0, 2, 1]\n[1, 2, 1]\n[2, 2, 1]\n[0, 0, 2]\n[1, 0, 2]\n[2, 0, 2]\n[0, 1, 2]\n[1, 1, 2]\n[2, 1, 2]\n[0, 2, 2]\n[1, 2, 2]\n[2, 2, 2]"
   },
   {
-    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html",
-    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html",
-    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
+    "objectID": "posts/html_javascript.html",
+    "href": "posts/html_javascript.html",
+    "title": "HTMLとjavascriptなどのメモ",
     "section": "",
-    "text": "google drive apiを使ってファイルをアップロードする方法は公式の解説ではgolangのドキュメントが貧弱だ. golangからサービスアカウントで認証し, 共有ドライブ(shared drive)へファイルのアップロードを行おうとするとGoogle APIs Client Library for Goを解読する必要がある. quickstartではOAuth 2.0認証を使ってマイドライブ(mydrive)のファイル一覧を表示するサンプルがある. 少し検索するとOAuth 2.0認証やサービスアカウントでマイドライブへファイルをアップロードする方法が見つかるが, 共有ドライブへのアップロード方法は見つけることができなかったのでその方法を紹介する."
+    "text": "html+javascript+cssを用意すればブラウザで画面が見れる. Node.jsはjavascriptの実行環境. サーバーサイドの開発に利用される.\nこの手のプログラミングをするということは最終的に作った画面を公開するということだ. 公開する場合は自分のPCのポートを解放して…, ということもできるが現実的にはgithub pagesなどの無料のホスティングサービスを使う, レンタルサーバーを借りる, クラウドを利用するなどをするだろう. github pagesでは静的サイトしか作れない. このブログもgithub pagesで作っている静的サイトだ. 一方クラウドサービスを利用する場合は静的サイトも動的サイトも作成できる. どういうwebサイトを作るかによって選択することになるだろう."
   },
   {
-    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html#準備",
-    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html#準備",
-    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
-    "section": "準備",
-    "text": "準備\n\nshared driveにdirectoryを作成する(driveIdはhttps://drive.google.com/drive/folders/XXX のXXX部分)\nサービスアカウントを発行しcredential.jsonを保存する\ngoogle driveの画面 &gt; メンバーを管理 でサービスアカウントを追加し投稿者権限を付与する"
+    "objectID": "posts/html_javascript.html#jquery",
+    "href": "posts/html_javascript.html#jquery",
+    "title": "HTMLとjavascriptなどのメモ",
+    "section": "jQuery",
+    "text": "jQuery\nひと昔前にはjQueryが流行っていたらしい. ただし今でもブラウザ側だけで利用できるのでサーバーを立てないのであれば役にたつ."
   },
   {
-    "objectID": "posts/2021-07-04-upload_file_to_google_shared_drive.html#サンプルコード",
-    "href": "posts/2021-07-04-upload_file_to_google_shared_drive.html#サンプルコード",
-    "title": "golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする",
-    "section": "サンプルコード",
-    "text": "サンプルコード\n以下のコードはsample.txtをshared driveへアップロードする. driveIdを上の説明を参考に書き換えた後sample.txt, credential.jsonを同じディレクトリに置いて実行する. shared driveへファイルをアップロードするにはSupportsAllDrives(true)とする必要があり, ここに辿り着くまでに時間がかかり面倒だった.\n\n\nCode\npackage main\n\nimport (\n\n    \"encoding/json\"\n    \"io/ioutil\"\n    \"log\"\n    \"net/http\"\n    \"os\"\n    \"google.golang.org/api/drive/v3\"\n    \"golang.org/x/oauth2\"\n    \"golang.org/x/oauth2/google\"\n    \"golang.org/x/oauth2/jwt\"\n)\n\n// ServiceAccount : Use Service account\nfunc ServiceAccount(credentialFile string) *http.Client {\n    b, err := ioutil.ReadFile(credentialFile)\n    if err != nil {\n        log.Fatal(err)\n    }\n    var c = struct {\n        Email      string `json:\"client_email\"`\n        PrivateKey string `json:\"private_key\"`\n    }{}\n    json.Unmarshal(b, &c)\n    config := &jwt.Config{\n        Email:      c.Email,\n        PrivateKey: []byte(c.PrivateKey),\n        Scopes: []string{\n            drive.DriveScope,\n        },\n        TokenURL: google.JWTTokenURL,\n    }\n    client := config.Client(oauth2.NoContext)\n    return client\n}\n\n\nfunc main() {\n\n\n    filePath := \"sample.txt\"     // file path \n    driveId := \"XXX\"\n    \n    //use survice account\n    client := ServiceAccount(\"credential.json\") // Please set the json file of Service account.\n    \n    srv, err := drive.New(client)\n    if err != nil {\n        log.Fatalf(\"Unable to retrieve drive Client %v\", err)\n    }\n\n    uploadFile, err := os.Open(filePath)\n    if err != nil {\n        log.Fatalf(\"Cannot find such file %v\", err)\n    }\n\n    folderIdList := [] string{driveId}\n    f := &drive.File{Name: filePath, Parents: folderIdList}\n\n    _, err = srv.Files.Create(f).SupportsAllDrives(true).Media(uploadFile).Do()\n    if err != nil {\n        log.Fatalf(\"Upload Failed %v\", err)\n    }\n\n}"
+    "objectID": "posts/html_javascript.html#react",
+    "href": "posts/html_javascript.html#react",
+    "title": "HTMLとjavascriptなどのメモ",
+    "section": "React",
+    "text": "React\nReactは現在流行っているフロントのフレームワークらしい. 他にはvue.jsやangular.jsも人気のよう. Reactはシングルページアプリの開発に便利な上, Webアプリとしてもデスクトップアプリとしてもスマホ用アプリもこれひとつでできる. サーバーを立てるのであればとりこれで始めるのもよいかもしれない."
   },
   {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html",
-    "href": "posts/2021-07-12-ubuntu_memo.html",
-    "title": "Ubuntu memo",
+    "objectID": "posts/html_javascript.html#無名関数vs関数の上書き",
+    "href": "posts/html_javascript.html#無名関数vs関数の上書き",
+    "title": "HTMLとjavascriptなどのメモ",
+    "section": "無名関数vs関数の上書き",
+    "text": "無名関数vs関数の上書き\n image.onload = function(){\n        drawImage(image,context,canvas);\n    };\nfunction drawImage(image, context, canvas) {\n    context.drawImage(image, 0, 0, canvas.width, canvas.height);\n};\nと\n image.onload = drawImage(image,context,canvas);\n\nfunction drawImage(image, context, canvas) {\n    context.drawImage(image, 0, 0, canvas.width, canvas.height);\n};\nで前者はimageを描画するが後者はしない. 理由がわからなかったのでGPTに聞いてみた. 結果:\n最初の例：\n\n```javascript\nimage.onload = function(){\n    drawImage(image, context, canvas);\n};\n\nfunction drawImage(image, context, canvas) {\n    context.drawImage(image, 0, 0, canvas.width, canvas.height);\n};\n```\n\nここでは、`image.onload`への代入に無名関数（またはアロー関数）を使用しています。この方法から、JavaScriptはこの関数を`onload`イベントが発生したときに実行します。つまり、画像が完全に読み込まれた時点で関数が呼び出されます。\n\n二番目の例：\n\n```javascript\nimage.onload = drawImage(image, context, canvas);\n\nfunction drawImage(image, context, canvas) {\n    context.drawImage(image, 0, 0, canvas.width, canvas.height);\n};\n```\n\nここでは、`drawImage`関数の評価がすぐに実行されます。つまり、`image.onload`には`drawImage`関数の戻り値が代入されます。しかし、この`drawImage`関数には戻り値がありません（undefinedを返します）。そのため、`image.onload`はundefinedになります。これではイベントハンドラとして機能しません。\n\n`drawImage`はイベントが発生するまで待つ必要があるため、関数自体をアサインする必要があります。つまり、関数を呼び出すのではなく、関数自体（または無名関数）を代入するべきです。\n\nそのため、次のように書くべきです：\n\n```javascript\nimage.onload = function() {\n    drawImage(image, context, canvas); \n};\n```\n\nあるいは、引数を含まない関数を作り、その関数を代入することもできます：\n\n```javascript\nimage.onload = drawImage;\n\nfunction drawImage() {\n    context.drawImage(image, 0, 0, canvas.width, canvas.height);\n};\n```"
+  },
+  {
+    "objectID": "posts/emacs.html",
+    "href": "posts/emacs.html",
+    "title": "emacsメモ",
     "section": "",
-    "text": "インストール用DVDを突っ込んでインストール以下の２点に気をつける\n\nGPUの設定のためInstall Ubuntuにカーソルをあわせてe quiet splash --- を quiet splash nomodeset --- に変更しctrl + x\n自動ログイン https://forums.ubuntulinux.jp/viewtopic.php?id=19823\n\n\n\nUbuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2. インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3. 端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。 sudo gedit /etc/gdm3/custom.conf 4. コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5. 「設定」を起動し、左ペインの項目から「詳細」→「ユーザー 」と辿り、「自動ログイン」を「オフ」にします。 6. PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。\n\n最初にapt(macOSでのhomebrewみたいな奴)を更新しておく\nsudo apt update\nsudo apt upgrade\nsudo apt-get update\nsudo apt-get upgrade\n\n\n\n重要\n\nhttps://www.tensorflow.org/install/source#common_installation_problems の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する\n\n\n\n\nnouveau(デフォルトドライバ?)の停止.\n\nsudo lsmod | grep nouveau\nでnouveauの確認.\nsudo emacs /etc/modprobe.d/blacklist-nouveau.conf\nに\nblacklist nouveau\noptions nouveau modeset=0\nを書き込む.\nsudo update-initramfs -u\nsudo ubuntu-drivers autoinstall\nを叩いた後\nsudo reboot\nで再起動.\nnvidia-smi\nで動作確認. 念の為\nsudo lsmod | grep nouveau\n確認し反応なければok.\n\n\n\nくどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems でバージョン確認.\n\nCUDA\nhttps://developer.nvidia.com/cuda-toolkit-archive で必要なCUDAをダウンロードする. バージョンを選択するとインストール方法を教えてくれるのでそれに従う.\nインストール後\nsudo emacs .bashrc\nしてから\nexport PATH=/usr/local/cuda/bin:${PATH}\nexport LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}\nでpathを追加.\n再起動して\nnvcc -V\nでバージョン確認\ncuDNN\n公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9 でバージョンを選択し\n\ncuDNN Library for Linux\ncuDNN Runtime Library for Ubuntu18.04 (Deb)\ncuDNN Developer Library for Ubuntu18.04 (Deb)\ncuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)\n\nをダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に\nsudo dpkg -i $file_name\nとする. 一番上は\ntar xvf $file_name\nsudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/\nsudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/\nsudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*\ncp -r /usr/src/cudnn_samples_v7/ $HOME\ncd $HOME/cudnn_samples_v7/mnistCUDNN\nmake clean && make\nを叩く. pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).\n\n\n\n\n\nhttps://soinn.esa.io/posts/840\nhttps://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed\nhttps://qiita.com/yukoba/items/4733e8602fa4acabcc35\nhttps://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651\n\n\n\n\n\nsudo apt install build-essential libbz2-dev libdb-dev \\\nlibreadline-dev libffi-dev libgdbm-dev liblzma-dev \\\nlibncursesw5-dev libsqlite3-dev libssl-dev \\\nzlib1g-dev uuid-dev tk-dev\ni の後\n\npyenvの入れ方(好み) https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee\n\nあとは好きにpipで色々入れる.\n\n\n\n結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた. sshで繋げばよい\n\n左commandで検索画面が出る場合の対処法 https://forums.ubuntulinux.jp/viewtopic.php?id=19987\n\n\ngsettings set org.gnome.mutter overlay-key ''\ngsettings set org.gnome.desktop.wm.keybindings switch-input-source \"['Super_L']\"\n\nmacのcommandキーやwinのwindowsキーはlinuxではsuperキー\nusキーボードで日本語を使うための設定 1(fcitixとtweakで管理する) https://www.shujima.work/entry/2018/08/16/174352 https://qiita.com/tokida/items/a89b981680a1ce4523fa\n困ったらfcitixとtweakの設定を見直す\nctrlキーとsuperキーの入れ替え https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c\n\n\n\n\n\nhttps://hermemo.com/218/ ここを見てやる\n\n\n\n\nchrome, slack, emacs等を入れる.\n\n\n\n公式をみて入れる. activation回数に限りがあるので注意. (linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)\n\n\n\ngoogle-drive-ocamlfuseを使う (デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)\n\n\n\nOSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要. ホームディレクトリに適当な名前のディレクトリ(例えば=mountvol=)を作り\nsudo mount $マウントしたいhhdのパス $マウント先のディレクトリ\nとする. 自分の場合\nsudo mount /dev/sdb2 mount_vol\nとやる.\n\n\nhttps://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/\n\n\n\n\nターミナルで\nssh $user_id@$ip_adress\nリモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば\nssh $host_name\nで繋がる.\n\n\n\n自分の場合\nssh kameyama@ip_adress\n設定しておけば\nssh gpu1\n\n\ngit clone等でdockerを用意\n\n4.1.1. 旧バージョン\nターミナルで\nsudo docker-compose build\nで環境構築.\n新バージョン\nターミナルで\nsh build.sh\nで環境構築.\nJupyter\nsudo docker-compose up\nでdocker環境のjuputer notebook起動,\nその後ブラウザからアドレスに\n&lt;ip adress&gt;:&lt;port number&gt;\nでアクセス.\n例えば\n192.xxx.xx.xxx:8899\nなど. port番号は\nsudo emacs docker-compose.yml\nで確認/変更もできる. トークンは入力=dockerfile=内の=Notebook.App.token==を見る.\n\n\n\n\n\n\n\nhttps://qiita.com/mukoya/items/f20def019e25dc162ca8\nssh先をmac finder上にマウント\nbrewでsshfsとosxfuseを入れる.\nsshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号\n例えば\nsshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22\n\n\n\nhttps://techracho.bpsinc.jp/hachi8833/2019_02_05/66454\n\n\n\n\nサーバー側に公開鍵を渡しておいて、macの=.ssh/config=に\nHost *\n  ForwardAgent yes\n  ServerAliveInterval 60\n  GSSAPIAuthentication no\n  UseKeychain yes\n  AddKeysToAgent yes\n\n\nHost ubuntu\n    HostName &lt;ip address&gt;\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\n\nHost gpu1\n    HostName hogehoge\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\nと書いておけば\nssh ubuntu\nで手元のubuntu計算機に繋がる. 一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.\n\n\nhttps://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1\n\n\n\n\n\n\nログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
+    "text": "Introduction\nemacsは僕が大学の講義で最初に見たエディタでその頃から使っている. 最近はvscodeが流行っていてとても簡単で便利なのでemacsを使おうと思う. 意味不明な文だがvscodeは便利だがemacsを使いたいのでemacsを使いこんでより便利に使うという意味である. 僕のemacsの設定はここに置いてある.\n\n\nref\n\nM-x help-with-tutorial-spec-language Japanese\n\nで日本語チュートリアルが見れる\n\n\nバックグラウンド起動\nemacs --deamon\nでバックグラウンドでemacsを起動しておくとそれ以降はemacsclientで高速に起動できる.\nこの機能をもっと便利に使うために以下を行う.\n\nMac起動時にemacs deamonを自動で起動させる\n\nhttps://qiita.com/radixm46/items/da819ad074feb6ef4f81\n\nemacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする.\n\nhttps://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x\n\nAutomatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する\n\nhttps://linkerdesign.github.io/journal/2012/02/automator-1.html\n\n\n\n\n日本語入力\n\nMac側で日本語にする場合とemacsの中で日本語入力にする(c-\\)2通りの方法がある.\n\n\n\nカーソル移動\nm-f: 1単語前に移動 m-b: 1単語後に移動\n&lt;Delback&gt; カーソルの直前の文字を削除（delete） C-d カーソルのある文字を削除（delete）\nM-&lt;Delback&gt; カーソルの直前の単語を消去（kill） M-d カーソル位置の後ろにある単語を消去（kill）\nC-k カーソル位置から行末までを消去（kill） M-k カーソル位置から文末までを消去（kill）\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#インストール間違えると起動がおかしくなる",
-    "href": "posts/2021-07-12-ubuntu_memo.html#インストール間違えると起動がおかしくなる",
-    "title": "Ubuntu memo",
+    "objectID": "posts/2022-01-10-post_org_files_via_fastpages.html",
+    "href": "posts/2022-01-10-post_org_files_via_fastpages.html",
+    "title": "post org-mode files via fastpages",
     "section": "",
-    "text": "インストール用DVDを突っ込んでインストール以下の２点に気をつける\n\nGPUの設定のためInstall Ubuntuにカーソルをあわせてe quiet splash --- を quiet splash nomodeset --- に変更しctrl + x\n自動ログイン https://forums.ubuntulinux.jp/viewtopic.php?id=19823\n\n\n\nUbuntuのインストールをします。その際、インストールウィザードのアカウント設定画面で「自動ログイン」を有効にしておきます。 2. インストール完了後に再起動をすると、ログイン画面がスキップされ、正常にデスクトップ画面が表示されます。 3. 端末を起動し、以下をコピペしたのち実行します。実行時にはアカウントのパスワードを要求されるので、入力します。 sudo gedit /etc/gdm3/custom.conf 4. コマンドの実行によって、テキストエディタ「gedit」で、ファイル「custom.conf」が開かれます。「#WaylandEnable=false」という記述を探し、当該の「#」を削除、gedit画面右上の「保存」ボタンをクリックし、上書き保存をします。 5. 「設定」を起動し、左ペインの項目から「詳細」→「ユーザー 」と辿り、「自動ログイン」を「オフ」にします。 6. PCを再起動し、ログイン画面が正常に表示されれば、作業は完了です。\n\n最初にapt(macOSでのhomebrewみたいな奴)を更新しておく\nsudo apt update\nsudo apt upgrade\nsudo apt-get update\nsudo apt-get upgrade"
+    "text": "Overview(fastpages is already deprecated)\nFastpages is a nice tool to create your homepage written by jupyter notebooks via github pages. You can also make pages by using maekdown and word. However, it can not handle org-mode file. There is a method to use org-mode via fastpages in a blog, but it does not work for me. We soleve it in easy way.\n\n\nCustomize fastpages\nFastpages uses jekyll. Threfore, we use jekyll-org. The customization is easy: modify config.yml and gemfile.\nAdd a next line to config.yml:\nplugins:\n  - jekyll-org\nAdd a next line to Gemfile:\ngem 'jekyll-org', '&gt;= 1.0.2'\n\n\nTemplete\nWe can configure front matter like bellow:\n#+toc: true\n#+layout: post\n#+comments: true\n#+categories: org-mode english\n#+TITLE: post org-mode files via fastpages\n#+description: A guide of posting org-mode files \n\n\n\n\n Back to top"
   },
   {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#gpu-の設定nvidia-diriver-cuda-cudnn",
-    "href": "posts/2021-07-12-ubuntu_memo.html#gpu-の設定nvidia-diriver-cuda-cudnn",
-    "title": "Ubuntu memo",
+    "objectID": "posts/shell.html",
+    "href": "posts/shell.html",
+    "title": "Shellのメモ",
     "section": "",
-    "text": "重要\n\nhttps://www.tensorflow.org/install/source#common_installation_problems の下の方をみてtensorflow-gpuに対応したCUDAとcuDNNを確認する\n\n\n\n\nnouveau(デフォルトドライバ?)の停止.\n\nsudo lsmod | grep nouveau\nでnouveauの確認.\nsudo emacs /etc/modprobe.d/blacklist-nouveau.conf\nに\nblacklist nouveau\noptions nouveau modeset=0\nを書き込む.\nsudo update-initramfs -u\nsudo ubuntu-drivers autoinstall\nを叩いた後\nsudo reboot\nで再起動.\nnvidia-smi\nで動作確認. 念の為\nsudo lsmod | grep nouveau\n確認し反応なければok.\n\n\n\nくどいがhttps://www.tensorflow.org/install/source#commoninstallationproblems でバージョン確認.\n\nCUDA\nhttps://developer.nvidia.com/cuda-toolkit-archive で必要なCUDAをダウンロードする. バージョンを選択するとインストール方法を教えてくれるのでそれに従う.\nインストール後\nsudo emacs .bashrc\nしてから\nexport PATH=/usr/local/cuda/bin:${PATH}\nexport LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}\nでpathを追加.\n再起動して\nnvcc -V\nでバージョン確認\ncuDNN\n公式https://developer.nvidia.com/rdp/cudnn-archive#a-collapse714-9 でバージョンを選択し\n\ncuDNN Library for Linux\ncuDNN Runtime Library for Ubuntu18.04 (Deb)\ncuDNN Developer Library for Ubuntu18.04 (Deb)\ncuDNN Code Samples and User Guide for Ubuntu18.04 (Deb)\n\nをダウンロードする(要登録). ダウンロードディレクトリへ行き下３つは順番に\nsudo dpkg -i $file_name\nとする. 一番上は\ntar xvf $file_name\nsudo cp -a cuda/include/cudnn.h /usr/local/cuda/include/\nsudo cp -a cuda/lib64/libcudnn* /usr/local/cuda/lib64/\nsudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*\ncp -r /usr/src/cudnn_samples_v7/ $HOME\ncd $HOME/cudnn_samples_v7/mnistCUDNN\nmake clean && make\nを叩く. pipでtensorflow-gpuとkerasを入れて動作確認(python環境構築を参照).\n\n\n\n\n\nhttps://soinn.esa.io/posts/840\nhttps://qiita.com/k_ikasumipowder/items/5e88ec45f958c35e05ed\nhttps://qiita.com/yukoba/items/4733e8602fa4acabcc35\nhttps://qiita.com/tatsuya11bbs/items/70205b070c7afd7dd651"
+    "text": "次のような形でlsで表示したファイルを全てcurlでpostできる:\nls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \"Authorization: Bearer ${BEARER_TOKEN}\"\nそこでそれぞれの結果をresXXXXという名前のファイルに保存したいのでリダイレクト(&gt;)を使ってみるのだが次のコードだとうまく行かない:\nls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \"Authorization: Bearer ${BEARER_TOKEN}\" &gt; res_XXXX\n思いついた解法:\nls | xargs -IXXXX  bash -c \"curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \\\"Authorization: Bearer ${BEARER_TOKEN}\\\" &gt; res_XXXX\""
   },
   {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#python環境構築",
-    "href": "posts/2021-07-12-ubuntu_memo.html#python環境構築",
-    "title": "Ubuntu memo",
+    "objectID": "posts/shell.html#パイプとリダイレクト",
+    "href": "posts/shell.html#パイプとリダイレクト",
+    "title": "Shellのメモ",
     "section": "",
-    "text": "sudo apt install build-essential libbz2-dev libdb-dev \\\nlibreadline-dev libffi-dev libgdbm-dev liblzma-dev \\\nlibncursesw5-dev libsqlite3-dev libssl-dev \\\nzlib1g-dev uuid-dev tk-dev\ni の後\n\npyenvの入れ方(好み) https://qiita.com/micheleno13/items/39ad85cfe44ca32f53ee\n\nあとは好きにpipで色々入れる."
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#usキーボード設定",
-    "href": "posts/2021-07-12-ubuntu_memo.html#usキーボード設定",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "結局macのようなctrlキーとsuperキーの設定ができなかったのでubuntuをメインに使うことは諦めた. sshで繋げばよい\n\n左commandで検索画面が出る場合の対処法 https://forums.ubuntulinux.jp/viewtopic.php?id=19987\n\n\ngsettings set org.gnome.mutter overlay-key ''\ngsettings set org.gnome.desktop.wm.keybindings switch-input-source \"['Super_L']\"\n\nmacのcommandキーやwinのwindowsキーはlinuxではsuperキー\nusキーボードで日本語を使うための設定 1(fcitixとtweakで管理する) https://www.shujima.work/entry/2018/08/16/174352 https://qiita.com/tokida/items/a89b981680a1ce4523fa\n困ったらfcitixとtweakの設定を見直す\nctrlキーとsuperキーの入れ替え https://qiita.com/teppeitherock/items/113be4c5270f1d5e2f4c"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#macbuntumac風レイアウト-sshで繋げば良いのでいらない",
-    "href": "posts/2021-07-12-ubuntu_memo.html#macbuntumac風レイアウト-sshで繋げば良いのでいらない",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "https://hermemo.com/218/ ここを見てやる"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#アプリケーション",
-    "href": "posts/2021-07-12-ubuntu_memo.html#アプリケーション",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "chrome, slack, emacs等を入れる."
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#wolfram-engine",
-    "href": "posts/2021-07-12-ubuntu_memo.html#wolfram-engine",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "公式をみて入れる. activation回数に限りがあるので注意. (linuxを再インストールして上限に達してしまったがwolframにお願いしたら再アクティベートさせてくれた.)"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#google-drive",
-    "href": "posts/2021-07-12-ubuntu_memo.html#google-drive",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "google-drive-ocamlfuseを使う (デフォルトで入っっているシステム設定からgoogleを登録するとgoogledriveのディレクトリができるが機能しない)"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#ハードディスクマウント",
-    "href": "posts/2021-07-12-ubuntu_memo.html#ハードディスクマウント",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "OSが入っているssdとは別にhddが付いているが書き込みをする際にはマウントが必要. ホームディレクトリに適当な名前のディレクトリ(例えば=mountvol=)を作り\nsudo mount $マウントしたいhhdのパス $マウント先のディレクトリ\nとする. 自分の場合\nsudo mount /dev/sdb2 mount_vol\nとやる.\n\n\nhttps://mogi2fruits.net/blog/os-software/linux/ubuntu/4263/"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#ssh",
-    "href": "posts/2021-07-12-ubuntu_memo.html#ssh",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "ターミナルで\nssh $user_id@$ip_adress\nリモートPC/サーバーへ接続. 下に書いてあるssh/configの設定をしておけば\nssh $host_name\nで繋がる."
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#gpuサーバー使い方",
-    "href": "posts/2021-07-12-ubuntu_memo.html#gpuサーバー使い方",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "自分の場合\nssh kameyama@ip_adress\n設定しておけば\nssh gpu1\n\n\ngit clone等でdockerを用意\n\n4.1.1. 旧バージョン\nターミナルで\nsudo docker-compose build\nで環境構築.\n新バージョン\nターミナルで\nsh build.sh\nで環境構築.\nJupyter\nsudo docker-compose up\nでdocker環境のjuputer notebook起動,\nその後ブラウザからアドレスに\n&lt;ip adress&gt;:&lt;port number&gt;\nでアクセス.\n例えば\n192.xxx.xx.xxx:8899\nなど. port番号は\nsudo emacs docker-compose.yml\nで確認/変更もできる. トークンは入力=dockerfile=内の=Notebook.App.token==を見る."
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#公開鍵の登録",
-    "href": "posts/2021-07-12-ubuntu_memo.html#公開鍵の登録",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "https://qiita.com/mukoya/items/f20def019e25dc162ca8\nssh先をmac finder上にマウント\nbrewでsshfsとosxfuseを入れる.\nsshfs $ユーザー名@$サーバー名:$ディレクトリ $マウントディレクトリ -p $port番号\n例えば\nsshfs kameyama@192.xxx.xx.xxx:/home/kameyama ubuntu -p 22\n\n\n\nhttps://techracho.bpsinc.jp/hachi8833/2019_02_05/66454"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#sshconfig設定mac側",
-    "href": "posts/2021-07-12-ubuntu_memo.html#sshconfig設定mac側",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "サーバー側に公開鍵を渡しておいて、macの=.ssh/config=に\nHost *\n  ForwardAgent yes\n  ServerAliveInterval 60\n  GSSAPIAuthentication no\n  UseKeychain yes\n  AddKeysToAgent yes\n\n\nHost ubuntu\n    HostName &lt;ip address&gt;\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\n\nHost gpu1\n    HostName hogehoge\n    Port 22\n    User kameyama\n    IdentityFile  ~/.ssh/id_rsa\n    ServerAliveInterval 60\n    AddKeysToAgent yes\n    UseKeychain yes\nと書いておけば\nssh ubuntu\nで手元のubuntu計算機に繋がる. 一番上設定はconfigを変更した時にいちいち=ssh-add=をしなくてもよくするためのもの.\n\n\nhttps://qiita.com/0084ken/items/2e4e9ae44ec5e01328f1"
-  },
-  {
-    "objectID": "posts/2021-07-12-ubuntu_memo.html#shellterminal関連",
-    "href": "posts/2021-07-12-ubuntu_memo.html#shellterminal関連",
-    "title": "Ubuntu memo",
-    "section": "",
-    "text": "ログインシェルから一回読み込まれるのがzprofileとbashprofile. 場合により何度も読まれるのがzshrcやbashrc.\nZshの環境変数は.commonrcに書き込む(commonrcはbashとzshで共通). =zsh -c env=だとzprofileは読まれない. =zsh -l -c env=だとzprofileが読まれる.\n以降はdottofiesはgithubのreadmeのコマンドを叩くだけで良い(変更したらpushする).\nbrewは\nbrew bundle dump --global --force\nで書き出されるのでdotfilesにぶち込む.\nsshなどの設定は公開しない.\n\n\n\nprezto: フレームワーク、見た目が変わったりする peco:履歴参照 ghq: gitを便利にするやつ+\n\npeco\nsshでubuntuのterminalを操作する際pecoがおかしい挙動をする. カーソルキーが使えないのでctrl + n とctrl + pで操作する. +https://www.yuuan.net/item/1017+\n\n\n\n\nubuntuではterminal起動時に=.bashrc=が読み込まれるがsshで繋いだ場合=.bashprofile=が読み込まれる. そこで.=bashprofile=に\n# .bashrc\nif [ -f ~/.bashrc ]; then\n        . ~/.bashrc\nfi\nと書いてsshでも=.bashrc=を読み込むようにする."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html",
-    "href": "posts/2021-07-12-mac_memo.html",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase\n\n\n\n\n\nBetter Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない.\n\n\n\n\nマスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044\n\n\n\nosxfuseを使う\n\n\n\n拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する.\n\n\n\nGPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#無料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Karabiner-Elements: キー配置やキーバインドを変更できる.\nAmphetamine: (Caffeinの代わり) スリープ on/off\nSourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.\nDBeaver: SQLを叩くためののGUI\nQueryPie: SQLを叩くためののGUI開発終了した.\nkeybase"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "href": "posts/2021-07-12-mac_memo.html#有料アプリ",
-    "title": "Mac memo",
-    "section": "",
-    "text": "Better Touch Tool トラックパッドやキーボードショートカットをカスタマイズができる.\nStay 外部モニターを使ったあとのアプリ配置がぐちゃぐちゃになる問題を解消してくれる.\nintelliJ IDE: めっちゃ便利らしい. 全然便利じゃない."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "href": "posts/2021-07-12-mac_memo.html#powerpoint",
-    "title": "Mac memo",
-    "section": "",
-    "text": "マスタースライドでヒラギノフォントが設定できない問題\nhttp://btgr.hateblo.jp/entry/2016/03/22/214044"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "href": "posts/2021-07-12-mac_memo.html#macでssh先をマウントしてfinder操作したいとき",
-    "title": "Mac memo",
-    "section": "",
-    "text": "osxfuseを使う"
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "href": "posts/2021-07-12-mac_memo.html#拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法",
-    "title": "Mac memo",
-    "section": "",
-    "text": "拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. githubに素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:\na=`osascript -e 'id of app \"emacs\"'` && \\\ndefaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \\\n'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \\\n'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'\nその後再起動する."
-  },
-  {
-    "objectID": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "href": "posts/2021-07-12-mac_memo.html#macでのgpuの設定",
-    "title": "Mac memo",
-    "section": "",
-    "text": "GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない. (会社で誰も使わず腐っていた)BlackMagic(外付けgpu)でDNNを使って遊んだのでそのメモ pythonのDNNモジュールのkerasを使う場合普通の解説ではバックエンドでtensorflowが動く. tensorflowではNVIDIAのgpuを使うが上述の通りmacではnvidiaが使えない. そこで代わりにバックエンドとしてPlaidMLを使いkerasが動く環境を構築する.\n\nモニターとgpuをHDMIで, gpuとmacをthunderbolt3で繋げてモニターにデスクトップが表示させるか確認 (普通のgpuの使い方はここを参照 https://support.apple.com/ja-jp/HT208544 )\npythonの仮想環境を設定(しなくてもよいがしておいた方が無難)\npipでkeras, plaidml-keras, おまけでベンチマーク用plaidbenchと必要なmoduleをインストール\npip install keras plaidml-keras plaidbench\nPlaidmlを設定(https://github.com/plaidml/plaidml) ターミナルで\nplaidml-setup\nを叩く. その後experimental dviceを使うかどうか\nUsing experimental devices can cause poor performance, crashes, and\nother nastiness.\n\nEnable experimental device support? (y,n)[n]: =の後どのgpuを使うか=\nMultiple devices detected (You can override by setting\nPLAIDML_DEVICE_IDS). Please choose a default device:\n\n1 : metal_intel(r)_iris(tm)_plus_graphics_645.0 2 :\nmetal_amd_radeon_pro_580.0\n\nDefault device? (1,2)[1]:\nを聞かれるので, 適当に選んで( n –&gt; 2 : metalamdradeonpro580.0とした)設定し、saveを選ぶ.\nターミナルで=\nplaidbench keras mobilenet\nを叩いてベンチマークする.\npythonのコードを書く時kerasをinmportするより前の方に\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\nを追加すればバックエンドをplaidmlにしてkerasを動かすことができる.\n以下の適当に拾ってきたコードが動けばOK\nimport os\nimport time\nos.environ[\"KERAS_BACKEND\"] = \"plaidml.keras.backend\"\n\nimport numpy as np\nimport keras\nimport keras.applications as kapp\nfrom keras.datasets import cifar10\n\n(x_train, y_train_cats), (x_test, y_test_cats) = cifar10.load_data()\nbatch_size = 8 x_train = x_train[:batch_size] x_train =\nnp.repeat(np.repeat(x_train, 7, axis=1), 7, axis=2) model =\nkapp.VGG19() model.compile(optimizer='sgd',\nloss='categorical_crossentropy', metrics=['accuracy'])\n\nprint(\"Running initial batch (compiling tile program)\") y =\nmodel.predict(x=x_train, batch_size=batch_size)\n\n# Now start the clock and run 10 batches print(\"Timing inference...\")\nstart = time.time() for i in range(10): y = model.predict(x=x_train,\nbatch_size=batch_size) print(\"Ran in {} seconds\".format(time.time() -\n                            start)) \n\n後は好きなだけDNNで遊べば良い."
+    "text": "次のような形でlsで表示したファイルを全てcurlでpostできる:\nls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \"Authorization: Bearer ${BEARER_TOKEN}\"\nそこでそれぞれの結果をresXXXXという名前のファイルに保存したいのでリダイレクト(&gt;)を使ってみるのだが次のコードだとうまく行かない:\nls | xargs -IXXXX curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \"Authorization: Bearer ${BEARER_TOKEN}\" &gt; res_XXXX\n思いついた解法:\nls | xargs -IXXXX  bash -c \"curl -H POST $url -H 'Content-Type: application/json' -d @./XXXX -H \\\"Authorization: Bearer ${BEARER_TOKEN}\\\" &gt; res_XXXX\""
   },
   {
     "objectID": "posts/2022-01-11-org-jupyter.html",
