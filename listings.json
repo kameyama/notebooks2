@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/emacs.html",
       "/posts/quarto_with_org_mode.html",
       "/posts/fastapi.html",
       "/posts/stepci.html",
@@ -9,16 +10,16 @@
       "/posts/sagemaker.html",
       "/posts/2021-07-12-jupyter_settings.html",
       "/posts/2022-05-29-docker_from_scratch.html",
-      "/posts/2022-03-10-asdf.html",
       "/posts/2022-03-10-manim.html",
+      "/posts/2022-03-10-asdf.html",
       "/posts/2022-01-21-great_expextations.html",
       "/posts/2022-01-11-org-jupyter.html",
       "/posts/2022-01-10-post_org_files_via_fastpages.html",
+      "/posts/2021-07-29-examples_to_connect_dbs_in_python.html",
       "/posts/2021-07-14-examples_to_connect_dbs_in_julia.html",
       "/posts/2021-07-12-julia_memo.html",
-      "/posts/2021-07-29-examples_to_connect_dbs_in_python.html",
-      "/posts/2021-07-12-ubuntu_memo.html",
       "/posts/2021-07-12-julia_setup_and_settings.html",
+      "/posts/2021-07-12-ubuntu_memo.html",
       "/posts/2021-07-12-mac_memo.html",
       "/posts/2021-07-12-database_memo.html",
       "/posts/2021-07-04-upload_file_to_google_shared_drive.html"

@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Masaya Kameyama">
-<meta name="dcterms.date" content="2022-06-29">
-<meta name="description" content="docker imageをscratchから作る">
+<meta name="dcterms.date" content="2024-02-18">
+<meta name="description" content="emacsのメモ書き">
 
-<title>notebooks2 - docker image from scratch</title>
+<title>notebooks2 - emacsメモ</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,40 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -115,11 +81,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="notebooks2 - docker image from scratch">
-<meta property="og:description" content="docker imageをscratchから作る">
+<meta property="og:title" content="notebooks2 - emacsメモ">
+<meta property="og:description" content="emacsのメモ書き">
 <meta property="og:site_name" content="notebooks2">
-<meta name="twitter:title" content="notebooks2 - docker image from scratch">
-<meta name="twitter:description" content="docker imageをscratchから作る">
+<meta name="twitter:title" content="notebooks2 - emacsメモ">
+<meta name="twitter:description" content="emacsのメモ書き">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -165,14 +131,15 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">docker image from scratch</h1>
+      <h1 class="title">emacsメモ</h1>
                   <div>
         <div class="description">
-          docker imageをscratchから作る
+          emacsのメモ書き
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">docker</div>
+                <div class="quarto-category">emacs</div>
+                <div class="quarto-category">memo</div>
               </div>
                   </div>
   </div>
@@ -190,7 +157,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 29, 2022</p>
+        <p class="date">February 18, 2024</p>
       </div>
     </div>
     
@@ -209,115 +176,49 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
-<section id="はじめに" class="level1">
-<h1>はじめに</h1>
-<p>世ははまさに大docker時代、我々はdockerを使った上でプログラムの開発を行っている. プログラムを開発では最終的にdocker imageを作成してdeployする. この際docker imageは公開されている便利なimageを利用して新たなimageを作る. 例えばpythonでhello worldをする実行するdocker imageを作成して実行する一例は次の通りだ:</p>
-<ul>
-<li>Dockerfile</li>
-</ul>
-<!-- -->
-<pre><code>FROM python:3
-COPY hello.py /
-CMD ["python", "hello.py"]</code></pre>
-<ul>
-<li>hello.py</li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre class="shell"><code>docker build -t python-hello .
-docker container run python-hello</code></pre>
-<pre><code>hello</code></pre>
-<p>ubuntu 18のimageが欲しければ</p>
-<pre class="shell"><code>docker image pull ubuntu:18.04</code></pre>
-<p>でimageを取得できる. このように好きなimageを元に好きなimageを作ることができる.</p>
-<p>所でpythonやubuntu:18.04などのimageはどうやって作られているんだろうか. 我々のような末端ユーザーは公開されているimageを利用するがdocker fileを0から作るにはどうしたら良いのだろうか? そんな時に利用するのが<a href="https://hub.docker.com/_/scratch">scratch image</a>だ. この記事ではscratchにhello worldバイナリプログラムを実行するimageをscratchから作成し実行する.</p>
-<section id="参考" class="level2">
-<h2 class="anchored" data-anchor-id="参考">参考</h2>
-<p><a href="https://docs.docker.jp/v19.03/engine/userguide/eng-image/baseimages.html">ドキュメント: ベース・イメージの作成</a></p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>emacsは僕が大学の講義で最初に見たエディタでその頃から使っている. 最近はvscodeが流行っていてとても簡単で便利なのでemacsを使おうと思う. 意味不明な文だがvscodeは便利だがemacsを使いたいのでemacsを使いこんでより便利に使うという意味である. 僕のemacsの設定は<a href="https://github.com/kameyama/.emacs.d">ここ</a>に置いてある.</p>
 </section>
+<section id="ref" class="level1">
+<h1>ref</h1>
+<ul>
+<li>M-x help-with-tutorial-spec-language Japanese</li>
+</ul>
+<p>で日本語チュートリアルが見れる</p>
 </section>
-<section id="hello-worldバイナリの作成1" class="level1">
-<h1>hello worldバイナリの作成1</h1>
-<p>公式ドキュメントではC言語のhello worldを例にしているがC言語は触ったことがないのでfortranでコンテナ外でバイナリを用意して実行する.</p>
+<section id="バックグラウンド起動" class="level1">
+<h1>バックグラウンド起動</h1>
+<pre class="shell"><code>emacs --deamon</code></pre>
+<p>でバックグラウンドでemacsを起動しておくとそれ以降はemacsclientで高速に起動できる.</p>
+<p>この機能をもっと便利に使うために以下を行う.</p>
+<ol type="1">
+<li>Mac起動時にemacs deamonを自動で起動させる
 <ul>
-<li>hello.f90</li>
-</ul>
-<div class="sourceCode" id="cb6"><pre class="sourceCode fortran code-with-copy"><code class="sourceCode fortranfixed"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">program</span> hello</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> <span class="kw">*</span>, <span class="st">'Hello World!'</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end program</span> hello</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<pre class="shell"><code>gfortran hello.f90</code></pre>
-<p>これでコンパイルされて実行バイナリa.outができあがる. しかしこの実行バイナリはコンテナ内部では動作しない.</p>
+<li><a href="https://qiita.com/radixm46/items/da819ad074feb6ef4f81" class="uri">https://qiita.com/radixm46/items/da819ad074feb6ef4f81</a></li>
+</ul></li>
+<li>emacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする.
 <ul>
-<li>Dockerfile<sub>a</sub></li>
-</ul>
-<!-- -->
-<pre><code>FORM scratch
-COPY a.out /
-CMD ["/a.out"]</code></pre>
-<pre class="shell"><code>docker build -t hello-a -f Dockerfile_a .
-docker container run --rm hello-a</code></pre>
-<pre><code>standard_init_linux.go:228: exec user process caused: exec format error</code></pre>
-<p>その理由はa.outがM1 Mac動作するプログラムだからだ.</p>
-<pre class="shell"><code>file a.out</code></pre>
-<pre><code>a.out: Mach-O 64-bit executable arm64</code></pre>
-<p>scratch imageはlinuxなのでlinuxの実行バイナリが必要だ.</p>
+<li><a href="https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x" class="uri">https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x</a></li>
+</ul></li>
+<li>Automatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する
+<ul>
+<li><a href="https://linkerdesign.github.io/journal/2012/02/automator-1.html" class="uri">https://linkerdesign.github.io/journal/2012/02/automator-1.html</a></li>
+</ul></li>
+</ol>
 </section>
-<section id="hello-worldバイナリの作成2" class="level1">
-<h1>hello worldバイナリの作成2</h1>
-<p>1ではlinuxの実行バイナリを作成しなかったことが失敗の原因だったのでlinuxでバイナリを用意してscratch imageへコピーしよう. その方法としてmulti stage buildを使う.</p>
+<section id="日本語入力" class="level1">
+<h1>日本語入力</h1>
 <ul>
-<li>Dockerfile<sub>b</sub></li>
+<li>Mac側で日本語にする場合とemacsの中で日本語入力にする(c-\)2通りの方法がある.</li>
 </ul>
-<p>alpine imageを利用してgfortran, musl-dev(gfortranを実行するために入れた), fileをインストールしてコンパイル後scratchへコピーする.</p>
-<pre><code>FROM alpine AS b
-
-RUN apk update
-RUN apk add --upgrade gfortran musl-dev file
-
-COPY a.out /
-COPY hello.f90 /
-RUN gfortran hello.f90 -o b.out
-
-FROM scratch
-COPY a.out /
-COPY --from=b b.out /
-CMD ["/b.out"]</code></pre>
-<p>しかしこのb.outも動作しない:</p>
-<pre class="shell"><code>docker build -t hello-b -f Dockerfile_b .
-docker container run --rm hello-b</code></pre>
-<pre class="shell"><code>standard_init_linux.go:228: exec user process caused: no such file or directory</code></pre>
-<p>その理由はb.outがdynamically linkになっているからだ. multi stageのbのコンテナからfileを実行する:</p>
-<pre class="shell"><code>docker build -t hello-bb -f Dockerfile_b --target b .
-docker container run --rm hello-bb file b.out</code></pre>
-<pre class="shell"><code>b.out: ELF 64-bit LSB pie executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-musl-aarch64.so.1, with debug_info, not stripped</code></pre>
 </section>
-<section id="hello-worldバイナリの作成3" class="level1">
-<h1>hello worldバイナリの作成3</h1>
-<p>2ではdynamically linkだったことが良くなかったのでstatic linkのバイナリを作って実行する.</p>
-<ul>
-<li>Dockerfile</li>
-</ul>
-<!-- -->
-<pre><code>FROM alpine AS b
-
-RUN apk update
-RUN apk add --upgrade gfortran musl-dev file
-
-COPY a.out /
-COPY hello.f90 /
-RUN gfortran hello.f90 -o b.out
-RUN gfortran hello.f90 -o c.out -static
-
-FROM scratch
-COPY --from=b a.out /
-COPY --from=b b.out /
-COPY --from=b c.out /
-CMD ["/c.out"]</code></pre>
-<pre class="shell"><code>docker build -t hello -f Dockerfile  .
-docker container run --rm hello</code></pre>
-<pre class="shell"><code>Hello World!</code></pre>
-<p>2と同様にmulti stageのbでc.outをfileで調べると</p>
-<pre class="shell"><code>c.out: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, with debug_info, not stripped</code></pre>
-<p>となりstatic linkになっていることがわかる.</p>
+<section id="カーソル移動" class="level1">
+<h1>カーソル移動</h1>
+<p>m-f: 1単語前に移動 m-b: 1単語後に移動</p>
+<p>&lt;Delback&gt; カーソルの直前の文字を削除（delete） C-d カーソルのある文字を削除（delete）</p>
+<p>M-&lt;Delback&gt; カーソルの直前の単語を消去（kill） M-d カーソル位置の後ろにある単語を消去（kill）</p>
+<p>C-k カーソル位置から行末までを消去（kill） M-k カーソル位置から文末までを消去（kill）</p>
 
 
 </section>

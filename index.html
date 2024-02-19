@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -47,7 +47,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -56,6 +62,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -103,9 +110,36 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="notebooks2">
-<meta property="og:site-name" content="notebooks2">
+<meta property="og:site_name" content="notebooks2">
 <meta name="twitter:title" content="notebooks2">
 <meta name="twitter:card" content="summary">
 </head>
@@ -113,10 +147,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">notebooks2</span>
     </a>
@@ -128,23 +162,23 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/kameyama" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/kameyama"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/kamesen" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/kamesen"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -157,7 +191,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
   </div>
     
   
-  <div class="quarto-title-meta">
+  <div class="quarto-title-meta column-page-left">
 
       
     
@@ -170,7 +204,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(20)</span></div><div class="category" data-category="aws">aws <span class="quarto-category-count">(4)</span></div><div class="category" data-category="bigquery">bigquery <span class="quarto-category-count">(3)</span></div><div class="category" data-category="ci/cd">ci/cd <span class="quarto-category-count">(2)</span></div><div class="category" data-category="database">database <span class="quarto-category-count">(4)</span></div><div class="category" data-category="dev">dev <span class="quarto-category-count">(2)</span></div><div class="category" data-category="docker">docker <span class="quarto-category-count">(1)</span></div><div class="category" data-category="emacs">emacs <span class="quarto-category-count">(2)</span></div><div class="category" data-category="fastapi">fastapi <span class="quarto-category-count">(1)</span></div><div class="category" data-category="gcp">gcp <span class="quarto-category-count">(4)</span></div><div class="category" data-category="golang">golang <span class="quarto-category-count">(1)</span></div><div class="category" data-category="julia">julia <span class="quarto-category-count">(3)</span></div><div class="category" data-category="jupyter">jupyter <span class="quarto-category-count">(2)</span></div><div class="category" data-category="mac">mac <span class="quarto-category-count">(1)</span></div><div class="category" data-category="manim">manim <span class="quarto-category-count">(1)</span></div><div class="category" data-category="memo">memo <span class="quarto-category-count">(9)</span></div><div class="category" data-category="openapi">openapi <span class="quarto-category-count">(1)</span></div><div class="category" data-category="python">python <span class="quarto-category-count">(2)</span></div><div class="category" data-category="quarto">quarto <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ubuntu">ubuntu <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(21)</span></div><div class="category" data-category="aws">aws <span class="quarto-category-count">(4)</span></div><div class="category" data-category="bigquery">bigquery <span class="quarto-category-count">(3)</span></div><div class="category" data-category="ci/cd">ci/cd <span class="quarto-category-count">(2)</span></div><div class="category" data-category="database">database <span class="quarto-category-count">(4)</span></div><div class="category" data-category="dev">dev <span class="quarto-category-count">(2)</span></div><div class="category" data-category="docker">docker <span class="quarto-category-count">(1)</span></div><div class="category" data-category="emacs">emacs <span class="quarto-category-count">(3)</span></div><div class="category" data-category="fastapi">fastapi <span class="quarto-category-count">(1)</span></div><div class="category" data-category="gcp">gcp <span class="quarto-category-count">(4)</span></div><div class="category" data-category="golang">golang <span class="quarto-category-count">(1)</span></div><div class="category" data-category="julia">julia <span class="quarto-category-count">(3)</span></div><div class="category" data-category="jupyter">jupyter <span class="quarto-category-count">(2)</span></div><div class="category" data-category="mac">mac <span class="quarto-category-count">(1)</span></div><div class="category" data-category="manim">manim <span class="quarto-category-count">(1)</span></div><div class="category" data-category="memo">memo <span class="quarto-category-count">(10)</span></div><div class="category" data-category="openapi">openapi <span class="quarto-category-count">(1)</span></div><div class="category" data-category="python">python <span class="quarto-category-count">(2)</span></div><div class="category" data-category="quarto">quarto <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ubuntu">ubuntu <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -181,21 +215,58 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
+
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="ci/cd,memo,quarto,emacs" data-listing-date-sort="1704758400000" data-listing-file-modified-sort="1704774225338" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="0" data-categories="emacs,memo" data-listing-date-sort="1708214400000" data-listing-file-modified-sort="1708327260848" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="52">
 <div class="thumbnail">
-<p><a href="./posts/quarto_with_org_mode.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/emacs.html" class="no-external"></a></p><a href="./posts/emacs.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/emacs.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/quarto_with_org_mode.html">
 <h3 class="no-anchor listing-title">
-org-modeをquartoで扱う方法
+<a href="./posts/emacs.html" class="no-external">emacsメモ</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/emacs.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('emacs'); return false;">
+emacs
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
+memo
+</div>
+</div>
+<div class="listing-description">
+<a href="./posts/emacs.html" class="no-external">emacsのメモ書き</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/emacs.html" class="no-external">
+<div class="listing-date">
+Feb 18, 2024
+</div>
+<div class="listing-author">
+Masaya Kameyama
 </div>
 </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="ci/cd,memo,quarto,emacs" data-listing-date-sort="1704758400000" data-listing-file-modified-sort="1708327260952" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="446">
+<div class="thumbnail">
+<p><a href="./posts/quarto_with_org_mode.html" class="no-external"></a></p><a href="./posts/quarto_with_org_mode.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/quarto_with_org_mode.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/quarto_with_org_mode.html" class="no-external">org-modeをquartoで扱う方法</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/quarto_with_org_mode.html" class="no-external"></a>
+</div>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('ci/cd'); return false;">
 ci/cd
@@ -210,14 +281,12 @@ quarto
 emacs
 </div>
 </div>
-<a href="./posts/quarto_with_org_mode.html">
 <div class="listing-description">
-<p>pandocのfilterを使ってqmdのmetadataに変換する</p>
+<a href="./posts/quarto_with_org_mode.html" class="no-external">pandocのfilterを使ってqmdのmetadataに変換する</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/quarto_with_org_mode.html">
+<a href="./posts/quarto_with_org_mode.html" class="no-external">
 <div class="listing-date">
 Jan 9, 2024
 </div>
@@ -227,32 +296,30 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="fastapi" data-listing-date-sort="1703203200000" data-listing-file-modified-sort="1704774225282" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="2" data-categories="fastapi" data-listing-date-sort="1703203200000" data-listing-file-modified-sort="1708327260904" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2261">
 <div class="thumbnail">
-<p><a href="./posts/fastapi.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/fastapi.html" class="no-external"></a></p><a href="./posts/fastapi.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/fastapi.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/fastapi.html">
 <h3 class="no-anchor listing-title">
-uvicorn vs gunicorn
+<a href="./posts/fastapi.html" class="no-external">uvicorn vs gunicorn</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/fastapi.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('fastapi'); return false;">
 fastapi
 </div>
 </div>
-<a href="./posts/fastapi.html">
 <div class="listing-description">
-<p>fastapiを使う際のuvicornとgunicornの違い</p>
+<a href="./posts/fastapi.html" class="no-external">fastapiを使う際のuvicornとgunicornの違い</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/fastapi.html">
+<a href="./posts/fastapi.html" class="no-external">
 <div class="listing-date">
 Dec 22, 2023
 </div>
@@ -262,19 +329,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="dev,ci/cd,memo" data-listing-date-sort="1685923200000" data-listing-file-modified-sort="1704774225494" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="3" data-categories="dev,ci/cd,memo" data-listing-date-sort="1685923200000" data-listing-file-modified-sort="1708327261084" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="432">
 <div class="thumbnail">
-<p><a href="./posts/stepci.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/stepci.html" class="no-external"></a></p><a href="./posts/stepci.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/stepci.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/stepci.html">
 <h3 class="no-anchor listing-title">
-stepciのworkflow.yamlの上手かもしれない書き方
+<a href="./posts/stepci.html" class="no-external">stepciのworkflow.yamlの上手かもしれない書き方</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/stepci.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('dev'); return false;">
 dev
@@ -286,14 +353,12 @@ ci/cd
 memo
 </div>
 </div>
-<a href="./posts/stepci.html">
 <div class="listing-description">
-<p>APIのテストツール</p>
+<a href="./posts/stepci.html" class="no-external">APIのテストツール</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/stepci.html">
+<a href="./posts/stepci.html" class="no-external">
 <div class="listing-date">
 Jun 5, 2023
 </div>
@@ -303,19 +368,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="dev,openapi" data-listing-date-sort="1684627200000" data-listing-file-modified-sort="1704774225442" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="4" data-categories="dev,openapi" data-listing-date-sort="1684627200000" data-listing-file-modified-sort="1708327261044" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="130">
 <div class="thumbnail">
-<p><a href="./posts/security_of_cicd.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/security_of_cicd.html" class="no-external"></a></p><a href="./posts/security_of_cicd.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/security_of_cicd.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/security_of_cicd.html">
 <h3 class="no-anchor listing-title">
-OpenAPIとSchemathesisの紹介
+<a href="./posts/security_of_cicd.html" class="no-external">OpenAPIとSchemathesisの紹介</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/security_of_cicd.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('dev'); return false;">
 dev
@@ -324,14 +389,12 @@ dev
 openapi
 </div>
 </div>
-<a href="./posts/security_of_cicd.html">
 <div class="listing-description">
-<p>OpenAPIに従ってrest apiへリクエストを投げるパッケージ</p>
+<a href="./posts/security_of_cicd.html" class="no-external">OpenAPIに従ってrest apiへリクエストを投げるパッケージ</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/security_of_cicd.html">
+<a href="./posts/security_of_cicd.html" class="no-external">
 <div class="listing-date">
 May 21, 2023
 </div>
@@ -341,19 +404,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="gcp,aws" data-listing-date-sort="1683504000000" data-listing-file-modified-sort="1704774225386" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="5" data-categories="gcp,aws" data-listing-date-sort="1683504000000" data-listing-file-modified-sort="1708327260996" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="18">
 <div class="thumbnail">
-<p><a href="./posts/sagemaker.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/sagemaker.html" class="no-external"></a></p><a href="./posts/sagemaker.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/sagemaker.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/sagemaker.html">
 <h3 class="no-anchor listing-title">
-Amazon Sagemakerの感想
+<a href="./posts/sagemaker.html" class="no-external">Amazon Sagemakerの感想</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/sagemaker.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('gcp'); return false;">
 gcp
@@ -362,14 +425,12 @@ gcp
 aws
 </div>
 </div>
-<a href="./posts/sagemaker.html">
 <div class="listing-description">
-<p>1週間くらい調査してみた感想</p>
+<a href="./posts/sagemaker.html" class="no-external">1週間くらい調査してみた感想</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/sagemaker.html">
+<a href="./posts/sagemaker.html" class="no-external">
 <div class="listing-date">
 May 8, 2023
 </div>
@@ -379,19 +440,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="memo,jupyter" data-listing-date-sort="1657584000000" data-listing-file-modified-sort="1704774224838" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="6" data-categories="memo,jupyter" data-listing-date-sort="1657584000000" data-listing-file-modified-sort="1708327260428" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="93">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-12-jupyter_settings.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-12-jupyter_settings.html" class="no-external"></a></p><a href="./posts/2021-07-12-jupyter_settings.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-jupyter_settings.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-12-jupyter_settings.html">
 <h3 class="no-anchor listing-title">
-jupyter settings
+<a href="./posts/2021-07-12-jupyter_settings.html" class="no-external">jupyter settings</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-12-jupyter_settings.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
@@ -400,14 +461,12 @@ memo
 jupyter
 </div>
 </div>
-<a href="./posts/2021-07-12-jupyter_settings.html">
 <div class="listing-description">
-<p>Jupyter settings for myself</p>
+<a href="./posts/2021-07-12-jupyter_settings.html" class="no-external">Jupyter settings for myself</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-12-jupyter_settings.html">
+<a href="./posts/2021-07-12-jupyter_settings.html" class="no-external">
 <div class="listing-date">
 Jul 12, 2022
 </div>
@@ -417,32 +476,30 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="docker" data-listing-date-sort="1656460800000" data-listing-file-modified-sort="1704774225218" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2">
+<div class="quarto-post image-right" data-index="7" data-categories="docker" data-listing-date-sort="1656460800000" data-listing-file-modified-sort="1708327260804" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="371">
 <div class="thumbnail">
-<p><a href="./posts/2022-05-29-docker_from_scratch.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external"></a></p><a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2022-05-29-docker_from_scratch.html">
 <h3 class="no-anchor listing-title">
-docker image from scratch
+<a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external">docker image from scratch</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('docker'); return false;">
 docker
 </div>
 </div>
-<a href="./posts/2022-05-29-docker_from_scratch.html">
 <div class="listing-description">
-<p>docker imageをscratchから作る</p>
+<a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external">docker imageをscratchから作る</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2022-05-29-docker_from_scratch.html">
+<a href="./posts/2022-05-29-docker_from_scratch.html" class="no-external">
 <div class="listing-date">
 Jun 29, 2022
 </div>
@@ -452,54 +509,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="memo" data-listing-date-sort="1646870400000" data-listing-file-modified-sort="1704774225142" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="8" data-categories="memo,manim" data-listing-date-sort="1646870400000" data-listing-file-modified-sort="1708327260756" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="49">
 <div class="thumbnail">
-<p><a href="./posts/2022-03-10-asdf.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2022-03-10-manim.html" class="no-external"></a></p><a href="./posts/2022-03-10-manim.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-03-10-manim.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2022-03-10-asdf.html">
 <h3 class="no-anchor listing-title">
-asdfのメモ
+<a href="./posts/2022-03-10-manim.html" class="no-external">manimのメモ</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2022-03-10-manim.html" class="no-external"></a>
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
-memo
-</div>
-</div>
-<a href="./posts/2022-03-10-asdf.html">
-<div class="listing-description">
-<p>pyenvからasdfへ移行を例に</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2022-03-10-asdf.html">
-<div class="listing-date">
-Mar 10, 2022
-</div>
-<div class="listing-author">
-Masaya Kameyama
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="memo,manim" data-listing-date-sort="1646870400000" data-listing-file-modified-sort="1704774225170" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/2022-03-10-manim.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2022-03-10-manim.html">
-<h3 class="no-anchor listing-title">
-manimのメモ
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
@@ -508,14 +530,12 @@ memo
 manim
 </div>
 </div>
-<a href="./posts/2022-03-10-manim.html">
 <div class="listing-description">
-<p>manim</p>
+<a href="./posts/2022-03-10-manim.html" class="no-external">manim</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2022-03-10-manim.html">
+<a href="./posts/2022-03-10-manim.html" class="no-external">
 <div class="listing-date">
 Mar 10, 2022
 </div>
@@ -525,32 +545,63 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="python" data-listing-date-sort="1642723200000" data-listing-file-modified-sort="1704774225098" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="9" data-categories="memo" data-listing-date-sort="1646870400000" data-listing-file-modified-sort="1708327260732" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="47">
 <div class="thumbnail">
-<p><a href="./posts/2022-01-21-great_expextations.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2022-03-10-asdf.html" class="no-external"></a></p><a href="./posts/2022-03-10-asdf.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-03-10-asdf.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2022-01-21-great_expextations.html">
 <h3 class="no-anchor listing-title">
-great expectationsの紹介
+<a href="./posts/2022-03-10-asdf.html" class="no-external">asdfのメモ</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2022-03-10-asdf.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
+memo
+</div>
+</div>
+<div class="listing-description">
+<a href="./posts/2022-03-10-asdf.html" class="no-external">pyenvからasdfへ移行を例に</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-10-asdf.html" class="no-external">
+<div class="listing-date">
+Mar 10, 2022
+</div>
+<div class="listing-author">
+Masaya Kameyama
 </div>
 </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-categories="python" data-listing-date-sort="1642723200000" data-listing-file-modified-sort="1708327260684" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="26">
+<div class="thumbnail">
+<p><a href="./posts/2022-01-21-great_expextations.html" class="no-external"></a></p><a href="./posts/2022-01-21-great_expextations.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-01-21-great_expextations.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2022-01-21-great_expextations.html" class="no-external">great expectationsの紹介</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/2022-01-21-great_expextations.html" class="no-external"></a>
+</div>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
 python
 </div>
 </div>
-<a href="./posts/2022-01-21-great_expextations.html">
 <div class="listing-description">
-<p>グレートですよこいつはァ</p>
+<a href="./posts/2022-01-21-great_expextations.html" class="no-external">グレートですよこいつはァ</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2022-01-21-great_expextations.html">
+<a href="./posts/2022-01-21-great_expextations.html" class="no-external">
 <div class="listing-date">
 Jan 21, 2022
 </div>
@@ -560,19 +611,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="jupyter,emacs" data-listing-date-sort="1641859200000" data-listing-file-modified-sort="1704774225054" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="11" data-categories="jupyter,emacs" data-listing-date-sort="1641859200000" data-listing-file-modified-sort="1708327260640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="59">
 <div class="thumbnail">
-<p><a href="./posts/2022-01-11-org-jupyter.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2022-01-11-org-jupyter.html" class="no-external"></a></p><a href="./posts/2022-01-11-org-jupyter.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-01-11-org-jupyter.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2022-01-11-org-jupyter.html">
 <h3 class="no-anchor listing-title">
-use org-mode like jupyter
+<a href="./posts/2022-01-11-org-jupyter.html" class="no-external">use org-mode like jupyter</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2022-01-11-org-jupyter.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('jupyter'); return false;">
 jupyter
@@ -581,14 +632,12 @@ jupyter
 emacs
 </div>
 </div>
-<a href="./posts/2022-01-11-org-jupyter.html">
 <div class="listing-description">
-<p>org-modeをjupyterのように使う方法</p>
+<a href="./posts/2022-01-11-org-jupyter.html" class="no-external">org-modeをjupyterのように使う方法</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2022-01-11-org-jupyter.html">
+<a href="./posts/2022-01-11-org-jupyter.html" class="no-external">
 <div class="listing-date">
 Jan 11, 2022
 </div>
@@ -598,32 +647,30 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="memo" data-listing-date-sort="1641772800000" data-listing-file-modified-sort="1704774225006" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="12" data-categories="memo" data-listing-date-sort="1641772800000" data-listing-file-modified-sort="1708327260596" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="132">
 <div class="thumbnail">
-<p><a href="./posts/2022-01-10-post_org_files_via_fastpages.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external"></a></p><a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2022-01-10-post_org_files_via_fastpages.html">
 <h3 class="no-anchor listing-title">
-post org-mode files via fastpages
+<a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external">post org-mode files via fastpages</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
 </div>
 </div>
-<a href="./posts/2022-01-10-post_org_files_via_fastpages.html">
 <div class="listing-description">
-<p>A guide of posting org-mode files</p>
+<a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external">A guide of posting org-mode files</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2022-01-10-post_org_files_via_fastpages.html">
+<a href="./posts/2022-01-10-post_org_files_via_fastpages.html" class="no-external">
 <div class="listing-date">
 Jan 10, 2022
 </div>
@@ -633,113 +680,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-categories="julia,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1704774203274" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="13" data-categories="python,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1708327238584" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="81">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external"></a></p><a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html">
 <h3 class="no-anchor listing-title">
-Connect databses in Julia
+<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external">Connect databses in Python</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external"></a>
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
-julia
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('database'); return false;">
-database
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('aws'); return false;">
-aws
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('gcp'); return false;">
-gcp
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('bigquery'); return false;">
-bigquery
-</div>
-</div>
-<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html">
-<div class="listing-description">
-<p>Examples to connect db in Julia</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html">
-<div class="listing-date">
-Jul 29, 2021
-</div>
-<div class="listing-author">
-Masaya Kameyama
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-categories="julia,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1704774203274" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/2021-07-12-julia_memo.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-07-12-julia_memo.html">
-<h3 class="no-anchor listing-title">
-julia memo
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
-julia
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('database'); return false;">
-database
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('aws'); return false;">
-aws
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('gcp'); return false;">
-gcp
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('bigquery'); return false;">
-bigquery
-</div>
-</div>
-<a href="./posts/2021-07-12-julia_memo.html">
-<div class="listing-description">
-<p>(自分が)よく間違えるjuliaの構文をまとめる</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-07-12-julia_memo.html">
-<div class="listing-date">
-Jul 29, 2021
-</div>
-<div class="listing-author">
-Masaya Kameyama
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="14" data-categories="python,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1704774203274" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html">
-<h3 class="no-anchor listing-title">
-Connect databses in Python
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('python'); return false;">
 python
@@ -757,14 +710,12 @@ gcp
 bigquery
 </div>
 </div>
-<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html">
 <div class="listing-description">
-<p>Examples to connect db in Python</p>
+<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external">Examples to connect db in Python</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html">
+<a href="./posts/2021-07-29-examples_to_connect_dbs_in_python.html" class="no-external">
 <div class="listing-date">
 Jul 29, 2021
 </div>
@@ -774,19 +725,142 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-categories="memo,ubuntu" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1704774224962" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="quarto-post image-right" data-index="14" data-categories="julia,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1708327238584" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-12-ubuntu_memo.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external"></a></p><a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-12-ubuntu_memo.html">
 <h3 class="no-anchor listing-title">
-Ubuntu memo
+<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external">Connect databses in Julia</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
+julia
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('database'); return false;">
+database
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('aws'); return false;">
+aws
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('gcp'); return false;">
+gcp
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bigquery'); return false;">
+bigquery
+</div>
+</div>
+<div class="listing-description">
+<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external">Examples to connect db in Julia</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2021-07-14-examples_to_connect_dbs_in_julia.html" class="no-external">
+<div class="listing-date">
+Jul 29, 2021
+</div>
+<div class="listing-author">
+Masaya Kameyama
 </div>
 </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="15" data-categories="julia,database,aws,gcp,bigquery" data-listing-date-sort="1627516800000" data-listing-file-modified-sort="1708327238584" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="10">
+<div class="thumbnail">
+<p><a href="./posts/2021-07-12-julia_memo.html" class="no-external"></a></p><a href="./posts/2021-07-12-julia_memo.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-julia_memo.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2021-07-12-julia_memo.html" class="no-external">julia memo</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/2021-07-12-julia_memo.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
+julia
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('database'); return false;">
+database
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('aws'); return false;">
+aws
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('gcp'); return false;">
+gcp
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('bigquery'); return false;">
+bigquery
+</div>
+</div>
+<div class="listing-description">
+<a href="./posts/2021-07-12-julia_memo.html" class="no-external">(自分が)よく間違えるjuliaの構文をまとめる</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2021-07-12-julia_memo.html" class="no-external">
+<div class="listing-date">
+Jul 29, 2021
+</div>
+<div class="listing-author">
+Masaya Kameyama
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="16" data-categories="julia" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1708327260376" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="28">
+<div class="thumbnail">
+<p><a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external"></a></p><a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external">Julia setup &amp; settings</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
+julia
+</div>
+</div>
+<div class="listing-description">
+<a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external">Julia setup &amp; settings for myself</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2021-07-12-julia_setup_and_settings.html" class="no-external">
+<div class="listing-date">
+Jul 12, 2021
+</div>
+<div class="listing-author">
+Masaya Kameyama
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="17" data-categories="memo,ubuntu" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1708327260548" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="879">
+<div class="thumbnail">
+<p><a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external"></a></p><a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external">Ubuntu memo</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external"></a>
+</div>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
@@ -795,14 +869,12 @@ memo
 ubuntu
 </div>
 </div>
-<a href="./posts/2021-07-12-ubuntu_memo.html">
 <div class="listing-description">
-<p>Ubuntu memo for myself</p>
+<a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external">Ubuntu memo for myself</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-12-ubuntu_memo.html">
+<a href="./posts/2021-07-12-ubuntu_memo.html" class="no-external">
 <div class="listing-date">
 Jul 12, 2021
 </div>
@@ -812,54 +884,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-categories="julia" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1704774224786" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="18" data-categories="memo,mac" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1708327260476" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="454">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-12-julia_setup_and_settings.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-12-mac_memo.html" class="no-external"></a></p><a href="./posts/2021-07-12-mac_memo.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-mac_memo.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-12-julia_setup_and_settings.html">
 <h3 class="no-anchor listing-title">
-Julia setup &amp; settings
+<a href="./posts/2021-07-12-mac_memo.html" class="no-external">Mac memo</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-12-mac_memo.html" class="no-external"></a>
 </div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('julia'); return false;">
-julia
-</div>
-</div>
-<a href="./posts/2021-07-12-julia_setup_and_settings.html">
-<div class="listing-description">
-<p>Julia setup &amp; settings for myself</p>
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-07-12-julia_setup_and_settings.html">
-<div class="listing-date">
-Jul 12, 2021
-</div>
-<div class="listing-author">
-Masaya Kameyama
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-categories="memo,mac" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1704774224890" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/2021-07-12-mac_memo.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-07-12-mac_memo.html">
-<h3 class="no-anchor listing-title">
-Mac memo
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
@@ -868,14 +905,12 @@ memo
 mac
 </div>
 </div>
-<a href="./posts/2021-07-12-mac_memo.html">
 <div class="listing-description">
-<p>Mac memo for myself</p>
+<a href="./posts/2021-07-12-mac_memo.html" class="no-external">Mac memo for myself</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-12-mac_memo.html">
+<a href="./posts/2021-07-12-mac_memo.html" class="no-external">
 <div class="listing-date">
 Jul 12, 2021
 </div>
@@ -885,19 +920,19 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-categories="memo,database" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1704774224734" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="19" data-categories="memo,database" data-listing-date-sort="1626048000000" data-listing-file-modified-sort="1708327260324" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="515">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-12-database_memo.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-12-database_memo.html" class="no-external"></a></p><a href="./posts/2021-07-12-database_memo.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-12-database_memo.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-12-database_memo.html">
 <h3 class="no-anchor listing-title">
-Database memo
+<a href="./posts/2021-07-12-database_memo.html" class="no-external">Database memo</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-12-database_memo.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('memo'); return false;">
 memo
@@ -906,14 +941,12 @@ memo
 database
 </div>
 </div>
-<a href="./posts/2021-07-12-database_memo.html">
 <div class="listing-description">
-<p>A DB memo for myself</p>
+<a href="./posts/2021-07-12-database_memo.html" class="no-external">A DB memo for myself</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-12-database_memo.html">
+<a href="./posts/2021-07-12-database_memo.html" class="no-external">
 <div class="listing-date">
 Jul 12, 2021
 </div>
@@ -923,32 +956,30 @@ Masaya Kameyama
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-categories="golang" data-listing-date-sort="1625356800000" data-listing-file-modified-sort="1704774203274" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="20" data-categories="golang" data-listing-date-sort="1625356800000" data-listing-file-modified-sort="1708327238584" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="35">
 <div class="thumbnail">
-<p><a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+<p><a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external"></a></p><a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external">
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+</a><p><a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html">
 <h3 class="no-anchor listing-title">
-golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする
+<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external">golangでサービスアカウント認証の下、google driveの共有ドライブへファイルをアップロードする</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('golang'); return false;">
 golang
 </div>
 </div>
-<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html">
 <div class="listing-description">
-<p>The first post</p>
+<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external">The first post</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html">
+<a href="./posts/2021-07-04-upload_file_to_google_shared_drive.html" class="no-external">
 <div class="listing-date">
 Jul 4, 2021
 </div>
@@ -1042,10 +1073,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1055,8 +1085,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1069,6 +1108,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1112,6 +1270,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1137,6 +1296,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1197,6 +1382,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
