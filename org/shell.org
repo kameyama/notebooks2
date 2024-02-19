@@ -1,6 +1,6 @@
 
 #+toc: true
-#+categories: memo shell
+#+categories: memo, shell
 #+TITLE: Shellのメモ
 #+date: 2024-02-20
 #+description: shell芸人への道
