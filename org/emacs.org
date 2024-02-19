@@ -1,0 +1,55 @@
+#+TITLE: emacsメモ
+#+description: emacsのメモ書き
+#+date: 2024-02-18
+#+categories: emacs, memo
+
+
+
+* Introduction
+
+emacsは僕が大学の講義で最初に見たエディタでその頃から使っている. 最近はvscodeが流行っていてとても簡単で便利なのでemacsを使おうと思う. 意味不明な文だがvscodeは便利だがemacsを使いたいのでemacsを使いこんでより便利に使うという意味である.
+僕のemacsの設定は[[https://github.com/kameyama/.emacs.d][ここ]]に置いてある.
+
+* ref
+
+- M-x help-with-tutorial-spec-language Japanese
+で日本語チュートリアルが見れる
+
+
+
+* バックグラウンド起動
+
+#+begin_src shell
+emacs --deamon
+#+end_src
+でバックグラウンドでemacsを起動しておくとそれ以降はemacsclientで高速に起動できる.
+
+この機能をもっと便利に使うために以下を行う. 
+1. Mac起動時にemacs deamonを自動で起動させる
+   - https://qiita.com/radixm46/items/da819ad074feb6ef4f81
+2. emacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする.
+   - https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x
+3. Automatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する
+   - https://linkerdesign.github.io/journal/2012/02/automator-1.html   
+
+ 
+* 日本語入力
+
+- Mac側で日本語にする場合とemacsの中で日本語入力にする(c-\)2通りの方法がある.
+
+
+
+* カーソル移動
+
+m-f: 1単語前に移動
+m-b: 1単語後に移動
+
+
+<Delback>    カーソルの直前の文字を削除（delete）
+C-d	     カーソルのある文字を削除（delete）
+
+M-<Delback>  カーソルの直前の単語を消去（kill）
+M-d	     カーソル位置の後ろにある単語を消去（kill）
+
+C-k	     カーソル位置から行末までを消去（kill）
+M-k	     カーソル位置から文末までを消去（kill）
