@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/html_javascript.html",
+      "/posts/shell.html",
       "/posts/emacs.html",
       "/posts/quarto_with_org_mode.html",
       "/posts/fastapi.html",
