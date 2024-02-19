@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -25,7 +25,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,7 +82,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -109,10 +116,37 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="notebooks2 - julia memo">
 <meta property="og:description" content="(自分が)よく間違えるjuliaの構文をまとめる">
-<meta property="og:site-name" content="notebooks2">
+<meta property="og:site_name" content="notebooks2">
 <meta name="twitter:title" content="notebooks2 - julia memo">
 <meta name="twitter:description" content="(自分が)よく間違えるjuliaの構文をまとめる">
 <meta name="twitter:card" content="summary">
@@ -121,10 +155,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">notebooks2</span>
     </a>
@@ -136,23 +170,23 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/kameyama" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/kameyama"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/kamesen" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/kamesen"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -209,22 +243,26 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
-<div class="cell" data-execution_count="30">
-<details>
+
+<div id="88a20ef1" class="cell" data-execution_count="7">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">versioninfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Julia Version 1.6.1
-Commit 6aaedecc44 (2021-04-23 05:59 UTC)
+<pre><code>Julia Version 1.10.0
+Commit 3120989f39b (2023-12-25 18:01 UTC)
+Build Info:
+  Official https://julialang.org/ release
 Platform Info:
-  OS: macOS (x86_64-apple-darwin18.7.0)
-  CPU: Intel(R) Core(TM) i7-8557U CPU @ 1.70GHz
+  OS: macOS (arm64-apple-darwin22.4.0)
+  CPU: 8 × Apple M1
   WORD_SIZE: 64
   LIBM: libopenlibm
-  LLVM: libLLVM-11.0.1 (ORCJIT, skylake)
+  LLVM: libLLVM-15.0.7 (ORCJIT, apple-m1)
+  Threads: 1 on 4 virtual cores
 Environment:
-  JULIA_NUM_THREADS = 8</code></pre>
+  JULIA_NUM_THREADS = </code></pre>
 </div>
 </div>
 <section id="よく間違えるjulia構文" class="level1">
@@ -232,98 +270,98 @@ Environment:
 <section id="配列のfor文" class="level2">
 <h2 class="anchored" data-anchor-id="配列のfor文">配列のfor文</h2>
 <p>多次元配列と配列の配列を混同してfor文を間違えることがある. 適当な多次元配列<span class="math inline">\(x\)</span>があるとする.</p>
-<div class="cell" data-execution_count="2">
-<details>
+<div id="a54f9da1" class="cell" data-execution_count="8">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display">
 <pre><code>10×3 Matrix{Int64}:
- 2  1  3
- 1  1  5
- 5  1  1
- 4  1  2
- 3  5  5
- 5  4  3
- 4  4  4
- 5  4  2
- 1  5  5
- 3  5  2</code></pre>
+ 4  2  4
+ 3  3  3
+ 1  5  1
+ 1  3  5
+ 2  4  3
+ 2  4  3
+ 4  3  4
+ 5  1  3
+ 2  4  1
+ 2  3  4</code></pre>
 </div>
 </div>
 <p>for文で多次元配列を回そうとすると全ての要素を縦になめる:</p>
-<div class="cell" data-execution_count="3">
-<details>
+<div id="b218d5b9" class="cell" data-execution_count="9">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="cn">e</span> <span class="kw">in</span> x</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="cn">e</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>2
-1
-5
-4
-3
-5
-4
-5
-1
+<pre><code>4
 3
 1
-1
-1
-1
-5
-4
-4
-4
-5
-5
-3
-5
 1
 2
+2
+4
+5
+2
+2
+2
+3
 5
 3
 4
-2
+4
+3
+1
+4
+3
+4
+3
+1
 5
-2</code></pre>
+3
+3
+4
+3
+1
+4</code></pre>
 </div>
 </div>
 <p>行ごとに回したければeachrowを使う:</p>
-<div class="cell" data-execution_count="4">
-<details>
+<div id="a2f30a4f" class="cell" data-execution_count="10">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> <span class="fu">eachrow</span>(x)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(row)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[2, 1, 3]
-[1, 1, 5]
-[5, 1, 1]
-[4, 1, 2]
-[3, 5, 5]
-[5, 4, 3]
-[4, 4, 4]
-[5, 4, 2]
-[1, 5, 5]
-[3, 5, 2]</code></pre>
+<pre><code>[4, 2, 4]
+[3, 3, 3]
+[1, 5, 1]
+[1, 3, 5]
+[2, 4, 3]
+[2, 4, 3]
+[4, 3, 4]
+[5, 1, 3]
+[2, 4, 1]
+[2, 3, 4]</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="5">
-<details>
+<div id="a342d745" class="cell" data-execution_count="11">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> <span class="fu">eachcol</span>(x)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(col)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[2, 1, 5, 4, 3, 5, 4, 5, 1, 3]
-[1, 1, 1, 1, 5, 4, 4, 4, 5, 5]
-[3, 5, 1, 2, 5, 3, 4, 2, 5, 2]</code></pre>
+<pre><code>[4, 3, 1, 1, 2, 2, 4, 5, 2, 2]
+[2, 3, 5, 3, 4, 4, 3, 1, 4, 3]
+[4, 3, 1, 5, 3, 3, 4, 3, 1, 4]</code></pre>
 </div>
 </div>
 </section>
@@ -331,8 +369,8 @@ Environment:
 <section id="配列の配列の場合" class="level1">
 <h1>配列の配列の場合</h1>
 <p>配列の配列<span class="math inline">\(y\)</span>があるとする</p>
-<div class="cell" data-execution_count="6">
-<details>
+<div id="e072ba0b" class="cell" data-execution_count="12">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>[<span class="fu">zeros</span>(<span class="dt">Int</span>,<span class="fl">3</span>) for i<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
@@ -342,201 +380,166 @@ Environment:
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display">
 <pre><code>10-element Vector{Vector{Int64}}:
- [4, 2, 4]
- [4, 2, 1]
- [1, 2, 1]
- [5, 3, 5]
- [3, 5, 3]
- [2, 1, 3]
- [3, 5, 4]
- [5, 3, 4]
- [4, 5, 2]
- [1, 3, 1]</code></pre>
+ [3, 4, 4]
+ [1, 4, 4]
+ [3, 3, 2]
+ [5, 5, 2]
+ [5, 2, 2]
+ [2, 1, 5]
+ [3, 2, 1]
+ [5, 5, 3]
+ [5, 2, 2]
+ [3, 2, 4]</code></pre>
 </div>
 </div>
 <p>この場合は次のように回せる:</p>
-<div class="cell" data-execution_count="7">
-<details>
+<div id="68f74a0a" class="cell" data-execution_count="13">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> row <span class="kw">in</span> y</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(row)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[4, 2, 4]
-[4, 2, 1]
-[1, 2, 1]
-[5, 3, 5]
-[3, 5, 3]
-[2, 1, 3]
-[3, 5, 4]
-[5, 3, 4]
-[4, 5, 2]
-[1, 3, 1]</code></pre>
+<pre><code>[3, 4, 4]
+[1, 4, 4]
+[3, 3, 2]
+[5, 5, 2]
+[5, 2, 2]
+[2, 1, 5]
+[3, 2, 1]
+[5, 5, 3]
+[5, 2, 2]
+[3, 2, 4]</code></pre>
 </div>
 </div>
 </section>
 <section id="部分配列" class="level1">
 <h1>部分配列</h1>
 <p>ある配列から特定の条件を満たす部分配列を求める場合filter関数を使いたくなる:</p>
-<div class="cell" data-execution_count="12">
-<details>
+<div id="07bcf35c" class="cell" data-execution_count="15">
+<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>?filter</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>search: filter filter! fieldtype fieldtypes
-</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>filter(f, a)</code></pre>
-<p>Return a copy of collection <code>a</code>, removing elements for which <code>f</code> is <code>false</code>. The function <code>f</code> is passed one argument.</p>
-<p>!!! compat “Julia 1.4” Support for <code>a</code> as a tuple requires at least Julia 1.4.</p>
-<section id="examples" class="level1">
-<h1>Examples</h1>
-<pre class="jldoctest"><code>julia&gt; a = 1:10
-1:10
-
-julia&gt; filter(isodd, a)
-5-element Vector{Int64}:
- 1
- 3
- 5
- 7
- 9</code></pre>
-<hr>
-<pre><code>filter(f, d::AbstractDict)</code></pre>
-<p>Return a copy of <code>d</code>, removing elements for which <code>f</code> is <code>false</code>. The function <code>f</code> is passed <code>key=&gt;value</code> pairs.</p>
-</section>
-<section id="examples-1" class="level1">
-<h1>Examples</h1>
-<pre class="jldoctest"><code>julia&gt; d = Dict(1=&gt;"a", 2=&gt;"b")
-Dict{Int64, String} with 2 entries:
-  2 =&gt; "b"
-  1 =&gt; "a"
-
-julia&gt; filter(p-&gt;isodd(p.first), d)
-Dict{Int64, String} with 1 entry:
-  1 =&gt; "a"</code></pre>
-<hr>
-<pre><code>filter(f, itr::SkipMissing{&lt;:AbstractArray})</code></pre>
-<p>Return a vector similar to the array wrapped by the given <code>SkipMissing</code> iterator but with all missing elements and those for which <code>f</code> returns <code>false</code> removed.</p>
-<p>!!! compat “Julia 1.2” This method requires Julia 1.2 or later.</p>
-</section>
-<section id="examples-2" class="level1">
-<h1>Examples</h1>
-<pre class="jldoctest"><code>julia&gt; x = [1 2; missing 4]
-2×2 Matrix{Union{Missing, Int64}}:
- 1         2
-  missing  4
-
-julia&gt; filter(isodd, skipmissing(x))
-1-element Vector{Int64}:
- 1</code></pre>
-</section>
+<div class="cell-output cell-output-error">
+<pre><code>Base.Meta.ParseError: ParseError:
+# Error @ /Users/masaya/projects/notebooks2/posts/2021-07-12-julia_memo.ipynb:1:1
+?filter
+╙ ── not a unary operator</code></pre>
 </div>
 </div>
 <p>多次元配列に対しfilter関数を使うと１次元配列が返る:</p>
-<div class="cell" data-execution_count="2">
-<details>
+<div id="9fdb10af" class="cell" data-execution_count="16">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a> x <span class="op">=</span>  <span class="fu">reshape</span>([<span class="fu">rand</span>(<span class="dt">Int</span>) for i<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">*</span><span class="fl">3</span>], (<span class="op">:</span>, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a> x <span class="op">=</span>  <span class="fu">reshape</span>([<span class="fu">rand</span>(<span class="dt">Int</span>) for i<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">*</span><span class="fl">3</span>], (<span class="op">:</span>, <span class="fl">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display">
 <pre><code>10×3 Matrix{Int64}:
- -5225426650602014922  -7897912436381683945  -3211480135654296764
- -2367706378189222118  -8074233384091202526   7140575899278393832
- -3701204663351764859   8118911886810389263  -2465634172456524632
- -2009298108373942027   2477122666332687763  -9127782429389187925
- -7849043397713143979  -4501639957282787028  -2523742365264192937
- -5756877372530701820  -7147116965065108201  -8647207541707448429
- -6152057904350993939  -7050448553908782041   6147233744355870367
-  5026289808326491480  -7763311989044274567   3433803153276873203
- -7336383049661808522   3788869708303507081  -4376110160490542272
-  -129002948401320750   4228450907397190871   1524287850472670616</code></pre>
+  1434155849139153490   8792201589749886045   -349363450898840745
+  5845810908379303736  -8265185926902104011  -5065380767449374288
+ -3447320615839289584   2389268345481233176  -6485329445295354633
+ -5365742947389604229  -2326303111811756091   8698018437924141657
+  3595047806792093185   1172421900134288996  -4750125639239034923
+  1363143167553767130   7000736503973028484   5847702750677365622
+ -9135160136868605419  -2968857547344022737  -3598011947351858499
+ -7733185694899413747  -9217370134120495903  -7561702952325334262
+ -7716510106645479528   5657573041425477116  -1159079173192823842
+ -3856910791373303962   2502860500295826394   7127390806145534861</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="3">
-<details>
+<div id="eccd6388" class="cell" data-execution_count="17">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(isodd, <span class="fu">skipmissing</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(isodd, <span class="fu">skipmissing</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>17-element Vector{Int64}:
- -3701204663351764859
- -2009298108373942027
- -7849043397713143979
- -6152057904350993939
- -7897912436381683945
-  8118911886810389263
-  2477122666332687763
- -7147116965065108201
- -7050448553908782041
- -7763311989044274567
-  3788869708303507081
-  4228450907397190871
- -9127782429389187925
- -2523742365264192937
- -8647207541707448429
-  6147233744355870367
-  3433803153276873203</code></pre>
+<div class="cell-output cell-output-display">
+<pre><code>15-element Vector{Int64}:
+ -5365742947389604229
+  3595047806792093185
+ -9135160136868605419
+ -7733185694899413747
+  8792201589749886045
+ -8265185926902104011
+ -2326303111811756091
+ -2968857547344022737
+ -9217370134120495903
+  -349363450898840745
+ -6485329445295354633
+  8698018437924141657
+ -4750125639239034923
+ -3598011947351858499
+  7127390806145534861</code></pre>
 </div>
 </div>
 <p>従って2列目が偶数である部分配列を取り出そうとして次のコードを実行するとエラーになる:</p>
-<div class="cell" data-execution_count="4">
-<details>
+<div id="dab0cb6d" class="cell" data-execution_count="18">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="fu">x-&gt;iseven</span>(x[<span class="fl">2</span>]), x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(<span class="fu">x-&gt;iseven</span>(x[<span class="fl">2</span>]), x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-error">
-<pre><code>LoadError: BoundsError</code></pre>
+<pre><code>BoundsError: BoundsError: attempt to access Int64 at index [2]</code></pre>
 </div>
 </div>
 <p>filterを使えないので例えば次のようにする:</p>
-<div class="cell" data-execution_count="5">
-<details>
+<div id="3f9ffc60" class="cell" data-execution_count="19">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x[x[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.%</span><span class="fl">2</span> <span class="op">.==</span><span class="fl">0</span>,<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>x[x[<span class="op">:</span>,<span class="fl">2</span>] <span class="op">.%</span><span class="fl">2</span> <span class="op">.==</span><span class="fl">0</span>,<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>2×3 Matrix{Int64}:
- -2367706378189222118  -8074233384091202526   7140575899278393832
- -7849043397713143979  -4501639957282787028  -2523742365264192937</code></pre>
+<div class="cell-output cell-output-display">
+<pre><code>5×3 Matrix{Int64}:
+ -3447320615839289584  2389268345481233176  -6485329445295354633
+  3595047806792093185  1172421900134288996  -4750125639239034923
+  1363143167553767130  7000736503973028484   5847702750677365622
+ -7716510106645479528  5657573041425477116  -1159079173192823842
+ -3856910791373303962  2502860500295826394   7127390806145534861</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="6">
-<details>
+<div id="352e84c4" class="cell" data-execution_count="20">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">iseven</span>.(x[<span class="op">:</span>,<span class="fl">2</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">iseven</span>.(x[<span class="op">:</span>,<span class="fl">2</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>2×3 Matrix{Int64}:
- -2367706378189222118  -8074233384091202526   7140575899278393832
- -7849043397713143979  -4501639957282787028  -2523742365264192937</code></pre>
+<div class="cell-output cell-output-display">
+<pre><code>5×3 Matrix{Int64}:
+ -3447320615839289584  2389268345481233176  -6485329445295354633
+  3595047806792093185  1172421900134288996  -4750125639239034923
+  1363143167553767130  7000736503973028484   5847702750677365622
+ -7716510106645479528  5657573041425477116  -1159079173192823842
+ -3856910791373303962  2502860500295826394   7127390806145534861</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="7">
-<details>
+<div id="71c097d6" class="cell" data-execution_count="21">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">findall</span>(a <span class="op">-&gt;</span> <span class="fu">iseven</span>(x[a,<span class="fl">2</span>]), <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(x)[<span class="fl">1</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">findall</span>(a <span class="op">-&gt;</span> <span class="fu">iseven</span>(x[a,<span class="fl">2</span>]), <span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(x)[<span class="fl">1</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>2×3 Matrix{Int64}:
- -2367706378189222118  -8074233384091202526   7140575899278393832
- -7849043397713143979  -4501639957282787028  -2523742365264192937</code></pre>
+<div class="cell-output cell-output-display">
+<pre><code>5×3 Matrix{Int64}:
+ -3447320615839289584  2389268345481233176  -6485329445295354633
+  3595047806792093185  1172421900134288996  -4750125639239034923
+  1363143167553767130  7000736503973028484   5847702750677365622
+ -7716510106645479528  5657573041425477116  -1159079173192823842
+ -3856910791373303962  2502860500295826394   7127390806145534861</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="11">
-<details>
+<div id="862ed821" class="cell" data-execution_count="22">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">findall</span>(iseven,x[<span class="op">:</span>,<span class="fl">2</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>x[<span class="fu">findall</span>(iseven,x[<span class="op">:</span>,<span class="fl">2</span>]),<span class="op">:</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>2×3 Matrix{Int64}:
- -2367706378189222118  -8074233384091202526   7140575899278393832
- -7849043397713143979  -4501639957282787028  -2523742365264192937</code></pre>
+<div class="cell-output cell-output-display">
+<pre><code>5×3 Matrix{Int64}:
+ -3447320615839289584  2389268345481233176  -6485329445295354633
+  3595047806792093185  1172421900134288996  -4750125639239034923
+  1363143167553767130  7000736503973028484   5847702750677365622
+ -7716510106645479528  5657573041425477116  -1159079173192823842
+ -3856910791373303962  2502860500295826394   7127390806145534861</code></pre>
 </div>
 </div>
 </section>
@@ -545,83 +548,158 @@ julia&gt; filter(isodd, skipmissing(x))
 <section id="listをつなげて文字列にして出力する場合はjoinの方が早い" class="level2">
 <h2 class="anchored" data-anchor-id="listをつなげて文字列にして出力する場合はjoinの方が早い">listをつなげて文字列にして出力する場合はjoinの方が早い</h2>
 <p>と以前atcoderでハマったのでメモしようと思ったが試してみるとなぜかfor文ベタ書きが一番早い.</p>
-<div class="cell" data-execution_count="34">
-<details>
+<div id="b4e696c2" class="cell" data-execution_count="24">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>l<span class="op">=</span><span class="fu">rand</span>(<span class="fl">0</span><span class="op">:</span><span class="fl">9</span>,<span class="fl">100</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>l<span class="op">=</span><span class="fu">rand</span>(<span class="fl">0</span><span class="op">:</span><span class="fl">9</span>,<span class="fl">100</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="35">
-<details>
+<div id="86c468d4" class="cell" data-execution_count="25">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">println</span>(<span class="fu">join</span>(l))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317
-  0.001320 seconds (228 allocations: 10.438 KiB)</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="36">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">println</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">println</span>(<span class="fu">join</span>(l))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317
-  0.000147 seconds (21 allocations: 640 bytes)</code></pre>
+<pre><code>0825670272040984510758647377189790987793993950097603858275133276948923626202573746492476422906277389
+  0.021755 seconds (8.97 k allocations: 606.688 KiB, 97.98% compilation time: 13% of which was recompilation)</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="37">
-<details>
+<div id="10cf2eeb" class="cell" data-execution_count="26">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">j</span>(l)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">println</span>(<span class="fu">join</span>(l))</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">j</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">println</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317
-  0.004714 seconds (1.05 k allocations: 59.887 KiB, 93.06% compilation time)</code></pre>
+<pre><code>0825670272040984510758647377189790987793993950097603858275133276948923626202573746492476422906277389
+  0.000111 seconds (18 allocations: 536 bytes)</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="38">
-<details>
+<div id="8101a44a" class="cell" data-execution_count="27">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">jj</span>(l)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(s)</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">jj</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">j</span>(l)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">println</span>(<span class="fu">join</span>(l))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">j</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317
-  0.012173 seconds (4.91 k allocations: 249.832 KiB, 96.46% compilation time)</code></pre>
+<pre><code>0825670272040984510758647377189790987793993950097603858275133276948923626202573746492476422906277389
+  0.083234 seconds (742 allocations: 46.375 KiB, 95.49% gc time, 4.17% compilation time)</code></pre>
+</div>
+</div>
+<div id="14d113f4" class="cell" data-execution_count="28">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">jj</span>(l)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(s)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="fu">jj</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>0825670272040984510758647377189790987793993950097603858275133276948923626202573746492476422906277389
+  0.016438 seconds (2.65 k allocations: 170.320 KiB, 97.48% compilation time)</code></pre>
 </div>
 </div>
 <ol class="example" type="1">
 <li></li>
 </ol>
-<div class="cell" data-execution_count="41">
-<details>
+<div id="25a152fd" class="cell" data-execution_count="29">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="cf">begin</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">println</span>(s)</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@time</span> <span class="cf">begin</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>s<span class="op">=</span><span class="st">""</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> l</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    s<span class="op">*=</span><span class="fu">string</span>(n)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">println</span>(s)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>9003464350455442362738102226859217991002631105006012661620360406555247703162576929699877728261059317
-  0.000244 seconds (421 allocations: 20.469 KiB)</code></pre>
+<pre><code>0825670272040984510758647377189790987793993950097603858275133276948923626202573746492476422906277389
+  0.000128 seconds (418 allocations: 19.180 KiB)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="n重ループの綺麗な回し方" class="level1">
+<h1>n重ループの綺麗な回し方</h1>
+<section id="複数の変数をforひとつで書ける" class="level2">
+<h2 class="anchored" data-anchor-id="複数の変数をforひとつで書ける">複数の変数をforひとつで書ける</h2>
+<div id="3234aa3b" class="cell" data-execution_count="30">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, j<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(i,<span class="st">" "</span>,j)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 1
+1 2
+1 3
+1 4
+1 5
+2 1
+2 2
+2 3
+2 4
+2 5
+3 1
+3 2
+3 3
+3 4
+3 5</code></pre>
+</div>
+</div>
+</section>
+<section id="可変なn重ループはcartesianindicesで上手にできる" class="level2">
+<h2 class="anchored" data-anchor-id="可変なn重ループはcartesianindicesで上手にできる">可変なn重ループはCartesianIndicesで上手にできる</h2>
+<div id="10ba430a" class="cell" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>n<span class="op">=</span><span class="fl">3</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> <span class="fu">CartesianIndices</span>(<span class="fu">ntuple</span>(d<span class="op">-&gt;</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, n))</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># vectorにする</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="fu">collect</span>(c.I)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(x)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0, 0, 0]
+[1, 0, 0]
+[2, 0, 0]
+[0, 1, 0]
+[1, 1, 0]
+[2, 1, 0]
+[0, 2, 0]
+[1, 2, 0]
+[2, 2, 0]
+[0, 0, 1]
+[1, 0, 1]
+[2, 0, 1]
+[0, 1, 1]
+[1, 1, 1]
+[2, 1, 1]
+[0, 2, 1]
+[1, 2, 1]
+[2, 2, 1]
+[0, 0, 2]
+[1, 0, 2]
+[2, 0, 2]
+[0, 1, 2]
+[1, 1, 2]
+[2, 1, 2]
+[0, 2, 2]
+[1, 2, 2]
+[2, 2, 2]</code></pre>
 </div>
 </div>
 
@@ -709,10 +787,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -722,8 +799,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -736,6 +822,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -779,6 +984,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -804,6 +1010,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -864,6 +1096,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
