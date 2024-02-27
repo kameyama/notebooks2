@@ -24,3 +24,5 @@ format:
 execute:
   freeze: auto
 
+comments:
+  hypothesis: true
