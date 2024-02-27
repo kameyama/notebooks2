@@ -15,6 +15,9 @@ website:
   twitter-card: true
   open-graph: true  
   google-analytics: "G-3B1NXS7X3W"
+  comments:
+    giscus:
+      repo: kameyama/notebooks2
 
 format:
   html:
@@ -23,6 +26,3 @@ format:
 
 execute:
   freeze: auto
-
-comments:
-  hypothesis: true
