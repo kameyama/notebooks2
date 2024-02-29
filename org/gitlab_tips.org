@@ -1,0 +1,198 @@
+#+TITLE: gitlab tips
+#+description: gitlabのメモ
+#+date: 2024-02-29
+#+categories: dev, ci/cd, memo, gitlab
+
+* OIDC
+
+gitlabには[[https://docs.gitlab.com/ee/ci/cloud_services/aws/][OIDC]]の機能がある. CI/CDからAWSなどのcloudのリソースにアクセスする時当然認証情報が必要なのだ.
+[[https://docs.gitlab.com/ee/ci/cloud_deployment/][簡単なやり方]]だとgitlab用のAccess key IDとSecret access keyを用意してrepositoryの環境変数に設定するが鍵の更新が面倒だし, そのrepositoryにアクセスできる人全員が鍵を見られるのはセキュリティ上も好ましくない.
+OIDCはgitlabとcloudの間で適切な制限の範囲で一時認証を発行可能にする仕組みである. 例えば特定のrepositoryの特定のブランチからのCI/CDのjobには一時認証が発行できる, というような設定ができる.
+ドキュメントに従って設定すれば良いだけであるが, thumbprintを調べてべた書きするのも面倒なのでちょっと工夫してべた書きしない方法をまとめておく. 
+
+** example
+*** identity_providers.tf
+  
+#+begin_src terraform
+
+# these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
+
+resource "aws_iam_openid_connect_provider" "default" {
+  url = "https://gitlab.hoge.com"
+
+  client_id_list = [
+    "https://gitlab.hoge.com",
+  ]
+
+  thumbprint_list = ["${data.tls_certificate.gitlab.certificates.0.sha1_fingerprint}",
+  ]
+}
+
+
+data "http" "gitlab_openid_configuration" {
+  url = "https://gitlab.hoge.com/.well-known/openid-configuration"
+}
+
+data "tls_certificate" "gitlab" {
+  url = jsondecode(data.http.gitlab_openid_configuration.response_body).jwks_uri
+}
+
+#+end_src
+
+**** 補足
+
+- hogeは自分の使っているgitlabに合わせて変更する. 以下のhogehoge, fooなども同様.
+
+*** gitlab_role.tf
+
+以下は2つのrepository用にroleを作る例:
+
+#+begin_src terraform
+
+  # these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
+
+  # common part
+  data "aws_iam_policy_document" "oidc_principal" {
+    statement {
+      actions = ["sts:AssumeRoleWithWebIdentity"]
+
+      principals {
+        type        = "Federated"
+        identifiers = [aws_iam_openid_connect_provider.default.arn]
+      }
+
+      effect = "Allow"
+
+      condition {
+        test     = "StringLike"
+        variable = "gitlab.hoge.com:sub"
+
+        values = [
+          # 全てのブランチのコミットに対するジョブを対象にするための設定
+          "project_path:foo/*:ref_type:branch:ref:*",
+          # 全てのタグに対するジョブを対象にするための設定
+          "project_path:foo/*:ref_type:tag:ref:*"
+        ]
+      }
+    }
+  }
+
+
+  # define hoge role and attach policy
+  # we should define custom policy and attach it
+  resource "aws_iam_role" "hoge_gitlab_role" {
+    name               = "hoge_gitlab_cicd_role"
+    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
+  }
+
+locals {
+  iam_role_policies = {
+    AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
+  }
+}
+
+  resource "aws_iam_role_policy_attachment" "hoge_attach_policy" {
+    for_each = { for k, v in local.iam_role_policies : k => v }
+
+    policy_arn = each.value
+    role       = aws_iam_role.hoge_gitlab_role.name
+  }
+
+
+  # define hogehoge role and attach policy
+  # we should define custom policy and attach it
+  resource "aws_iam_role" "hogehoge_gitlab_cicd_role" {
+    name               = "hogehoge_gitlab_cicd_role"
+    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
+  }
+
+  resource "aws_iam_role_policy" "hogehoge_ci_cd_policy" {
+    name   = "hogehoge_ci_cd_policy"
+    role   = aws_iam_role.hogehoge_gitlab_cicd_role.id
+    policy = data.aws_iam_policy_document.hogehoge_cicd_policy_doc.json
+  }
+
+  data "aws_iam_policy_document" "hogehoge_cicd_policy_doc" {
+    statement {
+      actions = [
+        "s3:*",
+        "route53:*",
+        "elasticfilesystem:*",
+        "elasticloadbalancing:*",
+        "logs:*",
+        "ecs:*",
+        "iam:*",
+        "SNS:*",
+        "lambda:*",
+        "ec2:*",
+        "autoscaling:*",
+        "application-autoscaling:*",
+        "acm:*",
+        "ecr:*"
+
+      ]
+      effect    = "Allow"
+      resources = ["*"]
+
+    }
+  }
+
+#+end_src
+
+**** 補足
+- "arn:aws:iam::aws:policy/AdministratorAccess"は過剰なので使わない方が良い.
+- これはAWSアカウント全体を管理するリポジトリのtf file. hoge=全体, hogehoge=個別のプロジェクト, のつもり.
+- "s3:*"などもっと制限できる箇所はあるが制限しすぎると変更が面倒なので良い塩梅でやりたい. たとえばhogehogeでRDBを使いたくなったらhogeの方で権限を変更しなければならず制限しすぎると面倒.
+
+
+**** 一時認証の取得スクリプト
+
+#+begin_src shell
+#!/bin/bash
+export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+         $(aws sts assume-role-with-web-identity \
+           --role-arn ${ROLE_ARN} \
+           --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}" \
+           --web-identity-token $OIDC_TOKEN \
+           --duration-seconds 3600 \
+           --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+           --output text)) 
+aws sts get-caller-identity  
+
+#+end_src
+
+これをAWSに接続したいCI/CDのjobで実行するとAWS_ACCESS_KEY_IDなどが埋まる.
+gitlab-ci.yamlに
+#+begin_src yaml
+  id_tokens:
+    OIDC_TOKEN:
+      aud: https://gitlab.hoge.com
+  before_script:
+    - source ci/get_tmp_aws_seacrets.sh
+#+end_src
+などとする.
+
+
+* gitlabのtemplate jobs
+
+gitlabには[[https://docs.gitlab.com/ee/user/application_security/secure_your_application.html][備え付けのセキュリティ機能]]が用意されている. シークレットがハードコードされていないかなどをチェックしてくれる.
+settingsからチェックボックスで有効にすることもできるが.gitlab-ci.yamlに以下の様に書くだけで良い.
+jobの結果はbuild > artifactsからjsonをダウンロードして確認できる. 
+
+#+begin_src 
+include:
+  - template: Code-Quality.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST-IaC.gitlab-ci.yml
+#+end_src
+
+
+* auto devops
+
+[[https://docs.gitlab.com/ee/topics/autodevops/][auto devops]]も備え付けの機能で, 例えばECSへ継続的デプロイする機能を用意してくれている.
+試してみたみた結果CDの雛形を学ぶのには良いがこれに頼り切るには簡素すぎるという感想だった.
+例えば先のOIDCで一時認証を使うとなると結局自分で.gitlab-ci.yamlを書く必要がある. 
+
+[[../images/auto_devops.png]]
