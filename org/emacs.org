@@ -27,8 +27,16 @@ emacs --deamon
 この機能をもっと便利に使うために以下を行う. 
 1. Mac起動時にemacs deamonを自動で起動させる
    - https://qiita.com/radixm46/items/da819ad074feb6ef4f81
+   
 2. emacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする.
-   - https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x
+   https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x
+   を参考にAutomatorで以下のようにする:
+   #+begin_src shell
+     /usr/local/bin/emacsclient -n -c -a "" -- "$@" || /usr/local/bin/emacs --daemon
+   #+end_src
+   -aオプションはserverが立ち上がっていないときに自動でserverを起動してくれるオプションだがautomatorはエラーがでるとストップしてしまう.
+   -aオプションは一旦エラーを出してから立ち上げに行くので上記の様に修正.
+   
 3. Automatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する
    - https://linkerdesign.github.io/journal/2012/02/automator-1.html   
 
