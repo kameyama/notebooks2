@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Masaya Kameyama">
-<meta name="dcterms.date" content="2024-02-18">
-<meta name="description" content="emacsのメモ書き">
+<meta name="dcterms.date" content="2024-02-29">
+<meta name="description" content="gitlabのメモ">
 
-<title>notebooks2 - emacsメモ</title>
+<title>notebooks2 - gitlab tips</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -81,11 +115,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="notebooks2 - emacsメモ">
-<meta property="og:description" content="emacsのメモ書き">
+<meta property="og:title" content="notebooks2 - gitlab tips">
+<meta property="og:description" content="gitlabのメモ">
 <meta property="og:site_name" content="notebooks2">
-<meta name="twitter:title" content="notebooks2 - emacsメモ">
-<meta name="twitter:description" content="emacsのメモ書き">
+<meta name="twitter:title" content="notebooks2 - gitlab tips">
+<meta name="twitter:description" content="gitlabのメモ">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -131,15 +165,17 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">emacsメモ</h1>
+      <h1 class="title">gitlab tips</h1>
                   <div>
         <div class="description">
-          emacsのメモ書き
+          gitlabのメモ
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">emacs</div>
+                <div class="quarto-category">dev</div>
+                <div class="quarto-category">ci/cd</div>
                 <div class="quarto-category">memo</div>
+                <div class="quarto-category">gitlab</div>
               </div>
                   </div>
   </div>
@@ -157,7 +193,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 18, 2024</p>
+        <p class="date">February 29, 2024</p>
       </div>
     </div>
     
@@ -176,48 +212,179 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>emacsは僕が大学の講義で最初に見たエディタでその頃から使っている. 最近はvscodeが流行っていてとても簡単で便利なのでemacsを使おうと思う. 意味不明な文だがvscodeは便利だがemacsを使いたいのでemacsを使いこんでより便利に使うという意味である. 僕のemacsの設定は<a href="https://github.com/kameyama/.emacs.d">ここ</a>に置いてある.</p>
-</section>
-<section id="ref" class="level1">
-<h1>ref</h1>
-<ul>
-<li>M-x help-with-tutorial-spec-language Japanese</li>
-</ul>
-<p>で日本語チュートリアルが見れる</p>
-</section>
-<section id="バックグラウンド起動" class="level1">
-<h1>バックグラウンド起動</h1>
-<pre class="shell"><code>emacs --deamon</code></pre>
-<p>でバックグラウンドでemacsを起動しておくとそれ以降はemacsclientで高速に起動できる.</p>
-<p>この機能をもっと便利に使うために以下を行う.</p>
+<section id="oidc" class="level1">
+<h1>OIDC</h1>
+<p>gitlabには<a href="https://docs.gitlab.com/ee/ci/cloud_services/aws/">OIDC</a>の機能がある. CI/CDからAWSなどのcloudのリソースにアクセスする時当然認証情報が必要なのだ. <a href="https://docs.gitlab.com/ee/ci/cloud_deployment/">簡単なやり方</a>だとgitlab用のAccess key IDとSecret access keyを用意してrepositoryの環境変数に設定するが鍵の更新が面倒だし, そのrepositoryにアクセスできる人全員が鍵を見られるのはセキュリティ上も好ましくない. OIDCはgitlabとcloudの間で適切な制限の範囲で一時認証を発行可能にする仕組みである. 例えば特定のrepositoryの特定のブランチからのCI/CDのjobには一時認証が発行できる, というような設定ができる. ドキュメントに従って設定すれば良いだけであるが, thumbprintを調べてべた書きするのも面倒なのでちょっと工夫してべた書きしない方法をまとめておく.</p>
+<section id="example" class="level2">
+<h2 class="anchored" data-anchor-id="example">example</h2>
+<section id="identityproviders.tf" class="level3">
+<h3 class="anchored" data-anchor-id="identityproviders.tf">identity<sub>providers</sub>.tf</h3>
+<pre class="terraform"><code>
+# these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
+
+resource "aws_iam_openid_connect_provider" "default" {
+  url = "https://gitlab.hoge.com"
+
+  client_id_list = [
+    "https://gitlab.hoge.com",
+  ]
+
+  thumbprint_list = ["${data.tls_certificate.gitlab.certificates.0.sha1_fingerprint}",
+  ]
+}
+
+
+data "http" "gitlab_openid_configuration" {
+  url = "https://gitlab.hoge.com/.well-known/openid-configuration"
+}
+
+data "tls_certificate" "gitlab" {
+  url = jsondecode(data.http.gitlab_openid_configuration.response_body).jwks_uri
+}
+</code></pre>
 <ol type="1">
-<li><p>Mac起動時にemacs deamonを自動で起動させる</p>
+<li><p>補足</p>
 <ul>
-<li><a href="https://qiita.com/radixm46/items/da819ad074feb6ef4f81" class="uri">https://qiita.com/radixm46/items/da819ad074feb6ef4f81</a></li>
-</ul></li>
-<li><p>emacsclient用のMacアプリをAutomatorで作成してdockやfinderからemacsclientで開くようにする. <a href="https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x" class="uri">https://stackoverflow.com/questions/39464975/launch-emacsclient-with-gui-from-dock-on-mac-os-x</a> を参考にAutomatorで以下のようにする:</p>
-<pre class="shell"><code>/usr/local/bin/emacsclient -n -c -a "" -- "$@" || /usr/local/bin/emacs --daemon</code></pre>
-<p>-aオプションはserverが立ち上がっていないときに自動でserverを起動してくれるオプションだがautomatorはエラーがでるとストップしてしまう. -aオプションは一旦エラーを出してから立ち上げに行くので上記の様に修正.</p></li>
-<li><p>Automatorで作成したアプリはアイコンはデフォルトでAutomatorのものなので変更する</p>
-<ul>
-<li><a href="https://linkerdesign.github.io/journal/2012/02/automator-1.html" class="uri">https://linkerdesign.github.io/journal/2012/02/automator-1.html</a></li>
+<li>hogeは自分の使っているgitlabに合わせて変更する. 以下のhogehoge, fooなども同様.</li>
 </ul></li>
 </ol>
 </section>
-<section id="日本語入力" class="level1">
-<h1>日本語入力</h1>
+<section id="gitlabrole.tf" class="level3">
+<h3 class="anchored" data-anchor-id="gitlabrole.tf">gitlab<sub>role</sub>.tf</h3>
+<p>以下は2つのrepository用にroleを作る例:</p>
+<pre class="terraform"><code>
+  # these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
+
+  # common part
+  data "aws_iam_policy_document" "oidc_principal" {
+    statement {
+      actions = ["sts:AssumeRoleWithWebIdentity"]
+
+      principals {
+        type        = "Federated"
+        identifiers = [aws_iam_openid_connect_provider.default.arn]
+      }
+
+      effect = "Allow"
+
+      condition {
+        test     = "StringLike"
+        variable = "gitlab.hoge.com:sub"
+
+        values = [
+          # 全てのブランチのコミットに対するジョブを対象にするための設定
+          "project_path:foo/*:ref_type:branch:ref:*",
+          # 全てのタグに対するジョブを対象にするための設定
+          "project_path:foo/*:ref_type:tag:ref:*"
+        ]
+      }
+    }
+  }
+
+
+  # define hoge role and attach policy
+  # we should define custom policy and attach it
+  resource "aws_iam_role" "hoge_gitlab_role" {
+    name               = "hoge_gitlab_cicd_role"
+    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
+  }
+
+locals {
+  iam_role_policies = {
+    AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
+  }
+}
+
+  resource "aws_iam_role_policy_attachment" "hoge_attach_policy" {
+    for_each = { for k, v in local.iam_role_policies : k =&gt; v }
+
+    policy_arn = each.value
+    role       = aws_iam_role.hoge_gitlab_role.name
+  }
+
+
+  # define hogehoge role and attach policy
+  # we should define custom policy and attach it
+  resource "aws_iam_role" "hogehoge_gitlab_cicd_role" {
+    name               = "hogehoge_gitlab_cicd_role"
+    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
+  }
+
+  resource "aws_iam_role_policy" "hogehoge_ci_cd_policy" {
+    name   = "hogehoge_ci_cd_policy"
+    role   = aws_iam_role.hogehoge_gitlab_cicd_role.id
+    policy = data.aws_iam_policy_document.hogehoge_cicd_policy_doc.json
+  }
+
+  data "aws_iam_policy_document" "hogehoge_cicd_policy_doc" {
+    statement {
+      actions = [
+        "s3:*",
+        "route53:*",
+        "elasticfilesystem:*",
+        "elasticloadbalancing:*",
+        "logs:*",
+        "ecs:*",
+        "iam:*",
+        "SNS:*",
+        "lambda:*",
+        "ec2:*",
+        "autoscaling:*",
+        "application-autoscaling:*",
+        "acm:*",
+        "ecr:*"
+
+      ]
+      effect    = "Allow"
+      resources = ["*"]
+
+    }
+  }
+</code></pre>
+<ol type="1">
+<li><p>補足</p>
 <ul>
-<li>Mac側で日本語にする場合とemacsの中で日本語入力にする(c-\)2通りの方法がある.</li>
-</ul>
+<li>"arn:aws:iam::aws:policy/AdministratorAccess"は過剰なので使わない方が良い.</li>
+<li>これはAWSアカウント全体を管理するリポジトリのtf file. hoge=全体, hogehoge=個別のプロジェクト, のつもり.</li>
+<li>"s3:*"などもっと制限できる箇所はあるが制限しすぎると変更が面倒なので良い塩梅でやりたい. たとえばhogehogeでRDBを使いたくなったらhogeの方で権限を変更しなければならず制限しすぎると面倒.</li>
+</ul></li>
+<li><p>一時認証の取得スクリプト</p>
+<pre class="shell"><code>#!/bin/bash
+export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \
+         $(aws sts assume-role-with-web-identity \
+           --role-arn ${ROLE_ARN} \
+           --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}" \
+           --web-identity-token $OIDC_TOKEN \
+           --duration-seconds 3600 \
+           --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
+           --output text)) 
+aws sts get-caller-identity  
+</code></pre>
+<p>これをAWSに接続したいCI/CDのjobで実行するとAWS<sub>ACCESSKEYIDなどが埋まる</sub>. gitlab-ci.yamlに</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id_tokens</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">OIDC_TOKEN</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">aud</span><span class="kw">:</span><span class="at"> https://gitlab.hoge.com</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">before_script</span><span class="kw">:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> source ci/get_tmp_aws_seacrets.sh</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>などとする.</p></li>
+</ol>
 </section>
-<section id="カーソル移動" class="level1">
-<h1>カーソル移動</h1>
-<p>m-f: 1単語前に移動 m-b: 1単語後に移動</p>
-<p>&lt;Delback&gt; カーソルの直前の文字を削除（delete） C-d カーソルのある文字を削除（delete）</p>
-<p>M-&lt;Delback&gt; カーソルの直前の単語を消去（kill） M-d カーソル位置の後ろにある単語を消去（kill）</p>
-<p>C-k カーソル位置から行末までを消去（kill） M-k カーソル位置から文末までを消去（kill）</p>
+</section>
+</section>
+<section id="gitlabのtemplate-jobs" class="level1">
+<h1>gitlabのtemplate jobs</h1>
+<p>gitlabには<a href="https://docs.gitlab.com/ee/user/application_security/secure_your_application.html">備え付けのセキュリティ機能</a>が用意されている. シークレットがハードコードされていないかなどをチェックしてくれる. settingsからチェックボックスで有効にすることもできるが.gitlab-ci.yamlに以下の様に書くだけで良い. jobの結果はbuild &gt; artifactsからjsonをダウンロードして確認できる.</p>
+<pre><code>include:
+  - template: Code-Quality.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Security/SAST-IaC.gitlab-ci.yml</code></pre>
+</section>
+<section id="auto-devops" class="level1">
+<h1>auto devops</h1>
+<p><a href="https://docs.gitlab.com/ee/topics/autodevops/">auto devops</a>も備え付けの機能で, 例えばECSへ継続的デプロイする機能を用意してくれている. 試してみたみた結果CDの雛形を学ぶのには良いがこれに頼り切るには簡素すぎるという感想だった. 例えば先のOIDCで一時認証を使うとなると結局自分で.gitlab-ci.yamlを書く必要がある.</p>
+<p><img src="../images/auto_devops.png" class="img-fluid"></p>
 
 
 </section>

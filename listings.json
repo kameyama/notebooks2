@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/gitlab_tips.html",
       "/posts/html_javascript.html",
       "/posts/shell.html",
       "/posts/emacs.html",
