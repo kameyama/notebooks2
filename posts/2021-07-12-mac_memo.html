@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Masaya Kameyama">
 <meta name="dcterms.date" content="2021-07-12">
-<meta name="description" content="Mac memo for myself">
+<meta name="description" content="Mac setup memo for myself">
 
-<title>notebooks2 - Mac memo</title>
+<title>Mac setup memo – notebooks2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a5999791cc5123855ed18772c54919ed.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,11 +115,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="notebooks2 - Mac memo">
-<meta property="og:description" content="Mac memo for myself">
+<meta property="og:title" content="Mac setup memo – notebooks2">
+<meta property="og:description" content="Mac setup memo for myself">
 <meta property="og:site_name" content="notebooks2">
-<meta name="twitter:title" content="notebooks2 - Mac memo">
-<meta name="twitter:description" content="Mac memo for myself">
+<meta name="twitter:title" content="Mac setup memo – notebooks2">
+<meta name="twitter:description" content="Mac setup memo for myself">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -135,7 +135,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -156,7 +156,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -165,10 +165,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Mac memo</h1>
+      <h1 class="title">Mac setup memo</h1>
                   <div>
         <div class="description">
-          Mac memo for myself
+          Mac setup memo for myself
         </div>
       </div>
                           <div class="quarto-categories">
@@ -210,6 +210,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 
+<section id="dotfiles" class="level1">
+<h1>dotfiles</h1>
+<p>shellの設定などはdotfilesを使って管理する. ここでは手で設定が必要な設定をメモする.</p>
+</section>
 <section id="便利なアプリ" class="level1">
 <h1>便利なアプリ</h1>
 <section id="無料アプリ" class="level2">
@@ -218,9 +222,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <li><p>Karabiner-Elements: キー配置やキーバインドを変更できる.</p></li>
 <li><p>Amphetamine: (Caffeinの代わり) スリープ on/off</p></li>
 <li><p>Sourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.</p></li>
+<li><p>gitkraken: 同じくgitのGUIアプリ, 仕事では有料になるので使えない.</p></li>
 <li><p>DBeaver: SQLを叩くためののGUI</p></li>
-<li><p>QueryPie: SQLを叩くためののGUI開発終了した.</p></li>
+<li><p>QueryPie: SQLを叩くためののGUI. 開発終了した.</p></li>
 <li><p>keybase</p></li>
+<li><p>meetingbar: ミーティングの時間になると勝手にミーティング画面を開いてくれる.</p></li>
 </ul>
 </section>
 <section id="有料アプリ" class="level2">
@@ -242,13 +248,22 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 </section>
 <section id="拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法" class="level2">
 <h2 class="anchored" data-anchor-id="拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法">拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法</h2>
-<p>拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. <a href="https://gist.github.com/joshykautz/59a9778db92467bd557460a979552788">github</a>に素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:</p>
-<pre class="shell"><code>a=`osascript -e 'id of app "emacs"'` &amp;&amp; \
-defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
-'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \
-'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \
-'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'</code></pre>
-<p>その後再起動する.</p>
+<p>拡張子があれば右クリック&gt;情報から変更できるがない場合はこの方法では変更ができない. <a href="https://gist.github.com/joshkautz/59a9778db92467bd557460a979552788">github</a>に素晴らしい方法があった. 例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:</p>
+<pre class="shell"><code>defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
+'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=org.gnu.Emacs;}' \
+'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=org.gnu.Emacs;}' \
+'{LSHandlerContentType=public.data;LSHandlerRoleAll=org.gnu.Emacs;}'</code></pre>
+<p>その後再起動する. 別のエディタに設定したい場合は</p>
+<pre class="shell"><code>osascript -e 'id of app "Visual Studio Code"'</code></pre>
+<p>などを実行してorg.gnu.Emacsの部分を置き換える.</p>
+</section>
+<section id="iterm2" class="level2">
+<h2 class="anchored" data-anchor-id="iterm2">iterm2</h2>
+<ul>
+<li>meta keyの設定をする</li>
+<li>shell integrationを有効にする</li>
+<li>openAIのトークンを設定する</li>
+</ul>
 </section>
 <section id="macでのgpuの設定" class="level2">
 <h2 class="anchored" data-anchor-id="macでのgpuの設定">MacでのGPUの設定</h2>
@@ -277,33 +292,33 @@ Default device? (1,2)[1]:</code></pre>
 <pre class="shell"><code>plaidbench keras mobilenet</code></pre>
 <p>を叩いてベンチマークする.</p></li>
 <li><p>pythonのコードを書く時kerasをinmportするより前の方に</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"KERAS_BACKEND"</span>] <span class="op">=</span> <span class="st">"plaidml.keras.backend"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>を追加すればバックエンドをplaidmlにしてkerasを動かすことができる.</p>
-<p>以下の適当に拾ってきたコードが動けばOK</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"KERAS_BACKEND"</span>] <span class="op">=</span> <span class="st">"plaidml.keras.backend"</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras.applications <span class="im">as</span> kapp</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.datasets <span class="im">import</span> cifar10</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>(x_train, y_train_cats), (x_test, y_test_cats) <span class="op">=</span> cifar10.load_data()</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">8</span> x_train <span class="op">=</span> x_train[:batch_size] x_train <span class="op">=</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>np.repeat(np.repeat(x_train, <span class="dv">7</span>, axis<span class="op">=</span><span class="dv">1</span>), <span class="dv">7</span>, axis<span class="op">=</span><span class="dv">2</span>) model <span class="op">=</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>kapp.VGG19() model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">'sgd'</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>])</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Running initial batch (compiling tile program)"</span>) y <span class="op">=</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>model.predict(x<span class="op">=</span>x_train, batch_size<span class="op">=</span>batch_size)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Now start the clock and run 10 batches print("Timing inference...")</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.time() <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>): y <span class="op">=</span> model.predict(x<span class="op">=</span>x_train,</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>batch_size<span class="op">=</span>batch_size) <span class="bu">print</span>(<span class="st">"Ran in </span><span class="sc">{}</span><span class="st"> seconds"</span>.<span class="bu">format</span>(time.time() <span class="op">-</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                            start)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"KERAS_BACKEND"</span>] <span class="op">=</span> <span class="st">"plaidml.keras.backend"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>を追加すればバックエンドをplaidmlにしてkerasを動かすことができる.</p>
+<p>以下の適当に拾ってきたコードが動けばOK</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"KERAS_BACKEND"</span>] <span class="op">=</span> <span class="st">"plaidml.keras.backend"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras.applications <span class="im">as</span> kapp</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.datasets <span class="im">import</span> cifar10</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>(x_train, y_train_cats), (x_test, y_test_cats) <span class="op">=</span> cifar10.load_data()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">8</span> x_train <span class="op">=</span> x_train[:batch_size] x_train <span class="op">=</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>np.repeat(np.repeat(x_train, <span class="dv">7</span>, axis<span class="op">=</span><span class="dv">1</span>), <span class="dv">7</span>, axis<span class="op">=</span><span class="dv">2</span>) model <span class="op">=</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>kapp.VGG19() model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">'sgd'</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>])</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Running initial batch (compiling tile program)"</span>) y <span class="op">=</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>model.predict(x<span class="op">=</span>x_train, batch_size<span class="op">=</span>batch_size)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Now start the clock and run 10 batches print("Timing inference...")</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> time.time() <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>): y <span class="op">=</span> model.predict(x<span class="op">=</span>x_train,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>batch_size<span class="op">=</span>batch_size) <span class="bu">print</span>(<span class="st">"Ran in </span><span class="sc">{}</span><span class="st"> seconds"</span>.<span class="bu">format</span>(time.time() <span class="op">-</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                            start)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ol>
 <p>後は好きなだけDNNで遊べば良い.</p>
 
@@ -347,18 +362,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -390,7 +394,45 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/kameyama\.github\.io\/notebooks2\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -425,7 +467,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -473,7 +519,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

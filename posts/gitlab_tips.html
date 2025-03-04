@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2024-02-29">
 <meta name="description" content="gitlabのメモ">
 
-<title>notebooks2 - gitlab tips</title>
+<title>gitlab tips – notebooks2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -36,7 +36,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a5999791cc5123855ed18772c54919ed.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -115,12 +115,18 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="notebooks2 - gitlab tips">
+<meta property="og:title" content="gitlab tips – notebooks2">
 <meta property="og:description" content="gitlabのメモ">
+<meta property="og:image" content="https://kameyama.github.io/notebooks2/images/auto_devops.png">
 <meta property="og:site_name" content="notebooks2">
-<meta name="twitter:title" content="notebooks2 - gitlab tips">
+<meta property="og:image:height" content="1488">
+<meta property="og:image:width" content="2586">
+<meta name="twitter:title" content="gitlab tips – notebooks2">
 <meta name="twitter:description" content="gitlabのメモ">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kameyama.github.io/notebooks2/images/auto_devops.png">
+<meta name="twitter:image-height" content="1488">
+<meta name="twitter:image-width" content="2586">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -135,7 +141,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -156,7 +162,7 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -219,29 +225,28 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="example">example</h2>
 <section id="identityproviders.tf" class="level3">
 <h3 class="anchored" data-anchor-id="identityproviders.tf">identity<sub>providers</sub>.tf</h3>
-<pre class="terraform"><code>
-# these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
-
-resource "aws_iam_openid_connect_provider" "default" {
-  url = "https://gitlab.hoge.com"
-
-  client_id_list = [
-    "https://gitlab.hoge.com",
-  ]
-
-  thumbprint_list = ["${data.tls_certificate.gitlab.certificates.0.sha1_fingerprint}",
-  ]
-}
-
-
-data "http" "gitlab_openid_configuration" {
-  url = "https://gitlab.hoge.com/.well-known/openid-configuration"
-}
-
-data "tls_certificate" "gitlab" {
-  url = jsondecode(data.http.gitlab_openid_configuration.response_body).jwks_uri
-}
-</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode terraform code-with-copy"><code class="sourceCode terraform"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">resource</span> <span class="st">"aws_iam_openid_connect_provider"</span> <span class="st">"default"</span> {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  url <span class="op">=</span> <span class="st">"https://gitlab.hoge.com"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  client_id_list <span class="op">=</span> [</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"https://gitlab.hoge.com"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  thumbprint_list <span class="op">=</span> [<span class="st">"</span><span class="ss">${</span><span class="va">data.tls_certificate.gitlab.certificates.0.sha1_fingerprint</span><span class="ss">}</span><span class="st">"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="st">"http"</span> <span class="st">"gitlab_openid_configuration"</span> {</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  url <span class="op">=</span> <span class="st">"https://gitlab.hoge.com/.well-known/openid-configuration"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="st">"tls_certificate"</span> <span class="st">"gitlab"</span> {</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  url <span class="op">=</span> <span class="bu">jsondecode</span>(<span class="kw">data</span>.http.gitlab_openid_configuration.response_body).jwks_uri</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li><p>補足</p>
 <ul>
@@ -252,95 +257,94 @@ data "tls_certificate" "gitlab" {
 <section id="gitlabrole.tf" class="level3">
 <h3 class="anchored" data-anchor-id="gitlabrole.tf">gitlab<sub>role</sub>.tf</h3>
 <p>以下は2つのrepository用にroleを作る例:</p>
-<pre class="terraform"><code>
-  # these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/
-
-  # common part
-  data "aws_iam_policy_document" "oidc_principal" {
-    statement {
-      actions = ["sts:AssumeRoleWithWebIdentity"]
-
-      principals {
-        type        = "Federated"
-        identifiers = [aws_iam_openid_connect_provider.default.arn]
-      }
-
-      effect = "Allow"
-
-      condition {
-        test     = "StringLike"
-        variable = "gitlab.hoge.com:sub"
-
-        values = [
-          # 全てのブランチのコミットに対するジョブを対象にするための設定
-          "project_path:foo/*:ref_type:branch:ref:*",
-          # 全てのタグに対するジョブを対象にするための設定
-          "project_path:foo/*:ref_type:tag:ref:*"
-        ]
-      }
-    }
-  }
-
-
-  # define hoge role and attach policy
-  # we should define custom policy and attach it
-  resource "aws_iam_role" "hoge_gitlab_role" {
-    name               = "hoge_gitlab_cicd_role"
-    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
-  }
-
-locals {
-  iam_role_policies = {
-    AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
-  }
-}
-
-  resource "aws_iam_role_policy_attachment" "hoge_attach_policy" {
-    for_each = { for k, v in local.iam_role_policies : k =&gt; v }
-
-    policy_arn = each.value
-    role       = aws_iam_role.hoge_gitlab_role.name
-  }
-
-
-  # define hogehoge role and attach policy
-  # we should define custom policy and attach it
-  resource "aws_iam_role" "hogehoge_gitlab_cicd_role" {
-    name               = "hogehoge_gitlab_cicd_role"
-    assume_role_policy = data.aws_iam_policy_document.oidc_principal.json
-  }
-
-  resource "aws_iam_role_policy" "hogehoge_ci_cd_policy" {
-    name   = "hogehoge_ci_cd_policy"
-    role   = aws_iam_role.hogehoge_gitlab_cicd_role.id
-    policy = data.aws_iam_policy_document.hogehoge_cicd_policy_doc.json
-  }
-
-  data "aws_iam_policy_document" "hogehoge_cicd_policy_doc" {
-    statement {
-      actions = [
-        "s3:*",
-        "route53:*",
-        "elasticfilesystem:*",
-        "elasticloadbalancing:*",
-        "logs:*",
-        "ecs:*",
-        "iam:*",
-        "SNS:*",
-        "lambda:*",
-        "ec2:*",
-        "autoscaling:*",
-        "application-autoscaling:*",
-        "acm:*",
-        "ecr:*"
-
-      ]
-      effect    = "Allow"
-      resources = ["*"]
-
-    }
-  }
-</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode terraform code-with-copy"><code class="sourceCode terraform"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># these resources are following the docs https://docs.gitlab.com/ee/ci/cloud_services/aws/</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># common part</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">data</span> <span class="st">"aws_iam_policy_document"</span> <span class="st">"oidc_principal"</span> {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    statement {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      actions <span class="op">=</span> [<span class="st">"sts:AssumeRoleWithWebIdentity"</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      principals {</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        type        <span class="op">=</span> <span class="st">"Federated"</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        identifiers <span class="op">=</span> [aws_iam_openid_connect_provider.default.arn]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      effect <span class="op">=</span> <span class="st">"Allow"</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>      condition {</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        test     <span class="op">=</span> <span class="st">"StringLike"</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">variable</span> <span class="op">=</span> <span class="st">"gitlab.hoge.com:sub"</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">values</span> <span class="op">=</span> [</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>          <span class="co"># 全てのブランチのコミットに対するジョブを対象にするための設定</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>          <span class="st">"project_path:foo/*:ref_type:branch:ref:*"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>          <span class="co"># 全てのタグに対するジョブを対象にするための設定</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>          <span class="st">"project_path:foo/*:ref_type:tag:ref:*"</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># define hoge role and attach policy</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># we should define custom policy and attach it</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">resource</span> <span class="st">"aws_iam_role"</span> <span class="st">"hoge_gitlab_role"</span> {</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    name               <span class="op">=</span> <span class="st">"hoge_gitlab_cicd_role"</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    assume_role_policy <span class="op">=</span> <span class="kw">data</span>.aws_iam_policy_document.oidc_principal.json</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="kw">locals</span> {</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  iam_role_policies <span class="op">=</span> {</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    AdministratorAccess <span class="op">=</span> <span class="st">"arn:aws:iam::aws:policy/AdministratorAccess"</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">resource</span> <span class="st">"aws_iam_role_policy_attachment"</span> <span class="st">"hoge_attach_policy"</span> {</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">for_each</span> <span class="op">=</span> { <span class="cf">for</span> k, v <span class="cf">in</span> <span class="va">local</span>.iam_role_policies : k <span class="op">=&gt;</span> v }</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    policy_arn <span class="op">=</span> <span class="va">each</span>.value</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    role       <span class="op">=</span> aws_iam_role.hoge_gitlab_role.name</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># define hogehoge role and attach policy</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># we should define custom policy and attach it</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">resource</span> <span class="st">"aws_iam_role"</span> <span class="st">"hogehoge_gitlab_cicd_role"</span> {</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    name               <span class="op">=</span> <span class="st">"hogehoge_gitlab_cicd_role"</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    assume_role_policy <span class="op">=</span> <span class="kw">data</span>.aws_iam_policy_document.oidc_principal.json</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  <span class="kw">resource</span> <span class="st">"aws_iam_role_policy"</span> <span class="st">"hogehoge_ci_cd_policy"</span> {</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    name   <span class="op">=</span> <span class="st">"hogehoge_ci_cd_policy"</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    role   <span class="op">=</span> aws_iam_role.hogehoge_gitlab_cicd_role.id</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    policy <span class="op">=</span> <span class="kw">data</span>.aws_iam_policy_document.hogehoge_cicd_policy_doc.json</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  <span class="kw">data</span> <span class="st">"aws_iam_policy_document"</span> <span class="st">"hogehoge_cicd_policy_doc"</span> {</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    statement {</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>      actions <span class="op">=</span> [</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">"s3:*"</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">"route53:*"</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"elasticfilesystem:*"</span>,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">"elasticloadbalancing:*"</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">"logs:*"</span>,</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ecs:*"</span>,</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">"iam:*"</span>,</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">"SNS:*"</span>,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"lambda:*"</span>,</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ec2:*"</span>,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">"autoscaling:*"</span>,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">"application-autoscaling:*"</span>,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">"acm:*"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">"ecr:*"</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>      ]</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>      effect    <span class="op">=</span> <span class="st">"Allow"</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>      resources <span class="op">=</span> [<span class="st">"*"</span>]</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol type="1">
 <li><p>補足</p>
 <ul>
@@ -425,18 +429,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -468,7 +461,45 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/kameyama\.github\.io\/notebooks2\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -503,7 +534,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
@@ -551,7 +586,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
