@@ -1,10 +1,13 @@
-#+TITLE: Mac memo
-#+description: Mac memo for myself
+#+TITLE: Mac setup memo
+#+description: Mac setup memo for myself
 #+date: 2021-07-12
 #+categories: memo, mac
 
 #+PROPERTY: header-args:jupyter+ :async yes
 
+* dotfiles
+
+shellの設定などはdotfilesを使って管理する. ここでは手で設定が必要な設定をメモする. 
 
 * 便利なアプリ
 
@@ -14,14 +17,17 @@
 
 - Amphetamine: (Caffeinの代わり) スリープ on/off
 
-- Sourcetree: gitのGUIアプリ,
-  backlogとの連携はちょっとめんどくさいのでググる.
+- Sourcetree: gitのGUIアプリ, backlogとの連携はちょっとめんどくさいのでググる.
 
+- gitkraken: 同じくgitのGUIアプリ, 仕事では有料になるので使えない. 
+  
 - DBeaver: SQLを叩くためののGUI
 
-- QueryPie: SQLを叩くためののGUI開発終了した.
+- QueryPie: SQLを叩くためののGUI. 開発終了した.
 
 - keybase
+
+- meetingbar: ミーティングの時間になると勝手にミーティング画面を開いてくれる.
 
 ** 有料アプリ
 
@@ -47,17 +53,27 @@ osxfuseを使う
 ** 拡張子の無いファイルをfinderで開く際にdefaultのエディターを変更する方法
 
    拡張子があれば右クリック>情報から変更できるがない場合はこの方法では変更ができない.
-   [[https://gist.github.com/joshykautz/59a9778db92467bd557460a979552788][github]]に素晴らしい方法があった.
+   [[https://gist.github.com/joshkautz/59a9778db92467bd557460a979552788][github]]に素晴らしい方法があった.
    例えばemacsで開く設定をしたい場合は以下のコマンドで変更できる:
       #+begin_src shell
-	a=`osascript -e 'id of app "emacs"'` && \
 	defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
-	'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=$a;}' \
-	'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=$a;}' \
-	'{LSHandlerContentType=public.data;LSHandlerRoleAll=$a;}'
+	'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=org.gnu.Emacs;}' \
+	'{LSHandlerContentType=public.unix-executable;LSHandlerRoleAll=org.gnu.Emacs;}' \
+	'{LSHandlerContentType=public.data;LSHandlerRoleAll=org.gnu.Emacs;}'
       #+end_src
    その後再起動する.
-      
+   別のエディタに設定したい場合は
+         #+begin_src shell
+           osascript -e 'id of app "Visual Studio Code"'
+         #+end_src
+      などを実行してorg.gnu.Emacsの部分を置き換える.
+
+
+** iterm2
+- meta keyの設定をする
+- shell integrationを有効にする
+- openAIのトークンを設定する
+
 ** MacでのGPUの設定
 
 GPUを使ったDNNの計算はNVIDIAのGPUが主流だがmacではNVIDIAのGPUが使えない.
