@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/qmd/index.html",
+      "/qmd/google_cloud_lakehouse.html",
       "/posts/schreenshot_of_dropdown_menu_on_playright.html",
       "/posts/gitlab_tips.html",
       "/posts/html_javascript.html",
