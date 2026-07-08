@@ -1,0 +1,17 @@
+---
+title: "Integration with google cloud lakehouse runtime catalog with snowflake"
+description: "Google cloud lakehouse runtime catalogとsnowflakeの統合について"
+date: "2026/07/08"
+format:
+  html:
+    code-fold: true
+  pdf:
+    geometry: 
+        - top=30mm
+        - left=30mm
+categories: [gcp, bigquery, snowflaka]
+---
+
+# Introduction
+test
+
