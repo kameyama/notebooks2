@@ -28,5 +28,11 @@
       "/posts/2021-07-12-mac_memo.html",
       "/posts/2021-07-04-upload_file_to_google_shared_drive.html"
     ]
+  },
+  {
+    "listing": "/qmd/index.html",
+    "items": [
+      "/qmd/google_cloud_lakehouse.html"
+    ]
   }
 ]
