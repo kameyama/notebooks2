@@ -9,7 +9,7 @@ format:
     geometry: 
         - top=30mm
         - left=30mm
-categories: [gcp, bigquery, snowflaka]
+categories: [gcp, bigquery, snowflake]
 ---
 
 # Introduction
