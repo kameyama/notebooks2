@@ -2,6 +2,8 @@
 title: "notebooks2"
 listing:
   contents: [posts, qmd]
+  exclude:
+    filename: "index.qmd"
   sort: "date desc"
   type: default
   categories: true
