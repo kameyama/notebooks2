@@ -6,7 +6,6 @@ website:
   navbar:
     right:
       - about.qmd
-      - qmd/index.qmd
       - icon: github
         href: https://github.com/kameyama
       - icon: twitter
