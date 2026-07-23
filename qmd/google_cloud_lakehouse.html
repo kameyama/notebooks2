@@ -8,9 +8,9 @@
 
 <meta name="author" content="Masaya Kameyama">
 <meta name="dcterms.date" content="2026-07-08">
-<meta name="description" content="Google cloud lakehouse runtime catalogとsnowflakeの統合について">
+<meta name="description" content="GCP(Google cloud) lakehouse runtime catalogとsnowflakeの統合について">
 
-<title>Integration with google cloud lakehouse runtime catalog with snowflake – notebooks2</title>
+<title>Integration with GCP(google cloud) lakehouse runtime catalog with snowflake – notebooks2</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -45,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-48d15c741369f5bca4003664e9200f98.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-b8f8d779988b3617e16bc423848e433a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -85,11 +120,11 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="../styles.css">
-<meta property="og:title" content="Integration with google cloud lakehouse runtime catalog with snowflake – notebooks2">
-<meta property="og:description" content="Google cloud lakehouse runtime catalogとsnowflakeの統合について">
+<meta property="og:title" content="Integration with GCP(google cloud) lakehouse runtime catalog with snowflake – notebooks2">
+<meta property="og:description" content="GCP(Google cloud) lakehouse runtime catalogとsnowflakeの統合について">
 <meta property="og:site_name" content="notebooks2">
-<meta name="twitter:title" content="Integration with google cloud lakehouse runtime catalog with snowflake – notebooks2">
-<meta name="twitter:description" content="Google cloud lakehouse runtime catalogとsnowflakeの統合について">
+<meta name="twitter:title" content="Integration with GCP(google cloud) lakehouse runtime catalog with snowflake – notebooks2">
+<meta name="twitter:description" content="GCP(Google cloud) lakehouse runtime catalogとsnowflakeの統合について">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -114,10 +149,6 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
     <a class="nav-link" href="../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../qmd/index.html"> 
-<span class="menu-text">qmd</span></a>
-  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/kameyama"> <i class="bi bi-github" role="img">
 </i> 
@@ -139,10 +170,10 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Integration with google cloud lakehouse runtime catalog with snowflake</h1>
+      <h1 class="title">Integration with GCP(google cloud) lakehouse runtime catalog with snowflake</h1>
                   <div>
         <div class="description">
-          Google cloud lakehouse runtime catalogとsnowflakeの統合について
+          GCP(Google cloud) lakehouse runtime catalogとsnowflakeの統合について
         </div>
       </div>
                           <div class="quarto-categories">
@@ -189,12 +220,166 @@ gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>test</p>
+<p>最近GCP(Google cloud)のbiglake catalogがlakehouse runtime catalogと名前を変え, <a href="https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake">snowflakeなどとの統合</a>ができるようになった. 以前に比べれば非常に便利になったが, まだまだ残念な点が多い. この記事では前半で残念な点を挙げ, 後半でそれでもなんとか使う方法を解説する. この辺りは変更が激しいので, この記事もすぐに陳腐化するかもしれない. 2026年7月現在の情報であることに注意してほしい.</p>
+</section>
+<section id="icebergとlakehouseについて" class="level1">
+<h1>Icebergとlakehouseについて</h1>
+<p>Apache Icebergはデータレイクに保存されている大規模なデータセットのデータ処理を行うためのコミュニティ主導の分散型Apache 2.0ライセンスのオープンソースのデータテーブル形式である. Iceberg自体は単なる規格で, この規格を基にデータレイクとデータウェアハウスを統合した次世代のデータアーキテクチャをデータレイクハウスという. 歴史的なパラダイムとしてはRDBMS, データレイク, データウェアハウスに続く存在であり, 端的に言えばDBの仲間である.</p>
+<p>レイクハウス自体はデータレイクとウェアハウスの上に構築する概念であり, サービス上の実態はむしろカタログと呼ばれる機能である. レイクハウスではデータの実体をiceberg仕様に則ってデータレイクに保存する. カタログはicebergのメタデータを管理する機能を持ち, ウェアハウスはカタログを介してデータレイクに保存されたデータを操作する. このようなアーキテクチャを取ることで, これまでウェアハウス内部にあったデータの実体と計算資源を分離できる. その結果, ウェアハウスがカタログへ接続できればどのウェアハウスからでもデータを操作できるようになる.</p>
+<p>例えばAWSであれば, データレイクはS3, データウェアハウスはRedshift, レイクハウスはglue catalogをベースに構築する. GCPの場合はデータレイクはGoogle Cloud Storage(GCS), データウェアハウスはBigQuery, レイクハウスはlakehouse runtime catalog(旧biglake catalog)をベースに構築することになる. ここでは各クラウドのmanaged catalogを例に出したが, オープンソースのカタログ, 例えばpolaris catalogなどをmanaged catalogの代わりに使うこともできる.</p>
+</section>
+<section id="gcpでのテーブルの種類" class="level1">
+<h1>GCPでのテーブルの種類</h1>
+<p>GCPでは2種類のiceberg tableを作成できる. ひとつはbigqueryのiceberg tableであり, もうひとつはlakehouse runtime catalogのiceberg tableである. これに通常のテーブルと外部テーブルを含めると, 次の4種類が存在することになる:</p>
+<ul>
+<li>通常のbigqueryのテーブル(bigquery native table)</li>
+<li>bigquery管理のiceberg table(bigquery managed iceberg table)</li>
+<li>lakehouse runtime catalog(旧biglake)管理のiceberg table</li>
+<li>外部テーブル</li>
+</ul>
+<p>bigquery managed iceberg tableは通常のCREATE文でiceberg形式を指定することで作成できる:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> [PROJECT_ID.]DATASET_ID.TABLE_NAME (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">COLUMN</span> DATA_TYPE[, <span class="op">..</span>.]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">CLUSTER</span> <span class="kw">BY</span> CLUSTER_COLUMN_LIST</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> CONNECTION {CONNECTION_NAME | <span class="kw">DEFAULT</span>}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>OPTIONS (</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>file_format <span class="op">=</span> <span class="st">'PARQUET'</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>table_format <span class="op">=</span> <span class="st">'ICEBERG'</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>storage_uri <span class="op">=</span> <span class="st">'&lt;STORAGE_URI&gt;'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>一方, lakehouse runtime catalogのiceberg tableはlakehouse runtime catalogへ接続し, sparkでテーブルを作成する. bigqueryから読み取る場合は外部テーブルとして作成する必要がある:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> EXTERNAL <span class="kw">TABLE</span> `<span class="op">&lt;</span><span class="kw">table</span> name<span class="op">&gt;</span>`</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WITH</span> CONNECTION `<span class="op">&lt;</span>connection name<span class="op">&gt;</span>`</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  OPTIONS (</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    format <span class="op">=</span> <span class="st">'ICEBERG'</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    uris <span class="op">=</span> [<span class="st">'&lt;STORAGE_URI&gt;'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  );</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="残念ポイントその1" class="level2">
+<h2 class="anchored" data-anchor-id="残念ポイントその1">残念ポイントその1</h2>
+<p>どちらで作ってもGCSにデータの実体が保存される点は変わらない. しかしテーブルへの書き込みは作成した側のサービスからしか行えない. すなわち, bigquery managed iceberg tableはbigqueryからでなければ書き込めず, lakehouse runtime catalogのiceberg tableはカタログ経由でないと書き込めない. ただし<a href="https://docs.cloud.google.com/lakehouse/docs/lakehouse-iceberg-tables?hl=ja">両者は互いに読み取りが可能</a>である.</p>
+<p><a href="https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake">snowflakeと統合できるのはlakehouse runtime catalogの方</a>である. ここが残念ポイントのひとつで, bigquery側からlakehouse runtime catalogのテーブルを読み取れても操作はできない. AWSはこの辺りがうまく作られていて, レイクハウスをglue catalogとS3で構築すればathenaからテーブルを操作できるし, glueなどでsparkのエンジンを実行して操作することもできる.</p>
+</section>
+</section>
+<section id="snowflakeとの連携" class="level1">
+<h1>snowflakeとの連携</h1>
+<p>snowflakeとbigqueryを連携させる方法は, 以前は<a href="https://www.snowflake.com/en/developers/guides/getting-started-with-snowflake-and-bigquery-via-iceberg/#keeping-bq-in-sync-with-snowflake">この方法</a>のみであった. この方法では, external volumeとしてGCSを指定し, bigquery managed iceberg tableとして保存されたデータをsnowflakeからmetadataを指定して直接読み込む. bigquery iceberg tableの場合はv0.metadata.jsonという名前のmetadata.jsonが作成されるが, これはiceberg規格のmetadataではないため, これを指定してsnowflakeの外部テーブルを作成することはできない.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>EXPORT <span class="kw">TABLE</span> METADATA <span class="kw">FROM</span> <span class="op">&lt;</span><span class="kw">table</span> name<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>という構文を使うと, GCSのmetadataディレクトリにv1776853980.metadata.jsonのようなmetadataとavro filesが生成される. このmetadataはiceberg規格に沿っているため, これを指定すればsnowflakeのexternal iceberg tableを作成できる. ただしテーブルの更新のたびにexportとexternal iceberg tableの作り直しが必要になる. version-hint.textに最新のmetadataのバージョン番号(上記の例では1776853980)が書かれているので, これを都度確認して使うことになる.</p>
+<p>この方法の残念なポイントは, bigquery側でテーブルの更新が入るたびにexport metadataを実行して最新のmetadataを出力し, その後snowflake側で最新のmetadataを再度指定してテーブルを作り直す必要があることだ. テーブルの更新のたびにsnowflake側でテーブルを再作成するのは面倒であり, metadataのexportだけならまだしも, 最新のmetadataをsnowflake側で都度指定する必要もある. 自分のチーム内だけで完結するならまだ許容できるかもしれないが, そもそもレイクハウスのようなアーキテクチャを採用する典型的なユースケースは, GCPとsnowflakeで利用チームが分かれていて, GCP側のデータをsnowflakeから利用したいというケースだろう. そのような場合にテーブルの更新のたびに両者で連携作業をするのは面倒極まりない.</p>
+<p>そんな状況だったが, 最近GAになった<a href="https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake">snowflakeとlakehouse runtime catalogの統合</a>では, lakehouse runtime catalogのiceberg tableであれば上記のような手間は不要で, 元テーブルが更新されても自動的に最新の状態を参照できる. 構文は以下の通りだ:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> CATALOG INTEGRATION biglake_catalog_int</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  CATALOG_SOURCE <span class="op">=</span> ICEBERG_REST</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  TABLE_FORMAT <span class="op">=</span> ICEBERG</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  REST_CONFIG <span class="op">=</span> (</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    CATALOG_URI <span class="op">=</span> <span class="st">'https://biglake.googleapis.com/iceberg/v1/restcatalog'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    CATALOG_NAME <span class="op">=</span> <span class="st">'&lt;gcs_base_location&gt;'</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ADDITIONAL_HEADERS <span class="op">=</span> (</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="ot">"x-goog-user-project"</span> <span class="op">=</span> <span class="st">'&lt;gcp_project_id&gt;'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  REST_AUTHENTICATION <span class="op">=</span> (</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">TYPE</span> <span class="op">=</span> OAUTH</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    OAUTH_GRANT_TYPE <span class="op">=</span> TOKEN_EXCHANGE</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    OAUTH_TOKEN_URI <span class="op">=</span> <span class="st">'https://sts.googleapis.com/v1/token'</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    OAUTH_AUDIENCE <span class="op">=</span> <span class="st">'&lt;gcp_oidc_audience_url&gt;'</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    OAUTH_ALLOWED_SCOPES <span class="op">=</span> (<span class="st">'https://www.googleapis.com/auth/bigquery'</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  ENABLED <span class="op">=</span> <span class="kw">TRUE</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="残念ポイントその2" class="level2">
+<h2 class="anchored" data-anchor-id="残念ポイントその2">残念ポイントその2</h2>
+<p>上記のようなユースケースで連携したいデータがbigquery側にある場合, 残念ポイントその1のせいでbigqueryのテーブルをいったんlakehouse runtime catalogのテーブルへ書き込む必要がある. リリースノートによれば, プレビュー機能としてbigqueryからの書き込みが可能になりつつあるようなので, いずれこの辺りは改善されそうだが, 現時点では追加のワークフローを作る必要がある. できることならbigqueryのnative tableをiceberg tableに変えるだけで共有したい.</p>
+<p>上記構文のCATALOG_NAMEはmetadataではなくバケットを指定すればよいので, それを使えばいけそうな気もするが, 実際に試したところ連携はできなかった.</p>
+</section>
+</section>
+<section id="proxy-serverでbearer-tokenの期限切れとカタログの制約を回避する" class="level1">
+<h1>proxy serverでbearer tokenの期限切れとカタログの制約を回避する</h1>
+<p>proxy serverを挟むことで, 上記2つの残念ポイントを回避しつつsnowflakeとlakehouse runtime catalogを連携させる方法が見つかったので紹介したい. やりたいことは次の2点である:</p>
+<ol type="1">
+<li>GCPのbearer tokenは有効期限が1時間しかないため, 都度リフレッシュする仕組みが必要</li>
+<li>bigquery managed iceberg tableのデータをlakehouse runtime catalogへコピーせずに, そのままsnowflakeから参照したい</li>
+</ol>
+<p><a href="https://docs.snowflake.com/ja/sql-reference/sql/create-catalog-integration">snowflakeのcatalog integration</a>のドキュメントを見ると, <a href="https://docs.snowflake.com/ja/sql-reference/sql/create-catalog-integration-rest">Apache Iceberg™ REST</a>の一般的な接続方法が説明されている. 認証方式にはOAuth, ベアラートークン, SigV4があるが, ここではベアラートークンを選択する. 先述の統合方式がGAになる以前はOAuthが利用できず<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, ベアラートークン以外の選択肢がなかった. しかしGCPのアクセストークンの有効期限は1時間なので, そのままでは恒常的に利用できない. そこで次のようなproxyコンテナをcloud runで立て, snowflakeからこのコンテナへ接続してパラメータを書き換えることで, ベアラートークンの有効期限問題を回避する:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> google.auth</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> google.auth.transport.requests</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, Response, abort, request</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>PROJECT_ID <span class="op">=</span> os.environ[<span class="st">"GCP_PROJECT_ID"</span>]</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>PROXY_TOKEN <span class="op">=</span> os.environ[<span class="st">"PROXY_BEARER_TOKEN"</span>]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>BIGLAKE_BASE <span class="op">=</span> <span class="st">"https://biglake.googleapis.com/iceberg/v1/restcatalog"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_gcp_token():</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    creds, _ <span class="op">=</span> google.auth.default()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    creds.refresh(google.auth.transport.requests.Request())</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> creds.token</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">"/"</span>, methods<span class="op">=</span>[<span class="st">"GET"</span>])</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">"/&lt;path:path&gt;"</span>, methods<span class="op">=</span>[<span class="st">"GET"</span>, <span class="st">"POST"</span>, <span class="st">"DELETE"</span>, <span class="st">"HEAD"</span>])</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> proxy(path<span class="op">=</span><span class="st">""</span>):</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> request.headers.get(<span class="st">"Authorization"</span>) <span class="op">!=</span> <span class="ss">f"Bearer </span><span class="sc">{</span>PROXY_TOKEN<span class="sc">}</span><span class="ss">"</span>:</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        abort(<span class="dv">401</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>BIGLAKE_BASE<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>path<span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> path <span class="cf">else</span> BIGLAKE_BASE</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    headers <span class="op">=</span> {</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Authorization"</span>: <span class="ss">f"Bearer </span><span class="sc">{</span>get_gcp_token()<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x-goog-user-project"</span>: PROJECT_ID,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> request.content_type:</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        headers[<span class="st">"Content-Type"</span>] <span class="op">=</span> request.content_type</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> <span class="bu">dict</span>(request.args)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"warehouse"</span> <span class="kw">in</span> params:</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">"warehouse"</span>] <span class="op">=</span> <span class="ss">f"bq://projects/</span><span class="sc">{</span>PROJECT_ID<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    resp <span class="op">=</span> requests.request(</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        method<span class="op">=</span>request.method,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        url<span class="op">=</span>url,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">=</span>headers,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        params<span class="op">=</span>params,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>request.get_data(),</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Response(resp.content, status<span class="op">=</span>resp.status_code, content_type<span class="op">=</span>resp.headers.get(<span class="st">"Content-Type"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>このproxyはリクエストに含まれるbearer tokenを検証しているだけで, 検証さえ通れば実際のGCP認証情報(サービスアカウントの権限)を使ってlakehouse runtime catalogへリクエストする. そのため<code>PROXY_BEARER_TOKEN</code>の管理は本番のGCP認証情報と同等に扱い, cloud runのendpointへのアクセスも(IAMやネットワーク制限などで)必要最小限に絞ることを推奨する.</p>
+<p>snowflake側でのcatalog integrationの設定は以下のようにする:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> CATALOG INTEGRATION biglake_catalog_int_external</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    CATALOG_SOURCE <span class="op">=</span> ICEBERG_REST</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    TABLE_FORMAT <span class="op">=</span> ICEBERG</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    REST_CONFIG <span class="op">=</span> (</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      CATALOG_URI <span class="op">=</span> <span class="st">'&lt;cloud run endpoint of above&gt;'</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      CATALOG_NAME <span class="op">=</span> <span class="st">'gs://&lt;catalog location&gt;'</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      ACCESS_DELEGATION_MODE <span class="op">=</span> EXTERNAL_VOLUME_CREDENTIALS</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    REST_AUTHENTICATION <span class="op">=</span> (</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">TYPE</span> <span class="op">=</span> BEARER</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      BEARER_TOKEN <span class="op">=</span> <span class="st">'&lt;self defined bearer token for proxy container&gt;'</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    ENABLED <span class="op">=</span> <span class="kw">TRUE</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>経路はsnowflake -&gt; proxy container -&gt; lakehouse runtime catalogとなる. snowflake側のCATALOG_URIには, lakehouse runtime catalogのREST endpointではなく, cloud runで立てたproxy containerのendpointを指定する. <code>&lt;self defined bearer token for proxy container&gt;</code>は事前に手動で用意しておく. cloud runのproxy serverは, このトークンを持つリクエストを受け取ると, ADC経由で実際のbearer tokenを取得してリクエストのトークンを差し替えたうえで, lakehouse runtime catalogのREST endpointへリクエストを転送し, その結果をそのまま返す. 同時に, REST endpointが要求するがsnowflakeからのリクエストには含まれていないヘッダー(<code>x-goog-user-project</code>)も追加する. こうすることで, 1時間の有効期限を意識することなくsnowflakeとlakehouse runtime catalogを接続できる.</p>
+<p>もう一つのポイントは, CATALOG_NAMEで指定するgs://…をproxy側でbq://…に書き換える部分である. <a href="https://docs.cloud.google.com/lakehouse/docs/use-catalog-federation?hl=ja">lakehouse runtime catalogのカタログフェデレーション機能</a>を使うと, lakehouse runtime catalog経由でbigquery managed iceberg tableを読み取れる. catalog integrationの作成時点でbq://…を直接指定できればそれで済むのだが, snowflake側ではgs://…形式でしか指定できない. そこでproxy containerを挟むついでにwarehouseパラメータをbq://…へ書き換えるようにしたところ, snowflakeからlakehouse runtime catalogのカタログフェデレーション機能を通じて, bigquery managed iceberg tableを読み取ることに成功した.</p>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<ul>
+<li>Google cloudのbiglake catalogはlakehouse runtime catalogに改称され, snowflakeとのcatalog integrationが可能になった.</li>
+<li>GCPには4種類のテーブル(bigquery native table, bigquery managed iceberg table, lakehouse runtime catalog管理のiceberg table, 外部テーブル)が存在するが, iceberg tableは作成元のサービスからしか書き込めず, 相互に読み取りのみ可能である(残念ポイントその1).</li>
+<li>snowflakeとの連携方法は2つある. ひとつはbigquery managed iceberg tableに対して<code>EXPORT TABLE METADATA</code>を都度実行し, snowflake側でexternal iceberg tableを作り直す方法, もうひとつはlakehouse runtime catalogとのcatalog integration(GA済み)を使い自動的に最新テーブルを参照する方法である.</li>
+<li>ただしcatalog integrationを使うにはデータがlakehouse runtime catalog側のテーブルである必要があり, bigquery native/managed tableのデータをそのまま連携することはできない(残念ポイントその2).</li>
+<li>そこでcloud run上にproxy serverを立て, (1) GCPの1時間のbearer token期限切れをtokenの都度更新で回避し, (2) catalog federation機能を利用してCATALOG_NAMEのgs://をbq://に書き換えることで, bigquery managed iceberg tableをlakehouse runtime catalog経由でsnowflakeから直接読み取ることに成功した.</li>
+<li>この方法により追加のワークフローやテーブルの作り直しなしに, bigquery側のデータをsnowflakeから継続的に参照できるようになる. ただしproxyはGCPの実認証情報を代理で扱うため, アクセス制御は本番システムと同等に扱うべきである.</li>
+</ul>
 
 
 </section>
 
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><a href="https://groups.google.com/g/google-translate-api/c/un4Mjou_wtk">参考</a>. 現在OAuthが利用できるかどうかは未確認.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
