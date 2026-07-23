@@ -1,17 +1,188 @@
 ---
-title: "Integration with google cloud lakehouse runtime catalog with snowflake"
-description: "Google cloud lakehouse runtime catalogとsnowflakeの統合について"
+title: "Integration with GCP(google cloud) lakehouse runtime catalog with snowflake"
+description: "GCP(Google cloud) lakehouse runtime catalogとsnowflakeの統合について"
 date: "2026/07/08"
 format:
   html:
     code-fold: true
   pdf:
-    geometry: 
+    geometry:
         - top=30mm
         - left=30mm
 categories: [gcp, bigquery, snowflake]
 ---
 
 # Introduction
-test
 
+最近GCP(Google cloud)のbiglake catalogがlakehouse runtime catalogと名前を変え, [snowflakeなどとの統合](https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake)ができるようになった. 以前に比べれば非常に便利になったが, まだまだ残念な点が多い. この記事では前半で残念な点を挙げ, 後半でそれでもなんとか使う方法を解説する. この辺りは変更が激しいので, この記事もすぐに陳腐化するかもしれない. 2026年7月現在の情報であることに注意してほしい.
+
+# Icebergとlakehouseについて
+
+Apache Icebergはデータレイクに保存されている大規模なデータセットのデータ処理を行うためのコミュニティ主導の分散型Apache 2.0ライセンスのオープンソースのデータテーブル形式である. Iceberg自体は単なる規格で, この規格を基にデータレイクとデータウェアハウスを統合した次世代のデータアーキテクチャをデータレイクハウスという. 歴史的なパラダイムとしてはRDBMS, データレイク, データウェアハウスに続く存在であり, 端的に言えばDBの仲間である.
+
+レイクハウス自体はデータレイクとウェアハウスの上に構築する概念であり, サービス上の実態はむしろカタログと呼ばれる機能である. レイクハウスではデータの実体をiceberg仕様に則ってデータレイクに保存する. カタログはicebergのメタデータを管理する機能を持ち, ウェアハウスはカタログを介してデータレイクに保存されたデータを操作する. このようなアーキテクチャを取ることで, これまでウェアハウス内部にあったデータの実体と計算資源を分離できる. その結果, ウェアハウスがカタログへ接続できればどのウェアハウスからでもデータを操作できるようになる.
+
+例えばAWSであれば, データレイクはS3, データウェアハウスはRedshift, レイクハウスはglue catalogをベースに構築する. GCPの場合はデータレイクはGoogle Cloud Storage(GCS), データウェアハウスはBigQuery, レイクハウスはlakehouse runtime catalog(旧biglake catalog)をベースに構築することになる. ここでは各クラウドのmanaged catalogを例に出したが, オープンソースのカタログ, 例えばpolaris catalogなどをmanaged catalogの代わりに使うこともできる.
+
+# GCPでのテーブルの種類
+
+GCPでは2種類のiceberg tableを作成できる. ひとつはbigqueryのiceberg tableであり, もうひとつはlakehouse runtime catalogのiceberg tableである. これに通常のテーブルと外部テーブルを含めると, 次の4種類が存在することになる:
+
+- 通常のbigqueryのテーブル(bigquery native table)
+- bigquery管理のiceberg table(bigquery managed iceberg table)
+- lakehouse runtime catalog(旧biglake)管理のiceberg table
+- 外部テーブル
+
+bigquery managed iceberg tableは通常のCREATE文でiceberg形式を指定することで作成できる:
+```sql
+CREATE TABLE [PROJECT_ID.]DATASET_ID.TABLE_NAME (
+COLUMN DATA_TYPE[, ...]
+)
+CLUSTER BY CLUSTER_COLUMN_LIST
+WITH CONNECTION {CONNECTION_NAME | DEFAULT}
+OPTIONS (
+file_format = 'PARQUET',
+table_format = 'ICEBERG',
+storage_uri = '<STORAGE_URI>');
+```
+一方, lakehouse runtime catalogのiceberg tableはlakehouse runtime catalogへ接続し, sparkでテーブルを作成する. bigqueryから読み取る場合は外部テーブルとして作成する必要がある:
+```sql
+CREATE EXTERNAL TABLE `<table name>`
+  WITH CONNECTION `<connection name>`
+  OPTIONS (
+    format = 'ICEBERG',
+    uris = ['<STORAGE_URI>']
+  );
+```
+
+## 残念ポイントその1
+
+どちらで作ってもGCSにデータの実体が保存される点は変わらない. しかしテーブルへの書き込みは作成した側のサービスからしか行えない. すなわち, bigquery managed iceberg tableはbigqueryからでなければ書き込めず, lakehouse runtime catalogのiceberg tableはカタログ経由でないと書き込めない. ただし[両者は互いに読み取りが可能](https://docs.cloud.google.com/lakehouse/docs/lakehouse-iceberg-tables?hl=ja)である.
+
+[snowflakeと統合できるのはlakehouse runtime catalogの方](https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake)である. ここが残念ポイントのひとつで, bigquery側からlakehouse runtime catalogのテーブルを読み取れても操作はできない. AWSはこの辺りがうまく作られていて, レイクハウスをglue catalogとS3で構築すればathenaからテーブルを操作できるし, glueなどでsparkのエンジンを実行して操作することもできる.
+
+# snowflakeとの連携
+
+snowflakeとbigqueryを連携させる方法は, 以前は[この方法](https://www.snowflake.com/en/developers/guides/getting-started-with-snowflake-and-bigquery-via-iceberg/#keeping-bq-in-sync-with-snowflake)のみであった. この方法では, external volumeとしてGCSを指定し, bigquery managed iceberg tableとして保存されたデータをsnowflakeからmetadataを指定して直接読み込む. bigquery iceberg tableの場合はv0.metadata.jsonという名前のmetadata.jsonが作成されるが, これはiceberg規格のmetadataではないため, これを指定してsnowflakeの外部テーブルを作成することはできない.
+```sql
+EXPORT TABLE METADATA FROM <table name>
+```
+という構文を使うと, GCSのmetadataディレクトリにv1776853980.metadata.jsonのようなmetadataとavro filesが生成される. このmetadataはiceberg規格に沿っているため, これを指定すればsnowflakeのexternal iceberg tableを作成できる. ただしテーブルの更新のたびにexportとexternal iceberg tableの作り直しが必要になる. version-hint.textに最新のmetadataのバージョン番号(上記の例では1776853980)が書かれているので, これを都度確認して使うことになる.
+
+この方法の残念なポイントは, bigquery側でテーブルの更新が入るたびにexport metadataを実行して最新のmetadataを出力し, その後snowflake側で最新のmetadataを再度指定してテーブルを作り直す必要があることだ. テーブルの更新のたびにsnowflake側でテーブルを再作成するのは面倒であり, metadataのexportだけならまだしも, 最新のmetadataをsnowflake側で都度指定する必要もある. 自分のチーム内だけで完結するならまだ許容できるかもしれないが, そもそもレイクハウスのようなアーキテクチャを採用する典型的なユースケースは, GCPとsnowflakeで利用チームが分かれていて, GCP側のデータをsnowflakeから利用したいというケースだろう. そのような場合にテーブルの更新のたびに両者で連携作業をするのは面倒極まりない.
+
+そんな状況だったが, 最近GAになった[snowflakeとlakehouse runtime catalogの統合](https://docs.snowflake.com/en/user-guide/tables-iceberg-configure-catalog-integration-rest-biglake)では, lakehouse runtime catalogのiceberg tableであれば上記のような手間は不要で, 元テーブルが更新されても自動的に最新の状態を参照できる. 構文は以下の通りだ:
+```sql
+CREATE OR REPLACE CATALOG INTEGRATION biglake_catalog_int
+  CATALOG_SOURCE = ICEBERG_REST
+  TABLE_FORMAT = ICEBERG
+  REST_CONFIG = (
+    CATALOG_URI = 'https://biglake.googleapis.com/iceberg/v1/restcatalog'
+    CATALOG_NAME = '<gcs_base_location>'
+    ADDITIONAL_HEADERS = (
+      "x-goog-user-project" = '<gcp_project_id>'
+    )
+  )
+  REST_AUTHENTICATION = (
+    TYPE = OAUTH
+    OAUTH_GRANT_TYPE = TOKEN_EXCHANGE
+    OAUTH_TOKEN_URI = 'https://sts.googleapis.com/v1/token'
+    OAUTH_AUDIENCE = '<gcp_oidc_audience_url>'
+    OAUTH_ALLOWED_SCOPES = ('https://www.googleapis.com/auth/bigquery')
+  )
+  ENABLED = TRUE;
+```
+
+## 残念ポイントその2
+
+上記のようなユースケースで連携したいデータがbigquery側にある場合, 残念ポイントその1のせいでbigqueryのテーブルをいったんlakehouse runtime catalogのテーブルへ書き込む必要がある. リリースノートによれば, プレビュー機能としてbigqueryからの書き込みが可能になりつつあるようなので, いずれこの辺りは改善されそうだが, 現時点では追加のワークフローを作る必要がある. できることならbigqueryのnative tableをiceberg tableに変えるだけで共有したい.
+
+上記構文のCATALOG_NAMEはmetadataではなくバケットを指定すればよいので, それを使えばいけそうな気もするが, 実際に試したところ連携はできなかった.
+
+# proxy serverでbearer tokenの期限切れとカタログの制約を回避する
+
+proxy serverを挟むことで, 上記2つの残念ポイントを回避しつつsnowflakeとlakehouse runtime catalogを連携させる方法が見つかったので紹介したい. やりたいことは次の2点である:
+
+1. GCPのbearer tokenは有効期限が1時間しかないため, 都度リフレッシュする仕組みが必要
+2. bigquery managed iceberg tableのデータをlakehouse runtime catalogへコピーせずに, そのままsnowflakeから参照したい
+
+[snowflakeのcatalog integration](https://docs.snowflake.com/ja/sql-reference/sql/create-catalog-integration)のドキュメントを見ると, [Apache Iceberg™ REST](https://docs.snowflake.com/ja/sql-reference/sql/create-catalog-integration-rest)の一般的な接続方法が説明されている. 認証方式にはOAuth, ベアラートークン, SigV4があるが, ここではベアラートークンを選択する. 先述の統合方式がGAになる以前はOAuthが利用できず[^oauth-note], ベアラートークン以外の選択肢がなかった. しかしGCPのアクセストークンの有効期限は1時間なので, そのままでは恒常的に利用できない. そこで次のようなproxyコンテナをcloud runで立て, snowflakeからこのコンテナへ接続してパラメータを書き換えることで, ベアラートークンの有効期限問題を回避する:
+
+[^oauth-note]: [参考](https://groups.google.com/g/google-translate-api/c/un4Mjou_wtk). 現在OAuthが利用できるかどうかは未確認.
+
+```python
+import os
+
+import google.auth
+import google.auth.transport.requests
+import requests
+from flask import Flask, Response, abort, request
+
+app = Flask(__name__)
+PROJECT_ID = os.environ["GCP_PROJECT_ID"]
+PROXY_TOKEN = os.environ["PROXY_BEARER_TOKEN"]
+BIGLAKE_BASE = "https://biglake.googleapis.com/iceberg/v1/restcatalog"
+
+
+def get_gcp_token():
+    creds, _ = google.auth.default()
+    creds.refresh(google.auth.transport.requests.Request())
+    return creds.token
+
+
+@app.route("/", methods=["GET"])
+@app.route("/<path:path>", methods=["GET", "POST", "DELETE", "HEAD"])
+def proxy(path=""):
+    if request.headers.get("Authorization") != f"Bearer {PROXY_TOKEN}":
+        abort(401)
+    url = f"{BIGLAKE_BASE}/{path}" if path else BIGLAKE_BASE
+    headers = {
+        "Authorization": f"Bearer {get_gcp_token()}",
+        "x-goog-user-project": PROJECT_ID,
+    }
+    if request.content_type:
+        headers["Content-Type"] = request.content_type
+    params = dict(request.args)
+    if "warehouse" in params:
+        params["warehouse"] = f"bq://projects/{PROJECT_ID}"
+    resp = requests.request(
+        method=request.method,
+        url=url,
+        headers=headers,
+        params=params,
+        data=request.get_data(),
+    )
+    return Response(resp.content, status=resp.status_code, content_type=resp.headers.get("Content-Type"))
+```
+
+このproxyはリクエストに含まれるbearer tokenを検証しているだけで, 検証さえ通れば実際のGCP認証情報(サービスアカウントの権限)を使ってlakehouse runtime catalogへリクエストする. そのため`PROXY_BEARER_TOKEN`の管理は本番のGCP認証情報と同等に扱い, cloud runのendpointへのアクセスも(IAMやネットワーク制限などで)必要最小限に絞ることを推奨する.
+
+snowflake側でのcatalog integrationの設定は以下のようにする:
+```sql
+CREATE CATALOG INTEGRATION biglake_catalog_int_external
+    CATALOG_SOURCE = ICEBERG_REST
+    TABLE_FORMAT = ICEBERG
+    REST_CONFIG = (
+      CATALOG_URI = '<cloud run endpoint of above>'
+      CATALOG_NAME = 'gs://<catalog location>'
+      ACCESS_DELEGATION_MODE = EXTERNAL_VOLUME_CREDENTIALS
+    )
+    REST_AUTHENTICATION = (
+      TYPE = BEARER
+      BEARER_TOKEN = '<self defined bearer token for proxy container>'
+    )
+    ENABLED = TRUE;
+```
+
+経路はsnowflake -> proxy container -> lakehouse runtime catalogとなる. snowflake側のCATALOG_URIには, lakehouse runtime catalogのREST endpointではなく, cloud runで立てたproxy containerのendpointを指定する. `<self defined bearer token for proxy container>`は事前に手動で用意しておく. cloud runのproxy serverは, このトークンを持つリクエストを受け取ると, ADC経由で実際のbearer tokenを取得してリクエストのトークンを差し替えたうえで, lakehouse runtime catalogのREST endpointへリクエストを転送し, その結果をそのまま返す. 同時に, REST endpointが要求するがsnowflakeからのリクエストには含まれていないヘッダー(`x-goog-user-project`)も追加する. こうすることで, 1時間の有効期限を意識することなくsnowflakeとlakehouse runtime catalogを接続できる.
+
+もう一つのポイントは, CATALOG_NAMEで指定するgs://...をproxy側でbq://...に書き換える部分である. [lakehouse runtime catalogのカタログフェデレーション機能](https://docs.cloud.google.com/lakehouse/docs/use-catalog-federation?hl=ja)を使うと, lakehouse runtime catalog経由でbigquery managed iceberg tableを読み取れる. catalog integrationの作成時点でbq://...を直接指定できればそれで済むのだが, snowflake側ではgs://...形式でしか指定できない. そこでproxy containerを挟むついでにwarehouseパラメータをbq://...へ書き換えるようにしたところ, snowflakeからlakehouse runtime catalogのカタログフェデレーション機能を通じて, bigquery managed iceberg tableを読み取ることに成功した.
+
+# Summary
+
+- Google cloudのbiglake catalogはlakehouse runtime catalogに改称され, snowflakeとのcatalog integrationが可能になった.
+- GCPには4種類のテーブル(bigquery native table, bigquery managed iceberg table, lakehouse runtime catalog管理のiceberg table, 外部テーブル)が存在するが, iceberg tableは作成元のサービスからしか書き込めず, 相互に読み取りのみ可能である(残念ポイントその1).
+- snowflakeとの連携方法は2つある. ひとつはbigquery managed iceberg tableに対して`EXPORT TABLE METADATA`を都度実行し, snowflake側でexternal iceberg tableを作り直す方法, もうひとつはlakehouse runtime catalogとのcatalog integration(GA済み)を使い自動的に最新テーブルを参照する方法である.
+- ただしcatalog integrationを使うにはデータがlakehouse runtime catalog側のテーブルである必要があり, bigquery native/managed tableのデータをそのまま連携することはできない(残念ポイントその2).
+- そこでcloud run上にproxy serverを立て, (1) GCPの1時間のbearer token期限切れをtokenの都度更新で回避し, (2) catalog federation機能を利用してCATALOG_NAMEのgs://をbq://に書き換えることで, bigquery managed iceberg tableをlakehouse runtime catalog経由でsnowflakeから直接読み取ることに成功した.
+- この方法により追加のワークフローやテーブルの作り直しなしに, bigquery側のデータをsnowflakeから継続的に参照できるようになる. ただしproxyはGCPの実認証情報を代理で扱うため, アクセス制御は本番システムと同等に扱うべきである.
