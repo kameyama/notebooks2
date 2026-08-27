@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Masaya Kameyama">
+<meta name="dcterms.date" content="2026-08-24">
+<meta name="description" content="dbtでbigquery native tableからlakehouse runtime catalogのiceberg tableへ書き込む">
+
+<title>Writing to GCP(google cloud) lakehouse runtime catalog iceberg tables with dbt – notebooks2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-86fafa19d40ef0cb8171a6422e308a9d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-3B1NXS7X3W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Writing to GCP(google cloud) lakehouse runtime catalog iceberg tables with dbt – notebooks2">
+<meta property="og:description" content="dbtでbigquery native tableからlakehouse runtime catalogのiceberg tableへ書き込む">
+<meta property="og:site_name" content="notebooks2">
+<meta name="twitter:title" content="Writing to GCP(google cloud) lakehouse runtime catalog iceberg tables with dbt – notebooks2">
+<meta name="twitter:description" content="dbtでbigquery native tableからlakehouse runtime catalogのiceberg tableへ書き込む">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">notebooks2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kameyama"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kamesen"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Writing to GCP(google cloud) lakehouse runtime catalog iceberg tables with dbt</h1>
+                  <div>
+        <div class="description">
+          dbtでbigquery native tableからlakehouse runtime catalogのiceberg tableへ書き込む
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">gcp</div>
+                <div class="quarto-category">bigquery</div>
+                <div class="quarto-category">dbt</div>
+                <div class="quarto-category">iceberg</div>
+                <div class="quarto-category">ai_generated</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Masaya Kameyama </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">August 24, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="google_cloud_lakehouse_dbt.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>この記事は検証結果をもとに生成AIで作成した. dbtでlakehouse runtime catalogへ書き込みができるところまでは検証したが残念ポイントその3は未検証である.</p>
+<p>前回, <a href="../qmd/google_cloud_lakehouse.html">GCPのlakehouse runtime catalogとsnowflakeの統合</a>について書いた. その中で残念ポイントその2として, bigquery側のデータをlakehouse runtime catalogのテーブルへ書き込めないため, 連携したいデータをカタログ側のテーブルへコピーする追加のワークフローが必要になると述べた. その後この部分はプレビュー機能として解消しつつあり, bigqueryのDDL/DMLでlakehouse runtime catalogのiceberg tableを直接操作できるようになった.</p>
+<p>そこで, dbtで中間層まではbigquery native tableとして変換し, 最終層(gold層)だけをlakehouse runtime catalogのiceberg tableとして書き出すパイプラインを実際に作って検証した. 結論としては実現できたが, dbtの標準機能では届かず, カスタムマテリアライゼーションを書く必要があった. この記事ではその方法と, 実際に動いた範囲, そして新たに見つかった残念ポイントをまとめる. 例によって変更の激しい領域なので, 2026年8月現在の情報であることに注意してほしい.</p>
+</section>
+<section id="bigqueryからlakehouse-runtime-catalogのテーブルを操作する" class="level1">
+<h1>bigqueryからlakehouse runtime catalogのテーブルを操作する</h1>
+<p>lakehouse runtime catalogのテーブルをbigqueryから操作する場合, <strong>4パート識別子</strong>が要求される. 前回紹介したmanaged iceberg tableの構文と比較すると, かなり簡潔である:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> `PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME` (<span class="kw">id</span> <span class="dt">int</span>, <span class="kw">data</span> string);</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">INSERT</span> <span class="kw">INTO</span> `PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME` <span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="ot">"foo"</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>managed iceberg tableで必要だった<code>WITH CONNECTION</code>も<code>OPTIONS(file_format, table_format, storage_uri)</code>も不要である. データの保存先はカタログ側が決めるためで, <code>CATALOG_ID</code>はカタログのIDを指す. <code>catalog_type</code>に<code>CATALOG_TYPE_GCS_BUCKET</code>を使った場合はバケット名がそのままカタログIDになるので, ハイフンを含む名前もバッククォートの内側にそのまま書けばよい. <code>UPDATE</code> / <code>DELETE</code> / <code>MERGE</code>も同じ識別子で通る.</p>
+<p>読み書きの可否はテーブルプロパティ<code>gcp.biglake.bigquery-dml.enabled</code>で決まる. bigqueryのDDLで作成したテーブルはこれが既定で有効になるため, 作成直後からbigqueryのDMLが使える. 一方でsparkなどのOSSエンジンが作成したテーブルは既定で無効なので, bigqueryからは<code>SELECT</code>しかできず, DMLを投げると</p>
+<pre><code>DML statements are only supported over tables that have data stored in BigQuery.</code></pre>
+<p>というエラーになる. この場合は<code>TBLPROPERTIES</code>または<code>ALTER TABLE</code>で明示的にオプトインすればbigqueryからのDMLが通る. つまり前回書いた「iceberg tableは作成した側のサービスからしか書き込めない」という制約は, カタログ側のテーブルに関してはプロパティで解除できるようになったということである.</p>
+<p>なお, この機能に関するドキュメントは記述が分散しており, 古いset upページには今でも「bigqueryのDDL/DMLでは作成も変更もできない」という記述が残っている. 実挙動は上記のとおりなので, 迷ったら実機で確認するのが早い.</p>
+<section id="terraform側の準備" class="level2">
+<h2 class="anchored" data-anchor-id="terraform側の準備">terraform側の準備</h2>
+<p>カタログとnamespaceはterraformで作れる. bigqueryの<code>CREATE TABLE</code>はnamespaceが存在している前提なので, テーブルを作る前にnamespaceを用意しておく必要がある:</p>
+<pre class="hcl"><code>resource "google_storage_bucket" "lakehouse" {
+  name                        = "my-lakehouse-bucket"
+  location                    = "us-central1"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_biglake_iceberg_catalog" "main" {
+  name             = google_storage_bucket.lakehouse.name
+  catalog_type     = "CATALOG_TYPE_GCS_BUCKET"
+  credential_mode  = "CREDENTIAL_MODE_VENDED_CREDENTIALS"
+  primary_location = "us-central1"
+}
+
+resource "google_biglake_iceberg_namespace" "gold" {
+  catalog      = google_biglake_iceberg_catalog.main.name
+  namespace_id = "gold"
+}
+
+# vended credentialsではカタログのサービスエージェントが
+# 利用者に代わってGCS上のmetadata/dataを読み書きするため, この権限が必要
+resource "google_storage_bucket_iam_member" "catalog_agent" {
+  bucket = google_storage_bucket.lakehouse.name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${google_biglake_iceberg_catalog.main.biglake_service_account}"
+}</code></pre>
+<p>最後のIAMを忘れると, テーブル作成時に<code>storage.objects.create denied</code>の403で落ちる. vended credentialsモードではクエリエンジンが自分の権限でGCSに書くのではなく, カタログのサービスエージェントが発行する短命のトークンを使ってGCSにアクセスするためである.</p>
+</section>
+</section>
+<section id="dbtの標準機能では届かない" class="level1">
+<h1>dbtの標準機能では届かない</h1>
+<p>dbtはバージョン1.10前後から<code>catalogs.yml</code>による外部カタログのサポートを入れており, dbt-bigqueryにも<code>catalog_type: biglake_metastore</code>が用意されている. しかしこれで作られるのは<strong>bigquery managed iceberg table</strong>である. アダプタの実装を読むと, iceberg指定時に付与されるのは<code>table_format</code> / <code>file_format</code> / <code>storage_uri</code>のOPTIONSであり, 識別子は通常の3パート<code>project.dataset.table</code>のままだった. catalog integrationの種類も<code>biglake_metastore</code>の1種類しかなく, 既定のカタログ名は<code>managed_iceberg</code>になっている.</p>
+<p>より根本的な問題として, dbt coreのRelationは<code>database.schema.identifier</code>の3パートまでしか表現できない. lakehouse runtime catalogのテーブルはproject, catalog, namespace, tableの4つを単一のバッククォートで囲む必要があるため, 標準のマテリアライゼーションでは構文上どうしても届かない.</p>
+</section>
+<section id="カスタムマテリアライゼーション" class="level1">
+<h1>カスタムマテリアライゼーション</h1>
+<p>そこでRelationを経由せず, configから4パート識別子を組み立ててDDL/DMLを直接発行するマテリアライゼーションを書く. 実装は次のようになる:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>{% macro lakehouse_iceberg_merge_sql(table_ref, source_sql, column_names, unique_keys) %}</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> update_columns <span class="op">=</span> column_names | reject(<span class="st">'in'</span>, unique_keys) | <span class="kw">list</span> <span class="op">-</span>%}</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">merge</span> <span class="kw">into</span> {{ table_ref }} <span class="kw">as</span> dbt_dest</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">using</span> (</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    {{ source_sql }}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="kw">as</span> dbt_src</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">on</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    {%<span class="op">-</span> <span class="cf">for</span> <span class="kw">key</span> <span class="kw">in</span> unique_keys %}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    {{ <span class="st">'and'</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">first</span> }} dbt_dest.`{ <span class="kw">key</span> }` <span class="op">=</span> dbt_src.`{ <span class="kw">key</span> }`</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    {%<span class="op">-</span> endfor %}</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  {% <span class="cf">if</span> update_columns | <span class="fu">length</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="op">-</span>%}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">when</span> matched <span class="cf">then</span> <span class="kw">update</span> <span class="kw">set</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    {%<span class="op">-</span> <span class="cf">for</span> col <span class="kw">in</span> update_columns %}</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    `{ col }` <span class="op">=</span> dbt_src.`{ col }`{{ <span class="st">','</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">last</span> }}</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    {%<span class="op">-</span> endfor %}</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  {% endif <span class="op">-</span>%}</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">when</span> <span class="kw">not</span> matched <span class="cf">then</span> <span class="kw">insert</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    ({% <span class="cf">for</span> col <span class="kw">in</span> column_names %}`{ col }`{{ <span class="st">', '</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">last</span> }}{% endfor %})</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">values</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    ({% <span class="cf">for</span> col <span class="kw">in</span> column_names %}dbt_src.`{ col }`{{ <span class="st">', '</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">last</span> }}{% endfor %})</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>{% endmacro %}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>{% materialization lakehouse_iceberg, adapter<span class="op">=</span><span class="st">'bigquery'</span> %}</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> <span class="kw">identifier</span> <span class="op">=</span> model[<span class="st">'alias'</span>] <span class="op">-</span>%}</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> catalog <span class="op">=</span> var(<span class="st">'iceberg_catalog'</span>) <span class="op">-</span>%}</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> namespace <span class="op">=</span> var(<span class="st">'iceberg_namespace'</span>) <span class="op">-</span>%}</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> table_ref <span class="op">=</span> <span class="st">'`'</span> ~ target.project ~ <span class="st">'.'</span> ~ catalog ~ <span class="st">'.'</span> ~ namespace ~ <span class="st">'.'</span> ~ <span class="kw">identifier</span> ~ <span class="st">'`'</span> <span class="op">-</span>%}</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> unique_key <span class="op">=</span> config.get(<span class="st">'unique_key'</span>) <span class="op">-</span>%}</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> unique_keys <span class="op">=</span> [unique_key] <span class="cf">if</span> unique_key <span class="kw">is</span> string <span class="cf">else</span> (unique_key <span class="kw">or</span> []) <span class="op">-</span>%}</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> full_refresh_mode <span class="op">=</span> should_full_refresh() <span class="op">-</span>%}</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  {{ run_hooks(pre_hooks) }}</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  {#<span class="op">-</span> <span class="dv">4</span>パート識別子はRelationではないためget_columns_in_relationが使えない.</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>      compiled SQLを空サブクエリ化して列名と型を取得する <span class="op">-</span>#}</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> <span class="kw">columns</span> <span class="op">=</span> adapter.get_column_schema_from_query(get_empty_subquery_sql(sql)) <span class="op">-</span>%}</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> column_names <span class="op">=</span> <span class="kw">columns</span> | map(<span class="kw">attribute</span><span class="op">=</span><span class="st">'name'</span>) | <span class="kw">list</span> <span class="op">-</span>%}</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="kw">set</span> column_ddl <span class="op">=</span> [] <span class="op">-</span>%}</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> <span class="cf">for</span> c <span class="kw">in</span> <span class="kw">columns</span> <span class="op">-</span>%}</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    {%<span class="op">-</span> do column_ddl.append(<span class="st">'`'</span> ~ c.name ~ <span class="st">'` '</span> ~ c.data_type) <span class="op">-</span>%}</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>  {%<span class="op">-</span> endfor <span class="op">-</span>%}</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>  {% <span class="cf">if</span> full_refresh_mode %}</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    {% do run_query(<span class="st">'drop table if exists '</span> ~ table_ref) %}</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>  {% endif %}</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  {% do run_query(<span class="st">'create table if not exists '</span> ~ table_ref ~ <span class="st">' ('</span> ~ column_ddl | <span class="kw">join</span>(<span class="st">', '</span>) ~ <span class="st">')'</span>) %}</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  {% <span class="kw">call</span> statement(<span class="st">'main'</span>) %}</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    {% <span class="cf">if</span> unique_keys | <span class="fu">length</span> <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> <span class="kw">not</span> full_refresh_mode %}</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>      {{ lakehouse_iceberg_merge_sql(table_ref, sql, column_names, unique_keys) }}</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    {% <span class="cf">else</span> %}</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>      <span class="kw">insert</span> <span class="kw">into</span> {{ table_ref }}</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>        ({% <span class="cf">for</span> col <span class="kw">in</span> column_names %}`{ col }`{{ <span class="st">', '</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">last</span> }}{% endfor %})</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>      <span class="kw">select</span> {% <span class="cf">for</span> col <span class="kw">in</span> column_names %}`{ col }`{{ <span class="st">', '</span> <span class="cf">if</span> <span class="kw">not</span> <span class="cf">loop</span>.<span class="fu">last</span> }}{% endfor %}</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>      <span class="kw">from</span> (</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>        {{ sql }}</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    {% endif %}</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  {% endcall %}</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  {{ run_hooks(post_hooks) }}</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  {#<span class="op">-</span> <span class="dv">4</span>パートのiceberg tableはrelation cacheで表現できないため空を返す <span class="op">-</span>#}</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>  {{ <span class="kw">return</span>({<span class="st">'relations'</span>: []}) }}</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>{% endmaterialization %}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>ポイントは3つある.</p>
+<p>ひとつめは列定義の取得方法である. 4パート識別子はRelationではないので<code>adapter.get_columns_in_relation</code>が使えない. 代わりに<code>get_empty_subquery_sql</code>でcompiled SQLを<code>where false limit 0</code>のサブクエリに包み, <code>adapter.get_column_schema_from_query</code>に渡すことで列名とbigqueryの型を得ている. これはdbtがcontract検証で使っているのと同じ手である.</p>
+<p>ふたつめは書き込みの分岐である. 通常のrunでは<code>CREATE TABLE IF NOT EXISTS</code>でテーブルを用意してから<code>MERGE</code>を投げる. 初回はテーブルが空なので結果的に全件INSERTになり, 2回目以降は差分更新になる. <code>--full-refresh</code>のときは<code>DROP</code> → <code>CREATE</code> → <code>INSERT ... SELECT</code>に切り替える.</p>
+<p>みっつめは<code>return({'relations': []})</code>である. 作ったテーブルをdbtのrelation cacheに載せないことで, 存在しない3パートのrelationをdbtが参照しようとして壊れるのを避けている. 代償として後述の制約が付く.</p>
+<p>モデル側はマテリアライゼーションを指定するだけでよい:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{{ config(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">materialized</span><span class="op">=</span><span class="st">'lakehouse_iceberg'</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">schema</span><span class="op">=</span><span class="st">'gold'</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    unique_key<span class="op">=</span>[<span class="st">'event_date'</span>, <span class="st">'tenant_id'</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>) }}</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">select</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    event_date,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    tenant_id,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    impressions,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    clicks,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">current_timestamp</span>() <span class="kw">as</span> loaded_at</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="kw">from</span> {{ <span class="fu">ref</span>(<span class="st">'int_events_daily'</span>) }}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="実際に動いたこと" class="level1">
+<h1>実際に動いたこと</h1>
+<p>公式ドキュメントに載っているのは列指定の<code>CREATE TABLE</code>と<code>INSERT ... VALUES</code>だけなので, dbtが必要とする操作を個別に切り分けて試した. 結果は次のとおりで, いずれも未文書ながら動作した:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>操作</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CREATE TABLE</code>(列指定)</td>
+<td>⭕ ドキュメント記載どおり</td>
+</tr>
+<tr class="even">
+<td><code>INSERT ... VALUES</code></td>
+<td>⭕ ドキュメント記載どおり</td>
+</tr>
+<tr class="odd">
+<td><code>INSERT ... SELECT</code>(native table → iceberg table)</td>
+<td>⭕ 未文書</td>
+</tr>
+<tr class="even">
+<td><code>MERGE</code>(native tableをUSINGに取る)</td>
+<td>⭕ 未文書</td>
+</tr>
+<tr class="odd">
+<td><code>CREATE TABLE AS SELECT</code></td>
+<td>⭕ 未文書</td>
+</tr>
+</tbody>
+</table>
+<p>native tableとiceberg tableをまたぐ<code>INSERT ... SELECT</code>と<code>MERGE</code>が通ることが, この方式が成立するかどうかの分岐点だった. ここが駄目なら<code>INSERT ... VALUES</code>しか書き込み手段がなくなり, dbtから使うのは現実的ではなくなる.</p>
+<p>dbt側の挙動も期待どおりだった. <code>loaded_at</code>に<code>current_timestamp()</code>を入れておくと差分更新の確認がしやすい:</p>
+<ul>
+<li>1回目のrun: <code>CREATE TABLE</code> + <code>MERGE</code>でテーブルが作られる</li>
+<li>2回目のrun: 行数が変わらず<code>loaded_at</code>だけが進む. すなわち追記ではなくMERGEとして既存行が更新されている</li>
+<li><code>--full-refresh</code>: dbtのログが<code>MERGE</code>から<code>INSERT</code>に変わり, GCS上のテーブルディレクトリが別のIDに切り替わる</li>
+</ul>
+<p>書き込み先が本当にlakehouse runtime catalog側のテーブルなのかは, 独立した3つの観測で確認した.</p>
+<ol type="1">
+<li>gold層に対応するbigquery datasetのテーブル一覧が<strong>空</strong>である. managed iceberg tableならdataset側に見えるはずである</li>
+<li>iceberg REST APIのテーブル一覧に出てくる</li>
+</ol>
+<pre><code>GET https://biglake.googleapis.com/iceberg/v1/restcatalog/v1/projects/PROJECT_ID/catalogs/CATALOG_ID/namespaces/NAMESPACE/tables
+
+{ "identifiers": [ { "namespace": ["gold"], "name": "gold_events_daily" } ] }</code></pre>
+<ol start="3" type="1">
+<li>icebergのクライアントからスナップショットと実データが読める</li>
+</ol>
+<p>pyicebergで読む場合は以下のようになる. sparkやtrinoを立てるよりも手軽に相互運用性を確認できる:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> google.auth</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> google.auth.transport.requests</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyiceberg.catalog.rest <span class="im">import</span> RestCatalog</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>creds, _ <span class="op">=</span> google.auth.default(scopes<span class="op">=</span>[<span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>creds.refresh(google.auth.transport.requests.Request())</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>catalog <span class="op">=</span> RestCatalog(<span class="st">"main"</span>, <span class="op">**</span>{</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"uri"</span>: <span class="st">"https://biglake.googleapis.com/iceberg/v1/restcatalog"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># バケット名だけを渡すと400になる</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"warehouse"</span>: <span class="st">"gs://my-lakehouse-bucket"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"token"</span>: creds.token,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"header.x-goog-user-project"</span>: <span class="st">"PROJECT_ID"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"header.X-Iceberg-Access-Delegation"</span>: <span class="st">"vended-credentials"</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># RestCatalog既定のOAuthフローを回避しADCのトークンをそのまま使う</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"rest.auth.type"</span>: <span class="st">"noop"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> catalog.load_table(<span class="st">"gold.gold_events_daily"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.current_snapshot())</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.scan().to_arrow())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>pyiceberg[gcsfs]</code>だけではFileIOが初期化できず<code>load_table</code>が失敗するので, <code>pyiceberg[pyarrow,gcsfs]</code>を入れる必要がある<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>読み取った<code>loaded_at</code>はdbtのrun時刻と一致した. <code>EXPORT TABLE METADATA</code>を挟まずに, dbtがbigqueryのエンジン経由で書いた結果が外部エンジンからそのまま見えているということである. 前回の記事で問題にしていたexportとテーブル作り直しのループが, 最終層をカタログ側のテーブルにするだけで消えたことになる.</p>
+<section id="残念ポイントその3" class="level2">
+<h2 class="anchored" data-anchor-id="残念ポイントその3">残念ポイントその3</h2>
+<p>とはいえ制約は残る. まずマテリアライゼーション自体に内在するものとして,</p>
+<ul>
+<li><strong>終端専用になる</strong>. relation cacheに載せないので, このモデルを下流の<code>ref()</code>で参照できない. したがってiceberg table同士を連結したリネージをdbtで組むことはできず, あくまでgold層の出口としてしか使えない</li>
+<li><strong><code>dbt test</code>と<code>dbt docs</code>が使えない</strong>. これらも3パートのrelationを前提にしているためである. データ品質のチェックはsilver層までで済ませ, 出力されたiceberg tableは4パート識別子への直接クエリで確認することになる</li>
+<li><strong>列の追加が反映されない</strong>. <code>CREATE TABLE IF NOT EXISTS</code>で作っているので, スキーマを変えたら<code>--full-refresh</code>が必要になる</li>
+</ul>
+<p>次に, プラットフォーム側の挙動として,</p>
+<ul>
+<li><strong><code>DROP TABLE</code>してもGCSのファイルは残る</strong>. カタログの登録は消えるが, metadataとparquetはバケットに残ったままだった. <code>--full-refresh</code>を繰り返すとゴミが蓄積していくので, ライフサイクルルールか定期的な掃除を前提にした方がよい</li>
+<li><strong>native tableとiceberg tableを同一クエリで扱うにはロケーションを揃える必要がある</strong>. bigqueryはUSマルチリージョンとus-central1を別ロケーションとして扱い, これをまたぐクエリを拒否する. silver層のdatasetとカタログのバケットのロケーションが食い違っていると, そもそも<code>INSERT ... SELECT</code>が組めない</li>
+<li><strong>プレビュー機能への依存</strong>. 上で動作したもののうち3つは公式ドキュメントに記載がない. GAまでの間に挙動が変わる可能性は当然ある</li>
+</ul>
+<p>そして最大の残念ポイントは, これがdbtの標準機能ではないことそのものである. dbt-bigqueryのRelationが4パートを扱えるようになるか, <code>catalogs.yml</code>にlakehouse runtime catalogを指すcatalog typeが追加されれば, このマテリアライゼーションは不要になる. それまでは自前で保守する必要がある.</p>
+</section>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<ul>
+<li>前回残念ポイントその2として挙げた「bigqueryからlakehouse runtime catalogのテーブルへ書き込めない」問題は, プレビュー機能として解消しつつある. <code>`PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME`</code>の4パート識別子を使えば, <code>WITH CONNECTION</code>も<code>OPTIONS</code>もなしにDDL/DMLが通る.</li>
+<li>書き込みの可否はテーブルプロパティ<code>gcp.biglake.bigquery-dml.enabled</code>で決まり, bigqueryが作成したテーブルは既定で有効, OSSエンジンが作成したテーブルはオプトインで有効化できる.</li>
+<li>dbt-bigqueryの<code>catalogs.yml</code>(<code>catalog_type: biglake_metastore</code>)ではmanaged iceberg tableしか作れず, dbt coreのRelationも3パートまでのため, 標準機能ではlakehouse runtime catalogのテーブルを作れない.</li>
+<li>4パート識別子を直接組み立てるカスタムマテリアライゼーションを書けば, 中間層はbigquery native tableで変換し, 最終層だけをlakehouse runtime catalogのiceberg tableとして書き出すパイプラインが成立する. 列定義は<code>get_column_schema_from_query</code>と<code>get_empty_subquery_sql</code>で取得し, 通常runは<code>MERGE</code>, <code>--full-refresh</code>は<code>DROP</code> → <code>CREATE</code> → <code>INSERT ... SELECT</code>とした.</li>
+<li>公式ドキュメント未記載の<code>INSERT ... SELECT</code>, <code>MERGE</code>(native sourceをUSING), <code>CREATE TABLE AS SELECT</code>はいずれも動作した. 出力されたテーブルはbigquery dataset側には現れず, iceberg REST APIとpyicebergから参照できる. <code>EXPORT TABLE METADATA</code>は不要である.</li>
+<li>ただしiceberg tableは終端専用(下流<code>ref()</code>不可)になり, <code>dbt test</code> / <code>dbt docs</code>も使えない. <code>DROP TABLE</code>でGCSのファイルが残る点と, native tableとのロケーション一致が必要な点にも注意が必要である.</li>
+</ul>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>余談だが, ユーザーのADCには<code>quota_project_id</code>が埋め込まれており, これが全APIリクエストの課金先プロジェクトになる. ここが無効なプロジェクトを指していると, どのバケットを触っても<code>UserProjectAccountProblem</code>の403が返る. <code>gcloud config set project</code>では変わらないので<code>gcloud auth application-default set-quota-project</code>で更新する.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kameyama\.github\.io\/notebooks2\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "kameyama/notebooks2";
+    script.dataset.repoId = "R_kgDOIvWFWA";
+    script.dataset.category = "General";
+    script.dataset.categoryId = "DIC_kwDOIvWFWM4Cdj8u";
+    script.dataset.mapping = "title";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
