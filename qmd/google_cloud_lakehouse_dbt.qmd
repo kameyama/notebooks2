@@ -1,0 +1,276 @@
+---
+title: "Writing to GCP(google cloud) lakehouse runtime catalog iceberg tables with dbt"
+description: "dbtでbigquery native tableからlakehouse runtime catalogのiceberg tableへ書き込む"
+date: "2026/08/24"
+format:
+  html:
+    code-fold: true
+  pdf:
+    geometry:
+        - top=30mm
+        - left=30mm
+categories: [gcp, bigquery, dbt, iceberg, ai_generated]
+---
+
+# Introduction
+
+この記事は検証結果をもとに生成AIで作成した. dbtでlakehouse runtime catalogへ書き込みができるところまでは検証したが残念ポイントその3は未検証である. 
+
+前回, [GCPのlakehouse runtime catalogとsnowflakeの統合](google_cloud_lakehouse.qmd)について書いた. その中で残念ポイントその2として, bigquery側のデータをlakehouse runtime catalogのテーブルへ書き込めないため, 連携したいデータをカタログ側のテーブルへコピーする追加のワークフローが必要になると述べた. その後この部分はプレビュー機能として解消しつつあり, bigqueryのDDL/DMLでlakehouse runtime catalogのiceberg tableを直接操作できるようになった.
+
+そこで, dbtで中間層まではbigquery native tableとして変換し, 最終層(gold層)だけをlakehouse runtime catalogのiceberg tableとして書き出すパイプラインを実際に作って検証した. 結論としては実現できたが, dbtの標準機能では届かず, カスタムマテリアライゼーションを書く必要があった. この記事ではその方法と, 実際に動いた範囲, そして新たに見つかった残念ポイントをまとめる. 例によって変更の激しい領域なので, 2026年8月現在の情報であることに注意してほしい.
+
+# bigqueryからlakehouse runtime catalogのテーブルを操作する
+
+lakehouse runtime catalogのテーブルをbigqueryから操作する場合, **4パート識別子**が要求される. 前回紹介したmanaged iceberg tableの構文と比較すると, かなり簡潔である:
+
+```sql
+CREATE TABLE `PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME` (id int, data string);
+INSERT INTO `PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME` VALUES (1, "foo");
+```
+
+managed iceberg tableで必要だった`WITH CONNECTION`も`OPTIONS(file_format, table_format, storage_uri)`も不要である. データの保存先はカタログ側が決めるためで, `CATALOG_ID`はカタログのIDを指す. `catalog_type`に`CATALOG_TYPE_GCS_BUCKET`を使った場合はバケット名がそのままカタログIDになるので, ハイフンを含む名前もバッククォートの内側にそのまま書けばよい. `UPDATE` / `DELETE` / `MERGE`も同じ識別子で通る.
+
+読み書きの可否はテーブルプロパティ`gcp.biglake.bigquery-dml.enabled`で決まる. bigqueryのDDLで作成したテーブルはこれが既定で有効になるため, 作成直後からbigqueryのDMLが使える. 一方でsparkなどのOSSエンジンが作成したテーブルは既定で無効なので, bigqueryからは`SELECT`しかできず, DMLを投げると
+
+```
+DML statements are only supported over tables that have data stored in BigQuery.
+```
+
+というエラーになる. この場合は`TBLPROPERTIES`または`ALTER TABLE`で明示的にオプトインすればbigqueryからのDMLが通る. つまり前回書いた「iceberg tableは作成した側のサービスからしか書き込めない」という制約は, カタログ側のテーブルに関してはプロパティで解除できるようになったということである.
+
+なお, この機能に関するドキュメントは記述が分散しており, 古いset upページには今でも「bigqueryのDDL/DMLでは作成も変更もできない」という記述が残っている. 実挙動は上記のとおりなので, 迷ったら実機で確認するのが早い.
+
+## terraform側の準備
+
+カタログとnamespaceはterraformで作れる. bigqueryの`CREATE TABLE`はnamespaceが存在している前提なので, テーブルを作る前にnamespaceを用意しておく必要がある:
+
+```hcl
+resource "google_storage_bucket" "lakehouse" {
+  name                        = "my-lakehouse-bucket"
+  location                    = "us-central1"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_biglake_iceberg_catalog" "main" {
+  name             = google_storage_bucket.lakehouse.name
+  catalog_type     = "CATALOG_TYPE_GCS_BUCKET"
+  credential_mode  = "CREDENTIAL_MODE_VENDED_CREDENTIALS"
+  primary_location = "us-central1"
+}
+
+resource "google_biglake_iceberg_namespace" "gold" {
+  catalog      = google_biglake_iceberg_catalog.main.name
+  namespace_id = "gold"
+}
+
+# vended credentialsではカタログのサービスエージェントが
+# 利用者に代わってGCS上のmetadata/dataを読み書きするため, この権限が必要
+resource "google_storage_bucket_iam_member" "catalog_agent" {
+  bucket = google_storage_bucket.lakehouse.name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${google_biglake_iceberg_catalog.main.biglake_service_account}"
+}
+```
+
+最後のIAMを忘れると, テーブル作成時に`storage.objects.create denied`の403で落ちる. vended credentialsモードではクエリエンジンが自分の権限でGCSに書くのではなく, カタログのサービスエージェントが発行する短命のトークンを使ってGCSにアクセスするためである.
+
+# dbtの標準機能では届かない
+
+dbtはバージョン1.10前後から`catalogs.yml`による外部カタログのサポートを入れており, dbt-bigqueryにも`catalog_type: biglake_metastore`が用意されている. しかしこれで作られるのは**bigquery managed iceberg table**である. アダプタの実装を読むと, iceberg指定時に付与されるのは`table_format` / `file_format` / `storage_uri`のOPTIONSであり, 識別子は通常の3パート`project.dataset.table`のままだった. catalog integrationの種類も`biglake_metastore`の1種類しかなく, 既定のカタログ名は`managed_iceberg`になっている.
+
+より根本的な問題として, dbt coreのRelationは`database.schema.identifier`の3パートまでしか表現できない. lakehouse runtime catalogのテーブルはproject, catalog, namespace, tableの4つを単一のバッククォートで囲む必要があるため, 標準のマテリアライゼーションでは構文上どうしても届かない.
+
+# カスタムマテリアライゼーション
+
+そこでRelationを経由せず, configから4パート識別子を組み立ててDDL/DMLを直接発行するマテリアライゼーションを書く. 実装は次のようになる:
+
+```sql
+{% macro lakehouse_iceberg_merge_sql(table_ref, source_sql, column_names, unique_keys) %}
+  {%- set update_columns = column_names | reject('in', unique_keys) | list -%}
+  merge into {{ table_ref }} as dbt_dest
+  using (
+    {{ source_sql }}
+  ) as dbt_src
+  on
+    {%- for key in unique_keys %}
+    {{ 'and' if not loop.first }} dbt_dest.`{{ key }}` = dbt_src.`{{ key }}`
+    {%- endfor %}
+  {% if update_columns | length > 0 -%}
+  when matched then update set
+    {%- for col in update_columns %}
+    `{{ col }}` = dbt_src.`{{ col }}`{{ ',' if not loop.last }}
+    {%- endfor %}
+  {% endif -%}
+  when not matched then insert
+    ({% for col in column_names %}`{{ col }}`{{ ', ' if not loop.last }}{% endfor %})
+  values
+    ({% for col in column_names %}dbt_src.`{{ col }}`{{ ', ' if not loop.last }}{% endfor %})
+{% endmacro %}
+
+
+{% materialization lakehouse_iceberg, adapter='bigquery' %}
+
+  {%- set identifier = model['alias'] -%}
+  {%- set catalog = var('iceberg_catalog') -%}
+  {%- set namespace = var('iceberg_namespace') -%}
+  {%- set table_ref = '`' ~ target.project ~ '.' ~ catalog ~ '.' ~ namespace ~ '.' ~ identifier ~ '`' -%}
+
+  {%- set unique_key = config.get('unique_key') -%}
+  {%- set unique_keys = [unique_key] if unique_key is string else (unique_key or []) -%}
+  {%- set full_refresh_mode = should_full_refresh() -%}
+
+  {{ run_hooks(pre_hooks) }}
+
+  {#- 4パート識別子はRelationではないためget_columns_in_relationが使えない.
+      compiled SQLを空サブクエリ化して列名と型を取得する -#}
+  {%- set columns = adapter.get_column_schema_from_query(get_empty_subquery_sql(sql)) -%}
+  {%- set column_names = columns | map(attribute='name') | list -%}
+  {%- set column_ddl = [] -%}
+  {%- for c in columns -%}
+    {%- do column_ddl.append('`' ~ c.name ~ '` ' ~ c.data_type) -%}
+  {%- endfor -%}
+
+  {% if full_refresh_mode %}
+    {% do run_query('drop table if exists ' ~ table_ref) %}
+  {% endif %}
+
+  {% do run_query('create table if not exists ' ~ table_ref ~ ' (' ~ column_ddl | join(', ') ~ ')') %}
+
+  {% call statement('main') %}
+    {% if unique_keys | length > 0 and not full_refresh_mode %}
+      {{ lakehouse_iceberg_merge_sql(table_ref, sql, column_names, unique_keys) }}
+    {% else %}
+      insert into {{ table_ref }}
+        ({% for col in column_names %}`{{ col }}`{{ ', ' if not loop.last }}{% endfor %})
+      select {% for col in column_names %}`{{ col }}`{{ ', ' if not loop.last }}{% endfor %}
+      from (
+        {{ sql }}
+      )
+    {% endif %}
+  {% endcall %}
+
+  {{ run_hooks(post_hooks) }}
+
+  {#- 4パートのiceberg tableはrelation cacheで表現できないため空を返す -#}
+  {{ return({'relations': []}) }}
+
+{% endmaterialization %}
+```
+
+ポイントは3つある.
+
+ひとつめは列定義の取得方法である. 4パート識別子はRelationではないので`adapter.get_columns_in_relation`が使えない. 代わりに`get_empty_subquery_sql`でcompiled SQLを`where false limit 0`のサブクエリに包み, `adapter.get_column_schema_from_query`に渡すことで列名とbigqueryの型を得ている. これはdbtがcontract検証で使っているのと同じ手である.
+
+ふたつめは書き込みの分岐である. 通常のrunでは`CREATE TABLE IF NOT EXISTS`でテーブルを用意してから`MERGE`を投げる. 初回はテーブルが空なので結果的に全件INSERTになり, 2回目以降は差分更新になる. `--full-refresh`のときは`DROP` → `CREATE` → `INSERT ... SELECT`に切り替える.
+
+みっつめは`return({'relations': []})`である. 作ったテーブルをdbtのrelation cacheに載せないことで, 存在しない3パートのrelationをdbtが参照しようとして壊れるのを避けている. 代償として後述の制約が付く.
+
+モデル側はマテリアライゼーションを指定するだけでよい:
+
+```sql
+{{ config(
+    materialized='lakehouse_iceberg',
+    schema='gold',
+    unique_key=['event_date', 'tenant_id']
+) }}
+
+select
+    event_date,
+    tenant_id,
+    impressions,
+    clicks,
+    current_timestamp() as loaded_at
+from {{ ref('int_events_daily') }}
+```
+
+# 実際に動いたこと
+
+公式ドキュメントに載っているのは列指定の`CREATE TABLE`と`INSERT ... VALUES`だけなので, dbtが必要とする操作を個別に切り分けて試した. 結果は次のとおりで, いずれも未文書ながら動作した:
+
+| 操作 | 結果 |
+| --- | --- |
+| `CREATE TABLE`(列指定) | ⭕ ドキュメント記載どおり |
+| `INSERT ... VALUES` | ⭕ ドキュメント記載どおり |
+| `INSERT ... SELECT`(native table → iceberg table) | ⭕ 未文書 |
+| `MERGE`(native tableをUSINGに取る) | ⭕ 未文書 |
+| `CREATE TABLE AS SELECT` | ⭕ 未文書 |
+
+native tableとiceberg tableをまたぐ`INSERT ... SELECT`と`MERGE`が通ることが, この方式が成立するかどうかの分岐点だった. ここが駄目なら`INSERT ... VALUES`しか書き込み手段がなくなり, dbtから使うのは現実的ではなくなる.
+
+dbt側の挙動も期待どおりだった. `loaded_at`に`current_timestamp()`を入れておくと差分更新の確認がしやすい:
+
+- 1回目のrun: `CREATE TABLE` + `MERGE`でテーブルが作られる
+- 2回目のrun: 行数が変わらず`loaded_at`だけが進む. すなわち追記ではなくMERGEとして既存行が更新されている
+- `--full-refresh`: dbtのログが`MERGE`から`INSERT`に変わり, GCS上のテーブルディレクトリが別のIDに切り替わる
+
+書き込み先が本当にlakehouse runtime catalog側のテーブルなのかは, 独立した3つの観測で確認した.
+
+1. gold層に対応するbigquery datasetのテーブル一覧が**空**である. managed iceberg tableならdataset側に見えるはずである
+2. iceberg REST APIのテーブル一覧に出てくる
+
+```
+GET https://biglake.googleapis.com/iceberg/v1/restcatalog/v1/projects/PROJECT_ID/catalogs/CATALOG_ID/namespaces/NAMESPACE/tables
+
+{ "identifiers": [ { "namespace": ["gold"], "name": "gold_events_daily" } ] }
+```
+
+3. icebergのクライアントからスナップショットと実データが読める
+
+pyicebergで読む場合は以下のようになる. sparkやtrinoを立てるよりも手軽に相互運用性を確認できる:
+
+```python
+import google.auth
+import google.auth.transport.requests
+from pyiceberg.catalog.rest import RestCatalog
+
+creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+creds.refresh(google.auth.transport.requests.Request())
+
+catalog = RestCatalog("main", **{
+    "uri": "https://biglake.googleapis.com/iceberg/v1/restcatalog",
+    # バケット名だけを渡すと400になる
+    "warehouse": "gs://my-lakehouse-bucket",
+    "token": creds.token,
+    "header.x-goog-user-project": "PROJECT_ID",
+    "header.X-Iceberg-Access-Delegation": "vended-credentials",
+    # RestCatalog既定のOAuthフローを回避しADCのトークンをそのまま使う
+    "rest.auth.type": "noop",
+})
+
+t = catalog.load_table("gold.gold_events_daily")
+print(t.current_snapshot())
+print(t.scan().to_arrow())
+```
+
+`pyiceberg[gcsfs]`だけではFileIOが初期化できず`load_table`が失敗するので, `pyiceberg[pyarrow,gcsfs]`を入れる必要がある[^adc-note].
+
+[^adc-note]: 余談だが, ユーザーのADCには`quota_project_id`が埋め込まれており, これが全APIリクエストの課金先プロジェクトになる. ここが無効なプロジェクトを指していると, どのバケットを触っても`UserProjectAccountProblem`の403が返る. `gcloud config set project`では変わらないので`gcloud auth application-default set-quota-project`で更新する.
+
+読み取った`loaded_at`はdbtのrun時刻と一致した. `EXPORT TABLE METADATA`を挟まずに, dbtがbigqueryのエンジン経由で書いた結果が外部エンジンからそのまま見えているということである. 前回の記事で問題にしていたexportとテーブル作り直しのループが, 最終層をカタログ側のテーブルにするだけで消えたことになる.
+
+## 残念ポイントその3
+
+とはいえ制約は残る. まずマテリアライゼーション自体に内在するものとして,
+
+- **終端専用になる**. relation cacheに載せないので, このモデルを下流の`ref()`で参照できない. したがってiceberg table同士を連結したリネージをdbtで組むことはできず, あくまでgold層の出口としてしか使えない
+- **`dbt test`と`dbt docs`が使えない**. これらも3パートのrelationを前提にしているためである. データ品質のチェックはsilver層までで済ませ, 出力されたiceberg tableは4パート識別子への直接クエリで確認することになる
+- **列の追加が反映されない**. `CREATE TABLE IF NOT EXISTS`で作っているので, スキーマを変えたら`--full-refresh`が必要になる
+
+次に, プラットフォーム側の挙動として,
+
+- **`DROP TABLE`してもGCSのファイルは残る**. カタログの登録は消えるが, metadataとparquetはバケットに残ったままだった. `--full-refresh`を繰り返すとゴミが蓄積していくので, ライフサイクルルールか定期的な掃除を前提にした方がよい
+- **native tableとiceberg tableを同一クエリで扱うにはロケーションを揃える必要がある**. bigqueryはUSマルチリージョンとus-central1を別ロケーションとして扱い, これをまたぐクエリを拒否する. silver層のdatasetとカタログのバケットのロケーションが食い違っていると, そもそも`INSERT ... SELECT`が組めない
+- **プレビュー機能への依存**. 上で動作したもののうち3つは公式ドキュメントに記載がない. GAまでの間に挙動が変わる可能性は当然ある
+
+そして最大の残念ポイントは, これがdbtの標準機能ではないことそのものである. dbt-bigqueryのRelationが4パートを扱えるようになるか, `catalogs.yml`にlakehouse runtime catalogを指すcatalog typeが追加されれば, このマテリアライゼーションは不要になる. それまでは自前で保守する必要がある.
+
+# Summary
+
+- 前回残念ポイントその2として挙げた「bigqueryからlakehouse runtime catalogのテーブルへ書き込めない」問題は, プレビュー機能として解消しつつある. `` `PROJECT_ID.CATALOG_ID.NAMESPACE.TABLE_NAME` ``の4パート識別子を使えば, `WITH CONNECTION`も`OPTIONS`もなしにDDL/DMLが通る.
+- 書き込みの可否はテーブルプロパティ`gcp.biglake.bigquery-dml.enabled`で決まり, bigqueryが作成したテーブルは既定で有効, OSSエンジンが作成したテーブルはオプトインで有効化できる.
+- dbt-bigqueryの`catalogs.yml`(`catalog_type: biglake_metastore`)ではmanaged iceberg tableしか作れず, dbt coreのRelationも3パートまでのため, 標準機能ではlakehouse runtime catalogのテーブルを作れない.
+- 4パート識別子を直接組み立てるカスタムマテリアライゼーションを書けば, 中間層はbigquery native tableで変換し, 最終層だけをlakehouse runtime catalogのiceberg tableとして書き出すパイプラインが成立する. 列定義は`get_column_schema_from_query`と`get_empty_subquery_sql`で取得し, 通常runは`MERGE`, `--full-refresh`は`DROP` → `CREATE` → `INSERT ... SELECT`とした.
+- 公式ドキュメント未記載の`INSERT ... SELECT`, `MERGE`(native sourceをUSING), `CREATE TABLE AS SELECT`はいずれも動作した. 出力されたテーブルはbigquery dataset側には現れず, iceberg REST APIとpyicebergから参照できる. `EXPORT TABLE METADATA`は不要である.
+- ただしiceberg tableは終端専用(下流`ref()`不可)になり, `dbt test` / `dbt docs`も使えない. `DROP TABLE`でGCSのファイルが残る点と, native tableとのロケーション一致が必要な点にも注意が必要である.
