@@ -1,0 +1,315 @@
+---
+title: "TypeScriptからmacOSのscreencaptureコマンドを叩いてスクリーンショットを撮る"
+description: "playwrightのscreenshotでは届かない範囲をOSのscreencaptureコマンドで撮るユーティリティ"
+date: "2026/09/02"
+format:
+  html:
+    code-fold: true
+  pdf:
+    geometry:
+        - top=30mm
+        - left=30mm
+categories: [typescript, playwright, macos, ai_generated]
+---
+
+# Introduction
+
+以前, 「playwrightでドロップダウンのスクリーンショットを撮る方法」という記事を書いた. ネイティブな`select`要素はブラウザ側のコンポーネントなので, playwrightの`page.screenshot`ではメニューを開いた状態を撮れない, という話である. あのときはドロップダウンを模倣するカスタム要素をDOMに差し込んで回避した.
+
+しかしこの手の「ブラウザの描画領域の外にあるもの」は`select`だけではない. ファイル選択ダイアログ, 権限のポップアップ, 拡張機能のパネル, IMEの変換候補, そもそもブラウザ以外のアプリケーション. playwrightのスクリーンショットはページの描画結果を撮る仕組みなので, これらはどう頑張っても写らない.
+
+そこで発想を変えて, OSの機能で画面そのものを撮ることにした. macOSには`screencapture`という標準コマンドがあるので, これをTypeScriptから呼べるようにラップしたのが今回のユーティリティである. E2Eテストのリポジトリの`e2e/utils`に置いて, playwrightのテストから必要なときだけ呼び出して使っている.
+
+# screencaptureコマンド
+
+まず素のコマンドを確認しておく. macOSに最初から入っているので追加のインストールは不要である.
+
+```bash
+# 画面全体を撮ってscreenshot.pngに保存
+screencapture screenshot.png
+
+# 撮影音を鳴らさない
+screencapture -x screenshot.png
+
+# 3秒待ってから撮る
+screencapture -T 3 screenshot.png
+
+# 範囲をマウスで選択して撮る
+screencapture -i screenshot.png
+
+# クリックしたウィンドウを撮る
+screencapture -w screenshot.png
+
+# フォーマットを指定する
+screencapture -t jpg screenshot.jpg
+
+# ディスプレイ2を撮る
+screencapture -D 2 screenshot.png
+```
+
+やりたいことはこれで足りている. 問題は, テストコードの中で毎回この文字列を組み立てて`exec`に渡すのが面倒でミスもしやすいことである. オプションの意味もフラグだけ見ても分からない. なので型のついたインターフェースを一枚被せる.
+
+# 実装
+
+外部ライブラリは使わず, Node.js標準の`child_process`, `fs`, `path`だけで書く. まずオプションの型を定義する.
+
+```typescript
+import {exec} from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import {promisify} from "node:util";
+
+const execAsync = promisify(exec);
+
+/**
+ * スクリーンショット撮影のオプション
+ */
+export interface ScreenCaptureOptions {
+  /** 出力ファイルパス（拡張子を含む） */
+  outputPath: string;
+  /** 画面全体を撮影するか（デフォルト: true） */
+  captureFullScreen?: boolean;
+  /** インタラクティブモードで特定の範囲を選択するか（デフォルト: false） */
+  interactive?: boolean;
+  /** ウィンドウを撮影するか（デフォルト: false） */
+  captureWindow?: boolean;
+  /** 音を鳴らすか（デフォルト: false） */
+  playSound?: boolean;
+  /** 遅延時間（秒）（デフォルト: 0） */
+  delay?: number;
+  /** 画像フォーマット（png, jpg, pdf等）（デフォルト: png） */
+  format?: "png" | "jpg" | "pdf" | "tiff";
+  /** 撮影するディスプレイID（1: メインディスプレイ, 2: セカンダリディスプレイ等） */
+  displayId?: number;
+}
+```
+
+本体はこのオプションをコマンドライン引数へ組み替えて`exec`するだけである.
+
+```typescript
+export async function takeScreenshot(options: ScreenCaptureOptions): Promise<string> {
+  const {
+    outputPath,
+    captureFullScreen = true,
+    interactive = false,
+    captureWindow = false,
+    playSound = false,
+    delay = 0,
+    format = "png",
+    displayId,
+  } = options;
+
+  // 出力ディレクトリが存在しない場合は作成
+  const outputDir = path.dirname(outputPath);
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, {recursive: true});
+  }
+
+  const args: string[] = [];
+
+  // 音を鳴らさない（デフォルト）
+  if (!playSound) {
+    args.push("-x");
+  }
+
+  if (displayId !== undefined && displayId > 0) {
+    args.push("-D", displayId.toString());
+  }
+
+  if (delay > 0) {
+    args.push("-T", delay.toString());
+  }
+
+  args.push("-t", format);
+
+  // 撮影モードを設定
+  if (interactive) {
+    args.push("-i");
+  } else if (captureWindow) {
+    args.push("-w");
+  } else if (captureFullScreen) {
+    // 全画面撮影（デフォルト動作なので特別なオプションは不要）
+  }
+
+  args.push(outputPath);
+
+  const command = `screencapture ${args.join(" ")}`;
+
+  try {
+    console.log(`実行中: ${command}`);
+    const {stderr} = await execAsync(command);
+
+    if (stderr) {
+      console.warn(`警告: ${stderr}`);
+    }
+
+    // ファイルが作成されたことを確認
+    if (!fs.existsSync(outputPath)) {
+      throw new Error(`スクリーンショットファイルが作成されませんでした: ${outputPath}`);
+    }
+
+    console.log(`スクリーンショットが保存されました: ${outputPath}`);
+    return outputPath;
+  } catch (error) {
+    throw new Error(`スクリーンショットの撮影に失敗しました: ${error}`);
+  }
+}
+```
+
+ここで地味に効いているのが次の3点である.
+
+- **出力ディレクトリの自動作成**: `screencapture`は存在しないディレクトリへ書こうとすると失敗する. テストの出力先が`./result/2026-09-02/`のように動的だと毎回引っかかるので, `mkdirSync`の`recursive`で先に作ってしまう.
+- **撮影音のデフォルト無効**: 撮影音はデフォルトで鳴る. テストで何十枚も撮ると鬱陶しいので, `playSound`を明示しない限り`-x`を付ける. コマンドのデフォルトとユーティリティのデフォルトを逆にしている唯一の箇所である.
+- **ファイル存在の確認**: `screencapture`は失敗しても終了コードが0のことがあり, `exec`のエラーだけを見ていると撮れていないのに成功扱いになる. 撮影後に`existsSync`でファイルの有無を確認して初めて成功とする.
+
+3点目は特に重要である. インタラクティブモードでユーザーがEscを押してキャンセルした場合など, コマンドが黙って終わるケースでも呼び出し側に例外が伝わる. これがないと, 撮れていないのに成功扱いになって後続の画像比較で意味不明な失敗をすることになる.
+
+# 用途別のラッパー
+
+`takeScreenshot`はオプションを全部持っているぶん呼び出しが冗長になる. 実際のテストコードで使うのは決まったパターンだけなので, 薄いラッパーを用意しておく.
+
+```typescript
+/** 画面全体を撮る */
+export async function captureScreen(filename: string, outputDir = "./screenshots"): Promise<string> {
+  return takeScreenshot({
+    outputPath: path.join(outputDir, filename),
+    captureFullScreen: true,
+    playSound: false,
+  });
+}
+
+/** 範囲をマウスで選択して撮る */
+export async function captureInteractive(filename: string, outputDir = "./screenshots"): Promise<string> {
+  return takeScreenshot({
+    outputPath: path.join(outputDir, filename),
+    interactive: true,
+    playSound: false,
+  });
+}
+
+/** クリックしたウィンドウを撮る */
+export async function captureWindow(filename: string, outputDir = "./screenshots"): Promise<string> {
+  return takeScreenshot({
+    outputPath: path.join(outputDir, filename),
+    captureWindow: true,
+    playSound: false,
+  });
+}
+
+/** 遅延付きで撮る */
+export async function captureWithDelay(
+  filename: string,
+  delaySeconds: number,
+  outputDir = "./screenshots",
+): Promise<string> {
+  return takeScreenshot({
+    outputPath: path.join(outputDir, filename),
+    delay: delaySeconds,
+    playSound: false,
+  });
+}
+
+/** 指定したディスプレイを撮る */
+export async function captureFromDisplay(
+  filename: string,
+  displayId: number,
+  outputDir = "./screenshots",
+): Promise<string> {
+  return takeScreenshot({
+    outputPath: path.join(outputDir, filename),
+    displayId,
+    playSound: false,
+  });
+}
+```
+
+いずれも`takeScreenshot`へ委譲しているだけで, 独自のロジックは持たない. 名前で意図が読めることだけが価値である.
+
+# オプション一覧
+
+| プロパティ | 型 | デフォルト | 説明 |
+|-----------|---|-----------|------|
+| `outputPath` | `string` | - | 出力ファイルパス（必須） |
+| `captureFullScreen` | `boolean` | `true` | 画面全体を撮影するか |
+| `interactive` | `boolean` | `false` | インタラクティブモードを使用するか |
+| `captureWindow` | `boolean` | `false` | ウィンドウを撮影するか |
+| `playSound` | `boolean` | `false` | 撮影音を鳴らすか |
+| `delay` | `number` | `0` | 遅延時間（秒） |
+| `format` | `'png' \| 'jpg' \| 'pdf' \| 'tiff'` | `'png'` | 画像フォーマット |
+| `displayId` | `number` | - | 撮影するディスプレイID |
+
+撮影モードは`interactive` → `captureWindow` → `captureFullScreen`の優先順で判定される. 複数を`true`にしても先に評価されたものが勝つだけなので, 排他だと思って使えばよい.
+
+# 使用例
+
+基本形は1行である.
+
+```typescript
+import {captureScreen} from "./utils/screencapture";
+
+await captureScreen("basic-screenshot.png");
+```
+
+細かく指定したい場合は`takeScreenshot`を直接呼ぶ.
+
+```typescript
+import {type ScreenCaptureOptions, takeScreenshot} from "./utils/screencapture";
+
+const options: ScreenCaptureOptions = {
+  outputPath: "./screenshots/detailed-screenshot.jpg",
+  format: "jpg",
+  delay: 2,
+  playSound: false,
+};
+await takeScreenshot(options);
+```
+
+PDFで保存したり, セカンダリディスプレイを撮ったりもできる. マルチディスプレイ環境ではディスプレイが存在しないこともあるので, 個別に`try`で囲んでおくと落ちない.
+
+```typescript
+// PDF形式で保存
+await takeScreenshot({
+  outputPath: "./screenshots/screenshot.pdf",
+  format: "pdf",
+});
+
+// セカンダリディスプレイ（-D 2）
+try {
+  await captureFromDisplay("display-2-screenshot.png", 2);
+} catch (error) {
+  console.log("セカンダリディスプレイが存在しないか, エラーが発生しました:", error);
+}
+```
+
+インタラクティブモードとウィンドウ撮影は人間の操作を前提とするので, 自動テストの中では使えない. 手元で資料用の画像を撮るときの用途である.
+
+```typescript
+console.log("画面上で撮影したい範囲をマウスで選択してください...");
+await captureInteractive("interactive-screenshot.png");
+
+console.log("撮影したいウィンドウをクリックしてください...");
+await captureWindow("window-screenshot.png");
+```
+
+実行はts-nodeで直接叩ける.
+
+```bash
+npx ts-node utils/screencapture-examples.ts
+```
+
+# 注意点
+
+- **macOS専用**である. `screencapture`はmacOSの標準コマンドなので, LinuxのCIでは当然動かない. CI上のE2Eはplaywrightの`page.screenshot`に任せ, このユーティリティはローカルでの確認や資料作成に限定して使うのが現実的である.
+- **画面収録の権限が必要**になる場合がある. ターミナルやIDEに対してシステム設定の「プライバシーとセキュリティ」から許可を出しておく. 権限がないと真っ黒な画像が保存されることがあり, これは前述のファイル存在チェックでも検出できない.
+- **画面に映っているものがそのまま写る**. 撮りたいウィンドウを前面に出しておく必要があるし, 逆に関係ないウィンドウや通知が写り込む. `delay`を入れて手で整える余地を作るのが実用的である.
+- **ヘッドレスでは撮れない**. 画面がないので当たり前だが, playwrightをヘッドレスで動かしている場合はこの方法自体が使えない. `headless: false`で起動する必要がある.
+
+# まとめ
+
+playwrightのスクリーンショットはページの描画結果を撮るものなので, ブラウザのネイティブUIやブラウザ外のものは撮れない. 以前はDOMを差し替えて見た目を再現するという回避策を取ったが, OSのコマンドで画面ごと撮ってしまえば, そもそも何が描画されているかを問わない.
+
+代わりに, macOS専用になる, 権限が必要になる, 実行環境の画面状態に依存する, といった制約を負う. 自動テストの本体には向かないが, 「playwrightでは撮れないもの」に対する逃げ道としては単純で確実である. 実装も標準ライブラリだけで済み, やっていることはコマンド文字列の組み立てとファイルの存在確認だけなので, 壊れる余地も小さい.
+
+# コメント
+
+この記事はE2Eテスト用に書いたユーティリティのコードとREADMEをもとに生成AIで作成した. コード自体は`screencapture`のラッパーにすぎず大した実装ではないが, 出力ディレクトリの自動作成と撮影後のファイル存在確認という2箇所だけは, 素のコマンドを毎回書いていると忘れがちなところである.
