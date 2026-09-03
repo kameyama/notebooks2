@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/qmd/screencapture_from_typescript.html",
       "/qmd/google_cloud_lakehouse_dbt.html",
       "/qmd/google_cloud_lakehouse.html",
       "/posts/schreenshot_of_dropdown_menu_on_playright.html",
