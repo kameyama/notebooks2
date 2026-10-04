@@ -2,3 +2,4 @@
 _site/*
 **/*.quarto_ipynb
 .vscode/github-issues/
+CLAUDE.local.md
