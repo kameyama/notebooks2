@@ -12,10 +12,14 @@ author:
   - name: Masaya Kameyama
 resources:
   - paper.pdf
+  - paper_ja.pdf
 other-links:
   - text: PDF (LaTeX version)
     icon: file-pdf
     href: paper.pdf
+  - text: 日本語による修士レベル詳細版
+    icon: file-pdf
+    href: paper_ja.pdf
 abstract: |
   First-order gauged matrix quantum mechanics on $S^1$ computes equivariant indices of line bundles on the Higgs branch, but the identification of the Chern--Simons level depends on how the theory is regularized. Different papers report different "quantum shifts": $k'\to k'-N$ for the ADHM model of the 4d quantum Hall effect [@BarnsGraham:2017zpx], $k+n\mapsto k$ for the Chern--Simons matrix model on the framed Jordan quiver [@Hu:2024csm], and $k\to k+1$ for the Polychronakos matrix model [@Polychronakos:2001mi]. We give a single rule that accounts for all of them. Write the one-loop factor of every field mode of weight $x$ and gauge fugacity $w$ as $x^{s_\varepsilon}w^{s_w}/(1-xw)$. Then the partition function is $Z=(\prod x^{s_\varepsilon})\,\chi(M,\mathcal{O}(k'-\sum \text{charge}\cdot s_w))$, where $M$ is the Higgs branch. It equals the twisted index $\chi(M,\mathcal{O}(k')\otimes K^{s})$ if and only if $s_\varepsilon=s_w=s$ for all fields. Zeta-function regularization ($s=\tfrac12$) gives the Dirac (spin$^c$) index; gauge-covariant time lattices have $s_w=0$ and never shift the level. The first two literature shifts are, as their authors already noted, the same normal-ordering mechanism ($s_w=1$ on fundamental fields). The third has been explained in the literature in three different ways: as normal ordering of the constraint, as the adjoint zero-point energy, and as a Jacobian. In the rule it is unambiguously an $s_\varepsilon$ effect, namely the adjoint zero-point energy absorbed into the Calogero coupling, and not a Gauss-law effect.
 

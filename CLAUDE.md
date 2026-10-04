@@ -4,7 +4,7 @@
 
 `papers/<名前>/index.qmd` は、親ファイルの LaTeX ソースから pandoc で生成したものである。親ファイルはこのリポジトリの外にあり、各ページに対応する親ディレクトリの場所は `CLAUDE.local.md`（git 管理外）に書く。
 
-- 親ディレクトリの `main.tex` が正本である。`refs.bib` と `paper.pdf`（親の `main.pdf`）はコピーである。
+- 親ディレクトリの `main.tex` が正本である。`refs.bib` と `paper.pdf`（親の `main.pdf`）はコピーである。`paper_ja.pdf` がある場合は、親の `paper_ja/main.pdf`（日本語による修士レベル詳細版）のコピーである。
 - 本文・数式・文献は index.qmd を直接編集しない。親の `main.tex` を直して再生成する。
 - 直接編集してよいのは qmd 固有の部分だけである。
   - front matter（title, subtitle, description, date, categories, author, bibliography, number-sections, toc, resources, other-links, abstract の書式）
@@ -24,4 +24,4 @@ quarto pandoc <親>/main.tex -f latex -t markdown --wrap=none
 4. 綴りをアメリカ式にする（regularisation → regularization, colour → color, analogue → analog など）
 5. 既存の front matter と qmd 固有の部分を残す
 
-再生成したら `refs.bib` と `paper.pdf` も親からコピーし直す。
+再生成したら `refs.bib` と `paper.pdf`（あれば `paper_ja.pdf` も）を親からコピーし直す。
