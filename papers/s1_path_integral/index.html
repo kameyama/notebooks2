@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="AI">
+<meta name="author" content="Masaya Kameyama">
+<meta name="dcterms.date" content="2026-10-03">
+<meta name="description" content="A draft paper organizing the quantum shifts of first-order gauged matrix models with two regularization exponents per field">
+
+<title>A dictionary of quantum shifts in first-order gauged matrix models – notebooks2</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-959c2a591665e60f1ae7f328a0795a6e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-3B1NXS7X3W"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-3B1NXS7X3W', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="A dictionary of quantum shifts in first-order gauged matrix models – notebooks2">
+<meta property="og:description" content="A draft paper organizing the quantum shifts of first-order gauged matrix models with two regularization exponents per field">
+<meta property="og:site_name" content="notebooks2">
+<meta name="twitter:title" content="A dictionary of quantum shifts in first-order gauged matrix models – notebooks2">
+<meta name="twitter:description" content="A draft paper organizing the quantum shifts of first-order gauged matrix models with two regularization exponents per field">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">notebooks2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/kameyama"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/kamesen"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">A dictionary of quantum shifts in first-order gauged matrix models</h1>
+            <p class="subtitle lead">ADHM, Grassmannians and the Jordan quiver</p>
+                  <div>
+        <div class="description">
+          A draft paper organizing the quantum shifts of first-order gauged matrix models with two regularization exponents per field
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">physics</div>
+                <div class="quarto-category">path_integral</div>
+                <div class="quarto-category">matrix_model</div>
+                <div class="quarto-category">ai_generated</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>AI </p>
+               <p>Masaya Kameyama </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 3, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      <p>First-order gauged matrix quantum mechanics on <span class="math inline">\(S^1\)</span> computes equivariant indices of line bundles on the Higgs branch, but the identification of the Chern–Simons level depends on how the theory is regularized. Different papers report different “quantum shifts”: <span class="math inline">\(k'\to k'-N\)</span> for the ADHM model of the 4d quantum Hall effect&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>, <span class="math inline">\(k+n\mapsto k\)</span> for the Chern–Simons matrix model on the framed Jordan quiver&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span>, and <span class="math inline">\(k\to k+1\)</span> for the Polychronakos matrix model&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span>. We give a single rule that accounts for all of them. Write the one-loop factor of every field mode of weight <span class="math inline">\(x\)</span> and gauge fugacity <span class="math inline">\(w\)</span> as <span class="math inline">\(x^{s_\varepsilon}w^{s_w}/(1-xw)\)</span>. Then the partition function is <span class="math inline">\(Z=(\prod x^{s_\varepsilon})\,\chi(M,\mathcal{O}(k'-\sum \text{charge}\cdot s_w))\)</span>, where <span class="math inline">\(M\)</span> is the Higgs branch. It equals the twisted index <span class="math inline">\(\chi(M,\mathcal{O}(k')\otimes K^{s})\)</span> if and only if <span class="math inline">\(s_\varepsilon=s_w=s\)</span> for all fields. Zeta-function regularization (<span class="math inline">\(s=\tfrac12\)</span>) gives the Dirac (spin<span class="math inline">\(^c\)</span>) index; gauge-covariant time lattices have <span class="math inline">\(s_w=0\)</span> and never shift the level. The first two literature shifts are, as their authors already noted, the same normal-ordering mechanism (<span class="math inline">\(s_w=1\)</span> on fundamental fields). The third has been explained in the literature in three different ways: as normal ordering of the constraint, as the adjoint zero-point energy, and as a Jacobian. In the rule it is unambiguously an <span class="math inline">\(s_\varepsilon\)</span> effect, namely the adjoint zero-point energy absorbed into the Calogero coupling, and not a Gauss-law effect. We test the rule on three phase spaces: <span class="math inline">\(\mathrm{Hilb}^n(\mathbb C^2)\)</span> (where <span class="math inline">\(K\)</span> is trivial), the Grassmannian (where <span class="math inline">\(K\)</span> is non-trivial and the space is compact) and the Jordan quiver variety (where <span class="math inline">\(K\)</span> is non-trivial and the space is non-compact). The tests use Molien integrals, Jeffrey–Kirwan residues, Atiyah–Bott sums and explicit time lattices for gauge group <span class="math inline">\(U(n)\)</span> with <span class="math inline">\(n\le 3\)</span>. We also show where the rule stops applying: once the Hamiltonian is quadratic in a generator, the continuum coherent-state path integral distorts the spectrum, and the time lattice converges only if the Fock space is truncated first.</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up"><span class="header-section-number">2</span> Set-up</a>
+  <ul class="collapse">
+  <li><a href="#models" id="toc-models" class="nav-link" data-scroll-target="#models"><span class="header-section-number">2.1</span> Models</a></li>
+  <li><a href="#regularization-data" id="toc-regularization-data" class="nav-link" data-scroll-target="#regularization-data"><span class="header-section-number">2.2</span> Regularization data</a></li>
+  </ul></li>
+  <li><a href="#the-rule" id="toc-the-rule" class="nav-link" data-scroll-target="#the-rule"><span class="header-section-number">3</span> The rule</a></li>
+  <li><a href="#three-phase-spaces" id="toc-three-phase-spaces" class="nav-link" data-scroll-target="#three-phase-spaces"><span class="header-section-number">4</span> Three phase spaces</a>
+  <ul class="collapse">
+  <li><a href="#mathrmhilbnmathbb-c2-trivial-k" id="toc-mathrmhilbnmathbb-c2-trivial-k" class="nav-link" data-scroll-target="#mathrmhilbnmathbb-c2-trivial-k"><span class="header-section-number">4.1</span> <span class="math inline">\(\mathrm{Hilb}^n(\mathbb C^2)\)</span>: trivial <span class="math inline">\(K\)</span></a></li>
+  <li><a href="#mathrmgrnn-non-trivial-k-compact" id="toc-mathrmgrnn-non-trivial-k-compact" class="nav-link" data-scroll-target="#mathrmgrnn-non-trivial-k-compact"><span class="header-section-number">4.2</span> <span class="math inline">\(\mathrm{Gr}(n,N)\)</span>: non-trivial <span class="math inline">\(K\)</span>, compact</a></li>
+  <li><a href="#jordan-quiver-non-trivial-k-non-compact" id="toc-jordan-quiver-non-trivial-k-non-compact" class="nav-link" data-scroll-target="#jordan-quiver-non-trivial-k-non-compact"><span class="header-section-number">4.3</span> Jordan quiver: non-trivial <span class="math inline">\(K\)</span>, non-compact</a></li>
+  </ul></li>
+  <li><a href="#the-dictionary" id="toc-the-dictionary" class="nav-link" data-scroll-target="#the-dictionary"><span class="header-section-number">5</span> The dictionary</a></li>
+  <li><a href="#sec-limits" id="toc-sec-limits" class="nav-link" data-scroll-target="#sec-limits"><span class="header-section-number">6</span> Limits of the rule</a></li>
+  <li><a href="#sec-jk" id="toc-sec-jk" class="nav-link" data-scroll-target="#sec-jk"><span class="header-section-number">7</span> Remarks on JK residues and wall crossing</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions"><span class="header-section-number">8</span> Conclusions</a></li>
+  
+  </ul>
+<div class="quarto-other-links"><h2>Other Links</h2><ul><li><a href="paper.pdf"><i class="bi bi-file-pdf"></i>PDF (LaTeX version)</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>Authorship.</strong> Claude Opus 5.5, an AI system developed by Anthropic. Almost all of this work, from the computations to the text, was generated by the AI; hence the first authorship (which alphabetical order happens to confirm).</p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>A first-order action <span class="math inline">\(S=\oint\theta-\oint H\,dt\)</span> with <span class="math inline">\(d\theta=\omega\)</span> defines a path-integral version of geometric quantization. When <span class="math inline">\(H\)</span> is the moment map of a torus action, the partition function <span class="math inline">\(Z=\mathrm{Tr}\,e^{-\beta H}\)</span> on a circle is an equivariant index and can be written as a fixed-point sum. Gauged versions of this set-up appear in several places:</p>
+<ul>
+<li><p>the ADHM matrix model of the 4d quantum Hall effect&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>, whose Higgs branch is the instanton moduli space (<span class="math inline">\(\mathrm{Hilb}^n(\mathbb C^2)\)</span> in rank one);</p></li>
+<li><p>the Chern–Simons matrix model on the framed Jordan quiver&nbsp;<span class="citation" data-cites="Dorey:2016mxm Hu:2024csm">(<a href="#ref-Dorey:2016mxm" role="doc-biblioref">Dorey et al. 2016a</a>; <a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span>;</p></li>
+<li><p>the Polychronakos matrix model of the quantum Hall effect&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span>.</p></li>
+</ul>
+<p>In each of these papers the relation between the bare Chern–Simons level and the line bundle that is actually quantized involves a shift.</p>
+<p><strong>What is already known.</strong> The shifts <span class="math inline">\(k'\to k'-N\)</span>&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span> and <span class="math inline">\(k+n\mapsto k\)</span>&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span> are both attributed by their authors to normal ordering of the fundamental-field bilinear in the trace of the Gauss law. The same “ordering issue” already appears in&nbsp;<span class="citation" data-cites="Dorey:2016hoj Dorey:2016mxm">(<a href="#ref-Dorey:2016hoj" role="doc-biblioref">Dorey et al. 2016b</a>, <a href="#ref-Dorey:2016mxm" role="doc-biblioref">2016a</a>)</span>, so the identification of these two shifts is not new. The shift <span class="math inline">\(k\to k+1\)</span> of&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span>, which Polychronakos calls “a quantum reordering effect”, has been explained in three different ways:</p>
+<ul>
+<li><p>as the zero-point energy <span class="math inline">\(N^2/2\)</span> of the adjoint oscillators&nbsp;<span class="citation" data-cites="Hellerman:2001rj">(<a href="#ref-Hellerman:2001rj" role="doc-biblioref">Hellerman and Susskind 2001</a>)</span>;</p></li>
+<li><p>as the comparison of ground-state energies, or equivalently a Vandermonde factor, between the matrix model and the Calogero model&nbsp;<span class="citation" data-cites="Cappelli:2004xh">(<a href="#ref-Cappelli:2004xh" role="doc-biblioref">Cappelli and Riccardi 2005</a>)</span>, and as a Jacobian (footnote in&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>);</p></li>
+<li><p>as “normal ordering a constraint”&nbsp;<span class="citation" data-cites="Goldman:2021gxx">(<a href="#ref-Goldman:2021gxx" role="doc-biblioref">Goldman and Senthil 2022</a>)</span>.</p></li>
+</ul>
+<p>In addition, <span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span> lists it together with the Gauss-law shift. Two related questions are whether the expected half-integer (<span class="math inline">\(K^{1/2}\)</span> or spin<span class="math inline">\(^c\)</span>) shifts appear&nbsp;<span class="citation" data-cites="Braun:2015weyl Lyris:2021meta Vaughan:2017mpc Hall:2006unitarity Walton:2021vortex">(<a href="#ref-Braun:2015weyl" role="doc-biblioref">Braun et al. 2015</a>; <a href="#ref-Lyris:2021meta" role="doc-biblioref">Lyris et al. 2021</a>; <a href="#ref-Vaughan:2017mpc" role="doc-biblioref">Vaughan 2017</a>; <a href="#ref-Hall:2006unitarity" role="doc-biblioref">Hall and Kirwin 2007</a>; <a href="#ref-Walton:2021vortex" role="doc-biblioref">Walton 2022</a>)</span>, and whether the continuum coherent-state path integral can be trusted&nbsp;<span class="citation" data-cites="Wilson:2010rf Kordas:2014ica Kordas:2016su2 Kochetov:2018comment Kordas:2019reply">(<a href="#ref-Wilson:2010rf" role="doc-biblioref">Wilson and Galitski 2011</a>; <a href="#ref-Kordas:2014ica" role="doc-biblioref">Kordas et al. 2014</a>, <a href="#ref-Kordas:2016su2" role="doc-biblioref">2016</a>, <a href="#ref-Kordas:2019reply" role="doc-biblioref">2019</a>; <a href="#ref-Kochetov:2018comment" role="doc-biblioref">Kochetov 2019</a>)</span>.</p>
+<p>This paper organizes these effects into one dictionary. Our main statements are:</p>
+<ol type="1">
+<li><p><em>A rule</em> (<a href="#prp-rule" class="quarto-xref">Proposition&nbsp;1</a>). Each field carries two regularization exponents, <span class="math inline">\(s_\varepsilon\)</span> for its zero-point energy and <span class="math inline">\(s_w\)</span> for its contribution to the Gauss law. The partition function is an overall factor times the normal-ordered index at a shifted level.</p></li>
+<li><p><em>A lemma</em> (<a href="#lem-khalf" class="quarto-xref">Lemma&nbsp;1</a>). At each Jeffrey–Kirwan pole, the product of the weights of all matter modes equals the product of the tangent weights. Hence uniform symmetric regularization computes <span class="math inline">\(\chi(M,\mathcal{O}(k')\otimes K^{1/2})\)</span>.</p></li>
+<li><p><em>A no-go statement</em> (<a href="#prp-lattice" class="quarto-xref">Proposition&nbsp;2</a>). Gauge-covariant time lattices have <span class="math inline">\(s_w=0\)</span>, so they never shift the level.</p></li>
+<li><p><em>A dictionary of the known shifts</em> (<a href="#tbl-dictionary" class="quarto-xref">Table&nbsp;1</a>). The shifts of&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span> and&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span> are recovered as <span class="math inline">\(s_w=1\)</span> on fundamental fields, in agreement with their authors. The shift of&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span> is <span class="math inline">\(s_\varepsilon=\tfrac12\)</span> on the adjoint: its Gauss law is normal ordered (<span class="math inline">\(s_w=0\)</span>), and the shift comes from the adjoint zero-point energy, whose off-diagonal part the Calogero coupling absorbs. This sides with&nbsp;<span class="citation" data-cites="Hellerman:2001rj Cappelli:2004xh">(<a href="#ref-Hellerman:2001rj" role="doc-biblioref">Hellerman and Susskind 2001</a>; <a href="#ref-Cappelli:2004xh" role="doc-biblioref">Cappelli and Riccardi 2005</a>)</span> and shows that attributing it to the ordering of the constraint&nbsp;<span class="citation" data-cites="Goldman:2021gxx">(<a href="#ref-Goldman:2021gxx" role="doc-biblioref">Goldman and Senthil 2022</a>)</span>, or grouping it with the Gauss-law shift&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>, mixes up two different exponents.</p></li>
+<li><p><em>The limits of the rule</em> (<a href="#sec-limits" class="quarto-xref">Section&nbsp;6</a>). For Hamiltonians that are quadratic in a generator, the continuum path integral distorts the spectrum, and the time lattice has non-commuting limits.</p></li>
+</ol>
+<p>Most individual entries are standard, and some identifications (items 4 and part of the Calogero discussion) are already in the literature, as summarized above. What we did not find in the literature, within the scope of our search, are:</p>
+<ul>
+<li><p>the two-exponent rule together with the criterion <span class="math inline">\(s_\varepsilon=s_w=s\)</span> for a <span class="math inline">\(K^s\)</span> interpretation;</p></li>
+<li><p>the statement that gauge-covariant time lattices never shift the level;</p></li>
+<li><p>the JK-pole argument for the <span class="math inline">\(K^{1/2}\)</span> twist;</p></li>
+<li><p>the observation that on phase spaces with non-trivial <span class="math inline">\(K\)</span> the midpoint lattice does not reproduce the half-form shift of the level;</p></li>
+<li><p>the non-commuting limits of the time lattice for non-linear Hamiltonians.</p></li>
+</ul>
+<p>The Jeffrey–Kirwan (JK) residue machinery&nbsp;<span class="citation" data-cites="Hori:2014tda Benini:2013xpa Hwang:2014uwa">(<a href="#ref-Hori:2014tda" role="doc-biblioref">Hori et al. 2015</a>; <a href="#ref-Benini:2013xpa" role="doc-biblioref">Benini et al. 2015</a>; <a href="#ref-Hwang:2014uwa" role="doc-biblioref">Hwang et al. 2015</a>)</span> is used throughout, mostly as a tool. Its application to the rank-one ADHM model (<a href="#sec-jk" class="quarto-xref">Section&nbsp;7</a>) adds only minor points to the general results of&nbsp;<span class="citation" data-cites="Hori:2014tda Hwang:2014uwa">(<a href="#ref-Hori:2014tda" role="doc-biblioref">Hori et al. 2015</a>; <a href="#ref-Hwang:2014uwa" role="doc-biblioref">Hwang et al. 2015</a>)</span>; see also&nbsp;<span class="citation" data-cites="BarnsGraham:2018thesis">(<a href="#ref-BarnsGraham:2018thesis" role="doc-biblioref">Barns-Graham 2018</a>)</span>.</p>
+</section>
+<section id="set-up" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Set-up</h1>
+<section id="models" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="models"><span class="header-section-number">2.1</span> Models</h2>
+<p>Let <span class="math inline">\(G=U(n)\)</span> with gauge field <span class="math inline">\(A_t\)</span> and bare Chern–Simons level <span class="math inline">\(k'\)</span>, and let the matter consist of complex fields in representations of <span class="math inline">\(G\)</span> with symplectic form <span class="math inline">\(i\,d\bar\phi\wedge d\phi\)</span>. The action is <span class="math display">\[
+S=\int dt\,\Big[\sum_{\rm fields} i\,\bar\phi\,D_t\phi - k'\,\operatorname{tr}A_t - H\Big],
+\]</span> where <span class="math inline">\(H\)</span> is the moment map of a torus <span class="math inline">\(T\)</span> (a linear combination of number operators). The Gauss law is <span class="math inline">\(\mu_{\mathbb R}=k'\mathbf 1\)</span>, so the FI parameter equals the bare level, <span class="math inline">\(\zeta=k'\)</span>. A holomorphic constraint <span class="math inline">\(\mu_{\mathbb C}=0\)</span>, if present, is imposed by Koszul fermions <span class="math inline">\(\chi\)</span> with <span class="math inline">\(Q=\sum(\mu_{\mathbb C})_{ab}\chi_{ba}\)</span>, <span class="math inline">\(Q^2=0\)</span>. The partition function on <span class="math inline">\(S^1\)</span> with periodic boundary conditions reduces, after static diagonal gauge fixing, to a torus integral with Haar measure <span class="math inline">\(\prod_{a\ne b}(1-w_a/w_b)\)</span>. We consider three examples.</p>
+<ul>
+<li><p><strong>ADHM, rank one</strong>: adjoints <span class="math inline">\(B_1,B_2\)</span> (weights <span class="math inline">\(t,q\)</span>), fundamental <span class="math inline">\(I\)</span> and antifundamental <span class="math inline">\(J\)</span>, and <span class="math inline">\(\mu_{\mathbb C}=[B_1,B_2]+IJ\)</span>. The Higgs branch is <span class="math inline">\(M=\mathrm{Hilb}^n(\mathbb C^2)\)</span>. The scheme <span class="math inline">\(\mu_{\mathbb C}^{-1}(0)\)</span> is a reduced complete intersection&nbsp;<span class="citation" data-cites="Gan:2004gg">(<a href="#ref-Gan:2004gg" role="doc-biblioref">Gan and Ginzburg 2004</a>)</span>, so imposing <span class="math inline">\(\mu_{\mathbb C}=0\)</span> by Koszul fermions or by restricting to the variety gives the same character. We use the conventions of&nbsp;<span class="citation" data-cites="Haiman:2002vt">(<a href="#ref-Haiman:2002vt" role="doc-biblioref">Haiman 2002</a>)</span>: <span class="math inline">\(T_\mu=t^{n(\mu)}q^{n(\mu')}\)</span>, <span class="math inline">\(\mathcal{O}(1)=\wedge^n\mathcal B\)</span>, and the tangent weights <span class="math inline">\(t^{1+l}q^{-a}\)</span>, <span class="math inline">\(t^{-l}q^{1+a}\)</span>.</p></li>
+<li><p><strong>Grassmannian</strong>: <span class="math inline">\(N\)</span> fundamentals <span class="math inline">\(I_i\)</span> with weights <span class="math inline">\(x_i\)</span> and nothing else. Then <span class="math inline">\(M=\mathrm{Gr}(n,N)\)</span> and <span class="math inline">\(K_M=\mathcal{O}(-N)\)</span>.</p></li>
+<li><p><strong>Framed Jordan quiver</strong>: one adjoint <span class="math inline">\(Z\)</span> (weight <span class="math inline">\(q\)</span>) and <span class="math inline">\(f\)</span> fundamentals (weights <span class="math inline">\(a_i\)</span>). Then <span class="math inline">\(M\cong\mathrm{Quot}^n(\mathcal{O}^{\oplus f}_{\mathbb A^1})\)</span>&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span>.</p></li>
+</ul>
+</section>
+<section id="regularization-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="regularization-data"><span class="header-section-number">2.2</span> Regularization data</h2>
+<p>A single bosonic mode of weight <span class="math inline">\(x=e^{-\beta\varepsilon}\)</span> and holonomy <span class="math inline">\(w\)</span> has the one-loop factor <span class="math inline">\(1/\det(\partial_\tau+\varepsilon-ia)\)</span>. Different regularizations give <span class="math inline">\(x^{s_\varepsilon}w^{s_w}/(1-xw)\)</span>:</p>
+<ul>
+<li><p>normal ordering (equivalently, the forward Q-symbol time lattice) gives <span class="math inline">\(s_\varepsilon=s_w=0\)</span>;</p></li>
+<li><p>zeta-function regularization with symmetric Matsubara cut-off gives <span class="math inline">\(s_\varepsilon=s_w=\tfrac12\)</span>;</p></li>
+<li><p>anti-normal ordering gives <span class="math inline">\(s_\varepsilon=s_w=1\)</span>;</p></li>
+<li><p>time lattices give <span class="math inline">\(s_w=0\)</span> with <span class="math inline">\(s_\varepsilon\in\{0,\tfrac12,1\}\)</span> (<a href="#prp-lattice" class="quarto-xref">Proposition&nbsp;2</a>).</p></li>
+</ul>
+<p>Fermions contribute the inverse factor. In operator language, <span class="math inline">\(s_w\)</span> is the ordering of the matter bilinear in the Gauss law, and <span class="math inline">\(s_\varepsilon\)</span> is the ordering of <span class="math inline">\(H\)</span>.</p>
+</section>
+</section>
+<section id="the-rule" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> The rule</h1>
+<div id="prp-rule" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 1 (Rule)</strong></span> Let <span class="math inline">\(\delta=\sum_f q_f\, s_{w,f}\)</span> be the sum, over charged fields, of the <span class="math inline">\(U(1)\subset U(n)\)</span> charge per color times <span class="math inline">\(s_w\)</span>. Let <span class="math inline">\(X=\prod_{\text{modes}}x^{s_\varepsilon}\)</span>, with fermions contributing <span class="math inline">\(x^{-s_\varepsilon}\)</span>. Then <span class="math display">\[
+Z_{\rm reg}(k')=X\cdot Z_{\rm normal}(k'-\delta).
+\]</span></p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>For adjoint fields the factors <span class="math inline">\(w^{s_w}\)</span> cancel between <span class="math inline">\((a,b)\)</span> and <span class="math inline">\((b,a)\)</span>. For a field of charge <span class="math inline">\(q_f\)</span> they give <span class="math inline">\(\prod_a w_a^{q_f s_w}\)</span>, which combines with the Chern–Simons factor <span class="math inline">\(\prod_a w_a^{-k'}\)</span>. What remains is the <span class="math inline">\(x^{s_\varepsilon}\)</span> factors, which are independent of <span class="math inline">\(w\)</span>.</p>
+</div>
+<div id="prp-lattice" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2 (Gauge-covariant lattices)</strong></span> Place the links <span class="math inline">\(U_j\)</span> on the hopping terms, <span class="math inline">\(\bar z_j(z_j-U_jz_{j-1})\)</span>, and evaluate <span class="math inline">\(H\)</span> by any rule that is local in time and gauge covariant. Then the lattice determinant of a field in representation <span class="math inline">\(R\)</span> is <span class="math inline">\(\prod_{\omega}(a^M-\omega b^M)\)</span>, where <span class="math inline">\(\omega\)</span> runs over the eigenvalues of the holonomy in <span class="math inline">\(R\)</span>. Hence <span class="math inline">\(s_w=0\)</span> and the lattice never shifts the level. In the continuum limit, the forward Q-symbol, midpoint and same-time P-symbol prescriptions give <span class="math inline">\(s_\varepsilon=0,\tfrac12,1\)</span> respectively.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Proof</em>. </span>The kinetic matrix is block-cyclic with diagonal <span class="math inline">\(a\mathbf 1\)</span> and sub-diagonal <span class="math inline">\(-bR(U_j)\)</span>. Its determinant depends only on the conjugacy class of <span class="math inline">\(R(U_M\cdots U_1)\)</span>. The values of <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> follow from expanding to first order in <span class="math inline">\(\delta=\beta/M\)</span>.</p>
+</div>
+<div id="lem-khalf" class="theorem lemma">
+<p><span class="theorem-title"><strong>Lemma 1 (Zeta function <span class="math inline">\(=K^{1/2}\)</span>)</strong></span> At every isolated JK pole, the product of the weights <span class="math inline">\(x w^\rho\)</span> of all matter modes equals the product of the tangent weights of <span class="math inline">\(M\)</span> at the corresponding fixed point. The reason is that the tangent character is the matter character minus the gauge character, and the gauge weights <span class="math inline">\(w_a/w_b\)</span> multiply to one. Consequently, uniform zeta-function regularization gives <span class="math display">\[
+Z_\zeta(k')=\chi\big(M,\mathcal{O}(k')\otimes K_M^{1/2}\big).
+\]</span> More generally, <span class="math inline">\(Z_{\rm reg}\)</span> equals <span class="math inline">\(\chi(M,\mathcal{O}(k')\otimes K_M^{s})\)</span> for all <span class="math inline">\(k'\)</span> if and only if <span class="math inline">\(s_\varepsilon=s_w=s\)</span> for all fields.</p>
+</div>
+<div id="rem-anomaly" class="proof remark">
+<p><span class="proof-title"><em>Remark 1</em> (Global anomaly). </span>If <span class="math inline">\(\delta\notin\mathbb Z\)</span>, for example with an odd number of fundamentals and no antifundamentals in zeta-function regularization, then <span class="math inline">\(Z_\zeta\)</span> is gauge invariant only for half-integer <span class="math inline">\(k'\)</span>. This is the bosonic analog of the fermionic global anomaly discussed in&nbsp;<span class="citation" data-cites="Hori:2014tda">(<a href="#ref-Hori:2014tda" role="doc-biblioref">Hori et al. 2015</a>)</span>. Lattices with integer level cannot reach the Dirac index in this case.</p>
+</div>
+</section>
+<section id="three-phase-spaces" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Three phase spaces</h1>
+<section id="mathrmhilbnmathbb-c2-trivial-k" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="mathrmhilbnmathbb-c2-trivial-k"><span class="header-section-number">4.1</span> <span class="math inline">\(\mathrm{Hilb}^n(\mathbb C^2)\)</span>: trivial <span class="math inline">\(K\)</span></h2>
+<p>Because the field content contains both <span class="math inline">\(I\)</span> and <span class="math inline">\(J\)</span>, the level shift in zeta-function regularization is <span class="math inline">\(\delta=n(s_{w,I}-s_{w,J})=0\)</span>. Equivariantly <span class="math inline">\(K\cong\mathcal{O}\otimes(qt)^n\)</span>, so the <span class="math inline">\(K^{1/2}\)</span> twist is only an overall factor <span class="math inline">\((qt)^{n/2}\)</span>, coming from the zero-point energy <span class="math inline">\(E_0=\tfrac12(\sum_{\rm bos}\varepsilon-\sum_{\rm ferm}\varepsilon)\)</span>. The midpoint lattice (<span class="math inline">\(s_w=0\)</span>, <span class="math inline">\(s_\varepsilon=\tfrac12\)</span>) and the zeta function (<span class="math inline">\(s_w=s_\varepsilon=\tfrac12\)</span>) therefore agree on <span class="math inline">\(\mathrm{Hilb}^n\)</span>. The ordering in&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span> (and the “ordering issue” of&nbsp;<span class="citation" data-cites="Dorey:2016hoj">(<a href="#ref-Dorey:2016hoj" role="doc-biblioref">Dorey et al. 2016b</a>)</span>) treats <span class="math inline">\(I\)</span> anti-normally and <span class="math inline">\(J\)</span> normally (<span class="math inline">\(s_{w,I}=1\)</span>, <span class="math inline">\(s_{w,J}=0\)</span>), which gives <span class="math inline">\(k=k'-N\)</span>. This is not a power of <span class="math inline">\(K\)</span>. If bosons and Koszul fermions, or <span class="math inline">\(B_1\)</span> and <span class="math inline">\(B_2\)</span>, are regularized differently, the overall factors are not powers of <span class="math inline">\(K\)</span> either.</p>
+<p>We checked the baseline <span class="math inline">\(Z_{\rm normal}=\chi(\mathrm{Hilb}^n,\mathcal{O}(k))\)</span> in four independent ways for <span class="math inline">\(n\le4\)</span>, <span class="math inline">\(0\le k\le3\)</span>:</p>
+<ul>
+<li><p>the Molien integral of&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>;</p></li>
+<li><p>JK residues, where each color-partition residue equals the corresponding Atiyah–Bott term (checked for <span class="math inline">\(n\le5\)</span>);</p></li>
+<li><p>the Atiyah–Bott sum;</p></li>
+<li><p>the Hilbert series of products of alternants&nbsp;<span class="citation" data-cites="Haiman:2001pg">(<a href="#ref-Haiman:2001pg" role="doc-biblioref">Haiman 2001</a>)</span>.</p></li>
+</ul>
+<p>For gauge-covariant lattices with <span class="math inline">\(n=2,3\)</span>, we computed every determinant numerically (random <span class="math inline">\(U(n)\)</span> links for the invariance check, and holonomy integrals for <span class="math inline">\(Z\)</span>). The results converge as <span class="math inline">\(O(1/M)\)</span> to <span class="math inline">\(X\cdot Z_{\rm normal}(k')\)</span> with no level shift.</p>
+</section>
+<section id="mathrmgrnn-non-trivial-k-compact" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="mathrmgrnn-non-trivial-k-compact"><span class="header-section-number">4.2</span> <span class="math inline">\(\mathrm{Gr}(n,N)\)</span>: non-trivial <span class="math inline">\(K\)</span>, compact</h2>
+<p>Here <span class="math inline">\(\delta=Ns_w\)</span>, and the rule gives:</p>
+<ul>
+<li><p>normal ordering: <span class="math inline">\(s_{(k'^n)}(x)=\chi(\mathcal{O}(k'))\)</span>;</p></li>
+<li><p>zeta function: <span class="math inline">\((\det x)^{n/2}s_{((k'-N/2)^n)}(x)=\chi(\mathcal{O}(k')\otimes K^{1/2})\)</span>, a level shift by <span class="math inline">\(N/2\)</span>;</p></li>
+<li><p>anti-normal ordering: <span class="math inline">\(\chi(\mathcal{O}(k')\otimes K)\)</span>, a level shift by <span class="math inline">\(N\)</span>;</p></li>
+<li><p>every gauge-covariant lattice, including the midpoint rule: <span class="math inline">\((\det x)^{sn}s_{(k'^n)}\)</span>.</p></li>
+</ul>
+<p>The naive identification “midpoint rule <span class="math inline">\(=\)</span> Weyl ordering <span class="math inline">\(=\)</span> metaplectic correction” is therefore correct for the zero-point part and wrong for the level part. On <span class="math inline">\(\mathrm{Hilb}^n\)</span> the failure is invisible because <span class="math inline">\(K\)</span> is trivial. This does not contradict the semiclassical statements that the Weyl symbol removes the Solari–Kochetov correction&nbsp;<span class="citation" data-cites="Braun:2015weyl">(<a href="#ref-Braun:2015weyl" role="doc-biblioref">Braun et al. 2015</a>)</span>, or that the metaplectic correction is tied to the correct continuum limit of coherent-state path integrals&nbsp;<span class="citation" data-cites="Lyris:2021meta">(<a href="#ref-Lyris:2021meta" role="doc-biblioref">Lyris et al. 2021</a>)</span>. Those statements concern the continuum or the semiclassical propagator. Ours concerns the Chern–Simons level in a gauge-covariant time discretization, where the half-form shift must be put in by hand through the bare level. For half-form and metaplectic-c quantization with torus actions see&nbsp;<span class="citation" data-cites="Vaughan:2017mpc Hall:2006unitarity">(<a href="#ref-Vaughan:2017mpc" role="doc-biblioref">Vaughan 2017</a>; <a href="#ref-Hall:2006unitarity" role="doc-biblioref">Hall and Kirwin 2007</a>)</span>; in the quantum-Hall context the metaplectic correction is sometimes deliberately omitted&nbsp;<span class="citation" data-cites="Walton:2021vortex">(<a href="#ref-Walton:2021vortex" role="doc-biblioref">Walton 2022</a>)</span>. We checked this for <span class="math inline">\((n,N)\in\{(1,2),(1,3),(2,3),(2,4)\}\)</span> and <span class="math inline">\(k\le3\)</span>.</p>
+</section>
+<section id="jordan-quiver-non-trivial-k-non-compact" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="jordan-quiver-non-trivial-k-non-compact"><span class="header-section-number">4.3</span> Jordan quiver: non-trivial <span class="math inline">\(K\)</span>, non-compact</h2>
+<p>In normal ordering the Molien integral and the JK residues reproduce Theorem&nbsp;A of&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span> (which notes that the formula first appeared in&nbsp;<span class="citation" data-cites="Dorey:2016mxm">(<a href="#ref-Dorey:2016mxm" role="doc-biblioref">Dorey et al. 2016a</a>)</span>), <span class="math display">\[
+\mathrm{ch}\,\mathcal H=\widetilde H_{(k^n)}(a;q)\prod_{i=1}^n\frac{1}{1-q^i},
+\]</span> where <span class="math inline">\(\widetilde H_\mu\)</span> is built from Jing operators as in that reference. We checked this for <span class="math inline">\(f\le2\)</span>, <span class="math inline">\(n\le3\)</span> and <span class="math inline">\(k\le3\)</span>. In zeta-function regularization the JK residues multiplied by (product of tangent weights)<span class="math inline">\(^{1/2}\)</span> reproduce <span class="math inline">\(Z_\zeta\)</span>, which confirms <a href="#lem-khalf" class="quarto-xref">Lemma&nbsp;1</a> here with <span class="math inline">\(K\cong\mathcal L_{\det}^{-f}\)</span> and a level shift of <span class="math inline">\(f/2\)</span>. The shift <span class="math inline">\(k+n\mapsto k\)</span> of&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span> is <span class="math inline">\(s_w=1\)</span> on fundamentals. For <span class="math inline">\(f=1\)</span>, the Calogero model obtained from the Hermitian (real-polarized) version&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span> with coupling <span class="math inline">\(\ell(\ell-1)\)</span>, <span class="math inline">\(\ell=k+1\)</span>, satisfies <span class="math display">\[
+Z_{\rm Cal}(\ell=k+1)=q^{n^2/2}\,a^{-kn}Z_{\rm normal}(k),
+\]</span> which we checked for <span class="math inline">\(n=2\)</span> by finite differences. The factor <span class="math inline">\(q^{n^2/2}\)</span> is the zero-point energy of the adjoint (<span class="math inline">\(s_\varepsilon=\tfrac12\)</span>). Its off-diagonal part <span class="math inline">\(q^{n(n-1)/2}\)</span> is the degree of the Vandermonde factor, which the Calogero coupling absorbs. Thus the shift of&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span> is an <span class="math inline">\(s_\varepsilon\)</span> effect, not an <span class="math inline">\(s_w\)</span> effect. The relation to the zero-point energy is not new: <span class="citation" data-cites="Hellerman:2001rj">(<a href="#ref-Hellerman:2001rj" role="doc-biblioref">Hellerman and Susskind 2001</a>)</span> identify the <span class="math inline">\(N^2/2\)</span> zero-point term as the cause of the shift, and <span class="citation" data-cites="Cappelli:2004xh">(<a href="#ref-Cappelli:2004xh" role="doc-biblioref">Cappelli and Riccardi 2005</a>)</span> compare the ground-state energies <span class="math inline">\(N^2/2\)</span> and <span class="math inline">\(N/2\)</span> of the matrix and Calogero models. What the rule adds is the following. Polychronakos’s Gauss law is normal ordered, so it has <span class="math inline">\(s_w=0\)</span>. Calling the effect a “level shift” is therefore a matter of which variables one uses (the Calogero coupling), not a Gauss-law effect. In particular, it should not be identified with the shifts of&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx Hu:2024csm">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>; <a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span>, contrary to the grouping in&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span> and the attribution in&nbsp;<span class="citation" data-cites="Goldman:2021gxx">(<a href="#ref-Goldman:2021gxx" role="doc-biblioref">Goldman and Senthil 2022</a>)</span>.</p>
+</section>
+</section>
+<section id="the-dictionary" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> The dictionary</h1>
+<div id="tbl-dictionary" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dictionary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: The dictionary of quantum shifts.
+</figcaption>
+<div aria-describedby="tbl-dictionary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Reported shift</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Explanation in the literature</th>
+<th style="text-align: left;">Position in the rule</th>
+<th style="text-align: left;">Geometric meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(k'\to k'-N\)</span>&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span></td>
+<td style="text-align: left;">ADHM</td>
+<td style="text-align: left;">normal ordering of <span class="math inline">\(\varphi\varphi^\dagger\)</span>&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx Dorey:2016hoj">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>; <a href="#ref-Dorey:2016hoj" role="doc-biblioref">Dorey et al. 2016b</a>)</span></td>
+<td style="text-align: left;"><span class="math inline">\(s_{w,I}=1\)</span>, <span class="math inline">\(s_{w,J}=0\)</span></td>
+<td style="text-align: left;">not a power of <span class="math inline">\(K\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(k+n\mapsto k\)</span>&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span></td>
+<td style="text-align: left;">Jordan quiver</td>
+<td style="text-align: left;">normal ordering of <span class="math inline">\((BA)\)</span>&nbsp;<span class="citation" data-cites="Hu:2024csm">(<a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>)</span></td>
+<td style="text-align: left;"><span class="math inline">\(s_w=1\)</span> on fundamentals</td>
+<td style="text-align: left;"><span class="math inline">\(K^1\)</span> (non-equivariantly)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(k\to k+1\)</span>&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span></td>
+<td style="text-align: left;">Jordan quiver, <span class="math inline">\(f=1\)</span></td>
+<td style="text-align: left;">reordering&nbsp;<span class="citation" data-cites="Polychronakos:2001mi">(<a href="#ref-Polychronakos:2001mi" role="doc-biblioref">Polychronakos 2001</a>)</span>; zero point&nbsp;<span class="citation" data-cites="Hellerman:2001rj Cappelli:2004xh">(<a href="#ref-Hellerman:2001rj" role="doc-biblioref">Hellerman and Susskind 2001</a>; <a href="#ref-Cappelli:2004xh" role="doc-biblioref">Cappelli and Riccardi 2005</a>)</span>; Jacobian&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>)</span>; constraint ordering&nbsp;<span class="citation" data-cites="Goldman:2021gxx">(<a href="#ref-Goldman:2021gxx" role="doc-biblioref">Goldman and Senthil 2022</a>)</span></td>
+<td style="text-align: left;">adjoint <span class="math inline">\(s_\varepsilon=\tfrac12\)</span>, <span class="math inline">\(s_w=0\)</span></td>
+<td style="text-align: left;">overall factor, read as Calogero coupling</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">spin<span class="math inline">\(^c\)</span> / <span class="math inline">\(K^{1/2}\)</span></td>
+<td style="text-align: left;">all</td>
+<td style="text-align: left;">half-form correction</td>
+<td style="text-align: left;"><span class="math inline">\(s_\varepsilon=s_w=\tfrac12\)</span> for all fields</td>
+<td style="text-align: left;">level shift iff <span class="math inline">\(K\)</span> non-trivial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gauge-covariant lattice</td>
+<td style="text-align: left;">all</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><span class="math inline">\(s_w=0\)</span></td>
+<td style="text-align: left;">no level shift</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-limits" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Limits of the rule</h1>
+<p>The rule assumes that <span class="math inline">\(H\)</span> is linear in number operators. For <span class="math inline">\(H=\varepsilon N+\lambda N^2\)</span> (the one-mode sector of <span class="math inline">\(\operatorname{tr}(B^\dagger B)^2\)</span>), a Hubbard–Stratonovich transformation evaluates the continuum coherent-state path integral exactly. For a quadratic symbol <span class="math inline">\(h\)</span> it gives <span class="math inline">\(\sum_{m\ge0}e^{-\beta h(m+1/2)}\)</span>.</p>
+<ul>
+<li><p>With the Q-symbol, the energies become <span class="math inline">\(E_m+\varepsilon/2+3\lambda/4+2\lambda m\)</span>. The shift depends on <span class="math inline">\(m\)</span>, so the spectrum is distorted.</p></li>
+<li><p>With the Weyl symbol the shift is the constant <span class="math inline">\(-\lambda/4\)</span>. This is an accident of <span class="math inline">\(N^2\)</span>.</p></li>
+</ul>
+<p>The Q-symbol time lattice equals <span class="math inline">\(\mathrm{Tr}(:\!e^{-\delta h}\!:)^M\)</span>. It converges as <span class="math inline">\(O(1/M)\)</span> on a truncated Fock space. At any finite <span class="math inline">\(M\)</span>, however, the transfer-matrix eigenvalues exceed one for <span class="math inline">\(m\gtrsim3.7M\)</span>, so the full trace diverges. This refines the statement of&nbsp;<span class="citation" data-cites="Wilson:2010rf">(<a href="#ref-Wilson:2010rf" role="doc-biblioref">Wilson and Galitski 2011</a>)</span> that the time-discretized path integral does not suffer from the breakdown: the order of the limits matters. For proposed consistent continuum formulations and the ensuing debate, see&nbsp;<span class="citation" data-cites="Kordas:2014ica Kordas:2016su2 Kochetov:2018comment Kordas:2019reply">(<a href="#ref-Kordas:2014ica" role="doc-biblioref">Kordas et al. 2014</a>, <a href="#ref-Kordas:2016su2" role="doc-biblioref">2016</a>, <a href="#ref-Kordas:2019reply" role="doc-biblioref">2019</a>; <a href="#ref-Kochetov:2018comment" role="doc-biblioref">Kochetov 2019</a>)</span>. We do not take a position on that debate. Our statement concerns only the lattice.</p>
+</section>
+<section id="sec-jk" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Remarks on JK residues and wall crossing</h1>
+<p>For rank-one ADHM we also verified the following.</p>
+<ul>
+<li><p>The fixed-contour Molien integral selects the chamber <span class="math inline">\(\mathrm{sign}(\zeta)=\mathrm{sign}(k)\)</span>, consistently with <span class="math inline">\(\zeta=k'\)</span>.</p></li>
+<li><p>The wall-crossing difference is <span class="math display">\[
+Z_+-Z_-=\chi(\mathcal{O}(k))-(qt)^{-(k+1)n}\chi(\mathcal{O}(k))^\vee .
+\]</span> It vanishes at <span class="math inline">\(k=0\)</span> and factorizes at <span class="math inline">\(k=1\)</span> because <span class="math inline">\(\chi(\mathcal{O}(1))=\chi(\mathcal{O}(-1))\)</span>, which we observed for <span class="math inline">\(n\le5\)</span>.</p></li>
+<li><p>In rank two there is no wall crossing for <span class="math inline">\(|k|&lt;N\)</span>.</p></li>
+</ul>
+<p>These follow from the general results of&nbsp;<span class="citation" data-cites="Hori:2014tda Hwang:2014uwa">(<a href="#ref-Hori:2014tda" role="doc-biblioref">Hori et al. 2015</a>; <a href="#ref-Hwang:2014uwa" role="doc-biblioref">Hwang et al. 2015</a>)</span>. A case analysis of the background charge already appears in&nbsp;<span class="citation" data-cites="BarnsGraham:2018thesis">(<a href="#ref-BarnsGraham:2018thesis" role="doc-biblioref">Barns-Graham 2018</a>)</span>.</p>
+</section>
+<section id="conclusions" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Conclusions</h1>
+<p>One rule with two exponents per field organizes the quantum shifts of first-order gauged matrix models. Part of the resulting dictionary confirms identifications already made by the original authors&nbsp;<span class="citation" data-cites="BarnsGraham:2017zpx Hu:2024csm Hellerman:2001rj Cappelli:2004xh">(<a href="#ref-BarnsGraham:2017zpx" role="doc-biblioref">Barns-Graham et al. 2018</a>; <a href="#ref-Hu:2024csm" role="doc-biblioref">Hu et al. 2024</a>; <a href="#ref-Hellerman:2001rj" role="doc-biblioref">Hellerman and Susskind 2001</a>; <a href="#ref-Cappelli:2004xh" role="doc-biblioref">Cappelli and Riccardi 2005</a>)</span>. Its use is to make the remaining distinctions sharp and to resolve conflicting attributions. It separates three kinds of shift: Gauss-law (dictionary) shifts (<span class="math inline">\(s_w\)</span>), zero-point and Calogero-type shifts (<span class="math inline">\(s_\varepsilon\)</span>), and genuine spin<span class="math inline">\(^c\)</span> twists (<span class="math inline">\(s_\varepsilon=s_w=\tfrac12\)</span>). The comparison between trivial and non-trivial canonical bundles is essential: on <span class="math inline">\(\mathrm{Hilb}^n\)</span> several inequivalent prescriptions cannot be told apart. A natural next step is a phase space with both non-trivial <span class="math inline">\(K\)</span> and a holomorphic constraint, together with non-linear Hamiltonians in the gauged setting.</p>
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="scope-of-the-numerical-checks" class="level1 appendix" data-number="9"><h2 class="anchored quarto-appendix-heading"><span class="header-section-number">9</span> Scope of the numerical checks</h2><div class="quarto-appendix-contents">
+
+<p>All checks are automated tests (346 in total). Power series in <span class="math inline">\(q,t\)</span> are compared up to total degree 10–16, and numerical integrals are compared to relative accuracy <span class="math inline">\(10^{-4}\)</span>–<span class="math inline">\(10^{-12}\)</span>. The ranges are:</p>
+<ul>
+<li><p>rank-one ADHM: <span class="math inline">\(n\le4\)</span>, <span class="math inline">\(0\le k\le3\)</span>; JK residues for <span class="math inline">\(n\le5\)</span>;</p></li>
+<li><p>lattices: <span class="math inline">\(n\le3\)</span>;</p></li>
+<li><p>rank two: <span class="math inline">\(n\le2\)</span>;</p></li>
+<li><p>Grassmannians: <span class="math inline">\(n\le2\)</span>, <span class="math inline">\(N\le4\)</span>;</p></li>
+<li><p>Jordan quiver: <span class="math inline">\(n\le3\)</span>, <span class="math inline">\(f\le2\)</span>.</p></li>
+</ul>
+<p>For <span class="math inline">\(k\ge2\)</span>, the Hilbert series of products of alternants is computed probabilistically, from ranks modulo a large prime.</p>
+
+
+
+</div></section><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-BarnsGraham:2017zpx" class="csl-entry" role="listitem">
+Barns-Graham, Alec, Nick Dorey, Nakarin Lohitsiri, David Tong, and Carl Turner. 2018. <span>“<span class="nocase">ADHM and the 4d Quantum Hall Effect</span>.”</span> <em>JHEP</em> 04: 040. <a href="https://doi.org/10.1007/JHEP04(2018)040">https://doi.org/10.1007/JHEP04(2018)040</a>.
+</div>
+<div id="ref-BarnsGraham:2018thesis" class="csl-entry" role="listitem">
+Barns-Graham, Alexander E. 2018. <span>“<span class="nocase">Much ado about nothing: The superconformal index and Hilbert series of three dimensional <span class="math inline">\(\mathcal{N}=4\)</span> vacua</span>.”</span> PhD thesis, University of Cambridge.
+</div>
+<div id="ref-Benini:2013xpa" class="csl-entry" role="listitem">
+Benini, Francesco, Richard Eager, Kentaro Hori, and Yuji Tachikawa. 2015. <span>“<span class="nocase">Elliptic Genera of 2d <span class="math inline">\(\mathcal{N}=2\)</span> Gauge Theories</span>.”</span> <em>Commun. Math. Phys.</em> 333: 1241. <a href="https://doi.org/10.1007/s00220-014-2210-y">https://doi.org/10.1007/s00220-014-2210-y</a>.
+</div>
+<div id="ref-Braun:2015weyl" class="csl-entry" role="listitem">
+Braun, Carol, Feifei Li, Anupam Garg, and Michael Stone. 2015. <span>“<span class="nocase">The semiclassical coherent state propagator in the Weyl representation</span>.”</span> <em>J. Math. Phys.</em> 56: 122106. <a href="https://doi.org/10.1063/1.4936315">https://doi.org/10.1063/1.4936315</a>.
+</div>
+<div id="ref-Cappelli:2004xh" class="csl-entry" role="listitem">
+Cappelli, Andrea, and Mauro Riccardi. 2005. <span>“<span class="nocase">Matrix model description of Laughlin Hall states</span>.”</span> <em>J. Stat. Mech.</em> 0505: P05001. <a href="https://doi.org/10.1088/1742-5468/2005/05/P05001">https://doi.org/10.1088/1742-5468/2005/05/P05001</a>.
+</div>
+<div id="ref-Dorey:2016mxm" class="csl-entry" role="listitem">
+Dorey, Nick, David Tong, and Carl Turner. 2016a. <span>“<span class="nocase">A Matrix Model for WZW</span>.”</span> <em>JHEP</em> 08: 007. <a href="https://doi.org/10.1007/JHEP08(2016)007">https://doi.org/10.1007/JHEP08(2016)007</a>.
+</div>
+<div id="ref-Dorey:2016hoj" class="csl-entry" role="listitem">
+Dorey, Nick, David Tong, and Carl Turner. 2016b. <span>“<span class="nocase">Matrix model for non-Abelian quantum Hall states</span>.”</span> <em>Phys. Rev. B</em> 94: 085114. <a href="https://doi.org/10.1103/PhysRevB.94.085114">https://doi.org/10.1103/PhysRevB.94.085114</a>.
+</div>
+<div id="ref-Gan:2004gg" class="csl-entry" role="listitem">
+Gan, Wee Liang, and Victor Ginzburg. 2004. <em><span class="nocase">Almost-commuting variety, D-modules, and Cherednik Algebras</span></em>. <a href="https://arxiv.org/abs/math/0409262">https://arxiv.org/abs/math/0409262</a>.
+</div>
+<div id="ref-Goldman:2021gxx" class="csl-entry" role="listitem">
+Goldman, Hart, and T. Senthil. 2022. <span>“<span class="nocase">Lowest Landau level theory of the bosonic Jain states</span>.”</span> <em>Phys. Rev. B</em> 105: 075130. <a href="https://doi.org/10.1103/PhysRevB.105.075130">https://doi.org/10.1103/PhysRevB.105.075130</a>.
+</div>
+<div id="ref-Haiman:2001pg" class="csl-entry" role="listitem">
+Haiman, Mark. 2001. <span>“<span class="nocase">Hilbert schemes, polygraphs, and the Macdonald positivity conjecture</span>.”</span> <em>J. Amer. Math. Soc.</em> 14: 941–1006. <a href="https://arxiv.org/abs/math/0010246">https://arxiv.org/abs/math/0010246</a>.
+</div>
+<div id="ref-Haiman:2002vt" class="csl-entry" role="listitem">
+Haiman, Mark. 2002. <span>“<span class="nocase">Vanishing theorems and character formulas for the Hilbert scheme of points in the plane</span>.”</span> <em>Invent. Math.</em> 149 (2): 371–407. <a href="https://doi.org/10.1007/s002220200219">https://doi.org/10.1007/s002220200219</a>.
+</div>
+<div id="ref-Hall:2006unitarity" class="csl-entry" role="listitem">
+Hall, Brian C., and William D. Kirwin. 2007. <span>“<span class="nocase">Unitarity in <span>‘quantization commutes with reduction’</span></span>.”</span> <em>Comm. Math. Phys.</em> 275 (3): 401–42. <a href="https://arxiv.org/abs/math/0610005">https://arxiv.org/abs/math/0610005</a>.
+</div>
+<div id="ref-Hellerman:2001rj" class="csl-entry" role="listitem">
+Hellerman, Simeon, and Leonard Susskind. 2001. <em><span class="nocase">Realizing the quantum Hall system in string theory</span></em>. <a href="https://arxiv.org/abs/hep-th/0107200">https://arxiv.org/abs/hep-th/0107200</a>.
+</div>
+<div id="ref-Hori:2014tda" class="csl-entry" role="listitem">
+Hori, Kentaro, Heeyeon Kim, and Piljin Yi. 2015. <span>“<span class="nocase">Witten Index and Wall Crossing</span>.”</span> <em>JHEP</em> 01: 124. <a href="https://doi.org/10.1007/JHEP01(2015)124">https://doi.org/10.1007/JHEP01(2015)124</a>.
+</div>
+<div id="ref-Hu:2024csm" class="csl-entry" role="listitem">
+Hu, Sen, Si Li, Dongheng Ye, and Yehao Zhou. 2024. <em><span class="nocase">On the Hilbert Space of the Chern-Simons Matrix Model, Deformed Double Current Algebra Action, and the Conformal Limit</span></em>. <a href="https://arxiv.org/abs/2409.12486">https://arxiv.org/abs/2409.12486</a>.
+</div>
+<div id="ref-Hwang:2014uwa" class="csl-entry" role="listitem">
+Hwang, Chiung, Joonho Kim, Seok Kim, and Jaemo Park. 2015. <span>“<span class="nocase">General instanton counting and 5d SCFT</span>.”</span> <em>JHEP</em> 07: 063. <a href="https://doi.org/10.1007/JHEP07(2015)063">https://doi.org/10.1007/JHEP07(2015)063</a>.
+</div>
+<div id="ref-Kochetov:2018comment" class="csl-entry" role="listitem">
+Kochetov, Evgenii. 2019. <span>“<span class="nocase">Comment on <span>‘Coherent-state path integrals in the continuum’</span></span>.”</span> <em>Phys. Rev. A</em> 99: 026101. <a href="https://doi.org/10.1103/PhysRevA.99.026101">https://doi.org/10.1103/PhysRevA.99.026101</a>.
+</div>
+<div id="ref-Kordas:2016su2" class="csl-entry" role="listitem">
+Kordas, G., D. Kalantzis, and A. I. Karanikas. 2016. <em><span class="nocase">Coherent-state path integrals in the continuum: The SU(2) case</span></em>. <a href="https://arxiv.org/abs/1605.06757">https://arxiv.org/abs/1605.06757</a>.
+</div>
+<div id="ref-Kordas:2014ica" class="csl-entry" role="listitem">
+Kordas, G., S. I. Mistakidis, and A. I. Karanikas. 2014. <span>“<span class="nocase">Coherent state path integrals in the continuum</span>.”</span> <em>Phys. Rev. A</em> 90: 032104. <a href="https://doi.org/10.1103/PhysRevA.90.032104">https://doi.org/10.1103/PhysRevA.90.032104</a>.
+</div>
+<div id="ref-Kordas:2019reply" class="csl-entry" role="listitem">
+Kordas, G., S. I. Mistakidis, and A. I. Karanikas. 2019. <span>“<span class="nocase">Reply to <span>‘Comment on <span>“Coherent-state path integrals in the continuum”</span> ’</span></span>.”</span> <em>Phys. Rev. A</em> 99: 026102. <a href="https://doi.org/10.1103/PhysRevA.99.026102">https://doi.org/10.1103/PhysRevA.99.026102</a>.
+</div>
+<div id="ref-Lyris:2021meta" class="csl-entry" role="listitem">
+Lyris, I., P. Lykourgias, and A. I. Karanikas. 2021. <span>“<span class="nocase">The importance of the metaplectic correction in Kähler quantization: a coherent-state path integral perspective</span>.”</span> <em>Lett. Math. Phys.</em> 111: 25. <a href="https://doi.org/10.1007/s11005-021-01368-3">https://doi.org/10.1007/s11005-021-01368-3</a>.
+</div>
+<div id="ref-Polychronakos:2001mi" class="csl-entry" role="listitem">
+Polychronakos, Alexios P. 2001. <span>“<span class="nocase">Quantum Hall states as matrix Chern-Simons theory</span>.”</span> <em>JHEP</em> 04: 011. <a href="https://doi.org/10.1088/1126-6708/2001/04/011">https://doi.org/10.1088/1126-6708/2001/04/011</a>.
+</div>
+<div id="ref-Vaughan:2017mpc" class="csl-entry" role="listitem">
+Vaughan, Jennifer. 2017. <em><span class="nocase">Equivariant Metaplectic-c Prequantization of Symplectic Manifolds with Hamiltonian Torus Actions</span></em>. <a href="https://arxiv.org/abs/1702.01476">https://arxiv.org/abs/1702.01476</a>.
+</div>
+<div id="ref-Walton:2021vortex" class="csl-entry" role="listitem">
+Walton, Edward. 2022. <span>“<span class="nocase">Vortex counting and the quantum Hall effect</span>.”</span> <em>JHEP</em> 02: 155. <a href="https://doi.org/10.1007/JHEP02(2022)155">https://doi.org/10.1007/JHEP02(2022)155</a>.
+</div>
+<div id="ref-Wilson:2010rf" class="csl-entry" role="listitem">
+Wilson, Justin H., and Victor Galitski. 2011. <span>“<span class="nocase">Breakdown of the coherent state path integral: two simple examples</span>.”</span> <em>Phys. Rev. Lett.</em> 106: 110401. <a href="https://doi.org/10.1103/PhysRevLett.106.110401">https://doi.org/10.1103/PhysRevLett.106.110401</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/kameyama\.github\.io\/notebooks2\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "kameyama/notebooks2";
+    script.dataset.repoId = "R_kgDOIvWFWA";
+    script.dataset.category = "General";
+    script.dataset.categoryId = "DIC_kwDOIvWFWM4Cdj8u";
+    script.dataset.mapping = "title";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
