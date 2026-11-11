@@ -25,3 +25,16 @@ quarto pandoc <親>/main.tex -f latex -t markdown --wrap=none
 5. 既存の front matter と qmd 固有の部分を残す
 
 再生成したら `refs.bib` と `paper.pdf`（あれば `paper_ja.pdf` も）を親からコピーし直す。
+
+### framed_knot と refined_kauffman
+
+この 2 ページは親が複数ファイル（`\input`、youngtab、tikz）なので、上の手順をスクリプトにしてある。
+
+```bash
+python3 papers/tex2qmd.py <親>/main.tex papers/<名前>
+```
+
+- index.qmd の front matter のうち `abstract: |` より前だけを残し、abstract・本文・`fig<N>.svg`（tikz の図）を作り直す。
+- 参照は番号だけの形（`[-@prp-...]`）にし、「Proposition」などの語は親の文面のまま残す。付録は Quarto に番号を振らせず、見出しと参照に `A`, `A.1` を直接書く。
+- Quarto に独自の定理型はないので、Hypothesis は `exm`、(Computational) Result は `exr` を借り、front matter の `crossref:` で表示名を変えている。
+- Young 図形 `\yng(2,1)` は `\ydBA` のようなマクロにし、ページ先頭の `.hidden` ブロックで定義する。
