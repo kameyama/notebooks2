@@ -1,0 +1,766 @@
+---
+title: "Refined large $N$ duality for framed knots"
+subtitle: "Positivity of refined LMOV invariants beyond torus knots"
+description: "Draft. Claude (Anthropic) was used for the computations, the literature search and the drafting."
+date: "2026/11/11"
+categories: [physics, knot_theory, topological_string, ai_generated]
+bibliography: refs.bib
+number-sections: true
+toc: true
+crossref:
+  exm-title: "Hypothesis"
+  exm-prefix: "Hypothesis"
+  exr-title: "Computational Result"
+  exr-prefix: "Computational Result"
+resources:
+  - paper.pdf
+other-links:
+  - text: PDF (LaTeX version)
+    icon: file-pdf
+    href: paper.pdf
+abstract: |
+  Kameyama and Nawata rewrote refined Chern--Simons invariants of knots in terms of refined BPS invariants of the resolved conifold and conjectured that the latter are non-negative integers; the conjecture was tested for torus knots and links and for a few thin knots, all at framing zero. We extend this framework to framed knots. The invariant at framing $x$ is defined by multiplying the refined Chern--Simons invariant colored by $\lambda$ by $\theta_\lambda^x$, where $\theta_\lambda$ is the inverse of the framing factor of the refined topological vertex and reduces to the Mariño--Vafa rule at $t=q$. We show that the refined LMOV generating functions are exponential polynomials in $x$, that the transposition symmetry and the symmetry under which the genus expansion closes do not depend on $x$, that for two boxes the Laurent property does not depend on $x$ either, and that for two boxes the Mariño--Vafa sign is necessary for the Laurent property. We then test the positivity of the refined LMOV invariants, before and after the genus expansion, beyond the original data, both in the direction of knots and in the direction of framings. For the fundamental representation, positivity holds for every knot and every framing whenever the input is the Poincaré polynomial of reduced HOMFLY-PT homology; for the $801$ prime knots with at most $11$ crossings we determine those for which the parity of the spin is constant (nine knots) and relate this condition to the parity knots of Chandler and Gorsky. For two boxes, we prove that the exponential growth property is necessary for the Laurent property, and, taking the conjectural formulas for colored superpolynomials as input, we give computer-assisted proofs of positivity for all twist knots, for a large region of double twist knots, and, for eight knots, for all integer framings. For three boxes, using the refined invariants defined by the elliptic Hall algebra and the double affine Hecke algebra, we check positivity for all six representations with at most three boxes for seven torus knots and seven algebraic iterated torus knots, including a three-strand cable and a two-step iteration with about $1.8$ million terms; positivity persists under changes of framing in all $1821$ cases examined. For the iterated torus knots these tests rest on a hypothesis that fixes the monomial normalization of the colored invariants, which the definition leaves open. For eight torus knots we check positivity for four or more boxes, up to a number of boxes between five and nine that depends on the knot ($340$ pairs of a knot and a representation). On this basis we formulate positivity conjectures for framed torus knots and for algebraic iterated torus knots. We also discuss the obstruction to treating hyperbolic knots with non-rectangular colors, and show that the Kameyama--Nawata candidate for the figure-eight knot colored by $\ydBA$ is obtained from the $Z$-factor expansion of Anokhina et al. by changing a single coefficient.
+---
+
+::: {.hidden}
+$$
+\newcommand{\ydA}{{\scriptsize\begin{aligned}&\square\end{aligned}}}
+\newcommand{\ydAA}{{\scriptsize\begin{aligned}&\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydAAA}{{\scriptsize\begin{aligned}&\square\\[-0.55em]&\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydAAAA}{{\scriptsize\begin{aligned}&\square\\[-0.55em]&\square\\[-0.55em]&\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydB}{{\scriptsize\begin{aligned}&\square\!\!\;\square\end{aligned}}}
+\newcommand{\ydBA}{{\scriptsize\begin{aligned}&\square\!\!\;\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydBAA}{{\scriptsize\begin{aligned}&\square\!\!\;\square\\[-0.55em]&\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydBB}{{\scriptsize\begin{aligned}&\square\!\!\;\square\\[-0.55em]&\square\!\!\;\square\end{aligned}}}
+\newcommand{\ydC}{{\scriptsize\begin{aligned}&\square\!\!\;\square\!\!\;\square\end{aligned}}}
+\newcommand{\ydCA}{{\scriptsize\begin{aligned}&\square\!\!\;\square\!\!\;\square\\[-0.55em]&\square\end{aligned}}}
+\newcommand{\ydD}{{\scriptsize\begin{aligned}&\square\!\!\;\square\!\!\;\square\!\!\;\square\end{aligned}}}
+$$
+:::
+
+# Introduction {#sec-intro}
+
+The large $N$ limit of $U(N)$ Chern--Simons theory [@Witten89] on $S^3$ is equivalent to topological string theory on the resolved conifold $X=\mathcal{O}(-1)\oplus\mathcal{O}(-1)\to\mathbb{P}^1$ [@Gopakumar98]. When a knot $K$ is included, the colored HOMFLY-PT polynomials are expressed through the numbers of BPS states of M2-branes ending on a Lagrangian submanifold $L_K\subset X$, the LMOV invariants [@Ooguri99; @Labastida01]. Kameyama and Nawata [@Kameyama17] (KN in what follows) extended this picture to refined Chern--Simons theory [@Aganagic11]. Starting from the refined index of M-theory and a Schwinger-type computation, they fixed the form of the free energy and gave formulas that convert the refined Chern--Simons invariants $\overline{\mathrm{rCS}}_\lambda(K;a,q,t)$ into refined reformulated invariants $f^q_\mu$, $f^{\bar t}_\mu$ and $\widehat{f}_\rho$. Writing $\widehat{f}_\rho$ in the variables $(\mathbf{a},\mathbf{q},\mathbf{t})$ of Dunfield, Gukov and Rasmussen (DGR) [@Dunfield05], they conjectured that two families of coefficients are non-negative integers: the coefficients $\widehat{\mathbf{N}}_{\rho;i,j,k}$ of $\widehat{f}_\rho$ as a Laurent polynomial in $(\mathbf{a},\mathbf{q},\mathbf{t})$, and the coefficients $\widehat{\mathbf{N}}_{\rho,g,\beta,F}$ obtained after expanding in powers of $G=(\mathbf{q}\mathbf{t}-\mathbf{q}^{-1}\mathbf{t}^{-1})(\mathbf{q}-\mathbf{q}^{-1})$, the genus expansion of M2-branes. We call the former the *spin form* and the latter the *genus form* of the refined LMOV invariants. Under the further conjecture that an additional $U(1)_R$ symmetry acts trivially on the BPS states, the genus form coincides with the refined BPS invariants $\widehat{N}_{\rho,g,\beta,J_r}$.
+
+KN tested the conjecture on the following data at framing zero, which we call the KN data: torus knots and torus links with $|\lambda|\le3$; the $(2s-1,1,2t-1)$-pretzel knots (which include the twist knots) and $\mathbf{6_2}$, $\mathbf{6_3}$ colored by $\ydA$, $\ydB$, $\ydAA$, with the conjectural Poincaré polynomials of colored HOMFLY-PT homology of Gukov, Nawata, Saberi, Stošić and Sułkowski (GNSSS) [@Gukov15] as input; and a candidate for the figure-eight knot $\mathbf{4_1}$ colored by $\ydBA$ constructed in [@Kameyama17]. KN also made two observations. First, the refined Chern--Simons invariants of non-rectangular representations have negative coefficients, while the genus form is non-negative. Second, the thick knot $\mathbf{9_{42}}$ does not fit into the conjectured form, which is related to the failure of the exponential growth property for thick homology [@Gukov11]. In this paper the reproduction of the KN data serves only to fix conventions; phenomena already observed by KN are not claimed as results.
+
+The aim of this paper is to extend the KN framework to framed knots and to test the positivity of both forms of the refined LMOV invariants beyond the KN data in two directions. In the direction of knots we pass from torus knots and thin knots to algebraic iterated torus knots, to all knots in the knot table, to the families of twist and double twist knots, and to thick knots. In the direction of framings we pass from $x=0$ to finite ranges of $x$ and, in some cases, to all integers $x$.
+
+We define the invariant at framing $x\in\mathbb{Z}$ by $\overline{\mathrm{rCS}}^{(x)}_\lambda=\theta_\lambda^x\,\overline{\mathrm{rCS}}_\lambda$ with $$\theta_\lambda=\bigl(-(q/t)^{1/2}\bigr)^{|\lambda|}\,q^{n(\lambda')}\,t^{-n(\lambda)} .$$ This factor is exactly the inverse of the framing factor of the refined topological vertex in the form of Taki [@Taki07], and at $t=q$ it reduces to the rule $W_R\mapsto(-1)^{|R|p}q^{p\kappa_R/2}W_R$ of Mariño and Vafa [@Marino01] with $x=p$. In the variables $(\mathbf{a},\mathbf{q},\mathbf{t})$ it becomes the sign-free monomial $\mathbf{t}^{|\lambda|+2n(\lambda')}\mathbf{q}^{2(n(\lambda')-n(\lambda))}$, so framing acts as a shift of homological degrees. In §[-@sec-framing] we show that $\mathbf{t}^{-|\rho|x}\widehat{f}^{(x)}_\rho$ is an exponential polynomial in $x$ (Proposition [-@prp-expsum]), that the transposition symmetry and the invariance under ([-@eq-sigma]), which the genus expansion needs in order to close, do not depend on $x$, and that for two boxes the Laurent property does not depend on $x$ either (Proposition [-@prp-x-indep]). The sign in $\theta_\lambda$ cannot be omitted: if the Mariño--Vafa sign $(-1)^{|\lambda|x}$ is dropped, the two-box $\widehat{f}$ fails to be a Laurent polynomial for odd $x$ (Proposition [-@prp-sign]). Framing also clarifies the monomial normalization needed in the KN framework, whose representation-dependent part is exactly a change of framing by $mn$ units, both for a torus knot $T_{m,n}$ and for an outermost cabling $C_{m,n}$ (Proposition [-@prp-N2-framing]).
+
+The tests of positivity are the subject of §[-@sec-one]--§[-@sec-higher]. The reliability of the input depends on the class of knots (Table [-@tbl-overview]), and we state our results accordingly. For the fundamental representation, if the input has non-negative coefficients and the symmetry ([-@eq-sigma]), the genus expansion closes over the integers and both forms are non-negative (Proposition [-@prp-one]). The symmetry is a theorem of Gorsky, Hogancamp and Mellit [@Gorsky21] for reduced HOMFLY-PT homology, so with homological input the case $\rho=\ydA$ holds for every knot and every framing. We show that the parity condition on the spin $2J_r$ in the KN conjecture is equivalent, for $\ydA$, to the parity condition of Chandler and Gorsky [@Chandler22], and we determine the knots that satisfy it among the $801$ prime knots with at most $11$ crossings: there are only nine (Computational Result [-@exr-parity]).
+
+For two boxes, we prove that the relation between $\mathbf{9_{42}}$ and exponential growth noted by KN is a necessary condition: if $\widehat{f}_{\ydB}$ is a Laurent polynomial then $\dim H^{\ydB}=(\dim H^{\ydA})^2$ (Proposition [-@prp-two-necessary]). With the refined formulas of Kameyama, Nawata, Tao and Zhang (KNTZ) [@Kameyama19] as input (they agree with the conjectural formulas of GNSSS), the two-box invariants are positive for all twist knots (Theorem [-@thm-twist]) and for a large region of double twist knots (Theorem [-@thm-pretzel]). For eight knots, positivity holds for all integer framings (Theorem [-@thm-two-all-x]). Two thick non-torus knots, $\mathbf{10_{139}}$ and $\mathbf{10_{152}}$, are also positive (Computational Result [-@exr-thick]).
+
+For three boxes, we consider seven torus knots and seven algebraic iterated torus knots. With the normalization (N1)(N2$'$) of §[-@sec-normalization], $\widehat{f}_\rho$ is positive in both forms for all $\rho$ with $|\rho|\le3$ (Computational Result [-@exr-three]). For the cables the rule (N2$'$) is a hypothesis (Hypothesis [-@exm-N2]), and our results for cables with two and three boxes depend on it. For the cables the input is the refined invariant defined through the double affine Hecke algebra (DAHA) by Cherednik and Danilenko [@Cherednik14]; the list includes a three-strand cable $K7$ and a two-step iteration $K10$ (the names are fixed in Table [-@tbl-cables]). As KN observed for torus knots, the input $\mathrm{rCS}_{\ydBA}$ itself has negative coefficients while the refined LMOV invariants are positive; we extend this phenomenon to algebraic iterated torus knots. Positivity persists when the framing is varied: all $1821$ cases examined are positive (Computational Result [-@exr-framing-batch]).
+
+To go beyond three boxes, we diagonalize the matrix $M(t)$ of KN by the characters of the symmetric group (Lemma [-@lem-M-diag]), which gives $\widehat{f}_\rho$ for any number of boxes. For eight torus knots, all $\rho$ with $4\le|\rho|\le9$ in the ranges of Table [-@tbl-higher] are positive ($340$ pairs $(K,\rho)$; Computational Result [-@exr-higher]). For $\mathbf{4_1}$ with four boxes we only obtain a weak test in which the unknown invariant for $\ydCA$ is constrained (Computational Result [-@exr-fig8-four]).
+
+On this basis we state the positivity of the framed refined LMOV invariants of torus knots as Conjecture [-@cnj-A] and of algebraic iterated torus knots as Conjecture [-@cnj-B]. For hyperbolic knots there is no definition-based refined invariant for the non-rectangular color $\ydBA$, and we explain in §[-@sec-21] that structural conditions do not determine it uniquely. The KN candidate for $\mathbf{4_1}$ colored by $\ydBA$ can be written as the $Z$-factor expansion of Anokhina et al. [@Anokhina12] with one coefficient replaced (§[-@sec-fig8-21]).
+
++:--------------------------------------+:-------------+:---------:+:--------:+:----------:+:--------:+:-----------------:+
+|                                       |              |           | $|\rho|=2$            | $|\rho|=3$                   |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| Knots                                 | Input        | $\ydA$ | $x=0$    | $x\neq0$   | $x=0$    | $x\neq0$          |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| unknot                                | --           | all $x$   | yes      | all $x$    | yes      | $|x|\le6$         |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $T_{2,3},T_{2,5},T_{2,7},T_{3,4}$     | EHA          | all $x$   | yes      | all $x$    | yes      | $|x|\le 3$ to $6$ |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $T_{3,5},T_{2,11},T_{3,7},T_{4,5}$    | EHA          | all $x$   | yes      | $|x|\le10$ | yes      | $|x|\le10$        |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $K1,K3$                               | DAHA         | all $x$   | yes      | all $x$    | yes      | note 1            |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $K6a,K7,K8,K9$                        | DAHA         | all $x$   | yes      | $|x|\le10$ | yes      | $|x|\le10$        |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $K10$                                 | DAHA         | all $x$   | yes      | $|x|\le10$ | yes      | $|x|\le2$         |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $\mathbf{4_1}$                        | homology, KN | all $x$   | yes      | all $x$    | yes      | $|x|\le4$         |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| knot table ($801$ knots)              | homology     | all $x$   | $\times$ | $\times$   | $\times$ | $\times$          |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| twist knots $K_p$                     | KNTZ         | all $x$   | all $p$  | note 2     | $\times$ | $\times$          |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| double twist knots $K_{m,n}$          | KNTZ         | all $x$   | note 3   | ---        | $\times$ | $\times$          |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+| $\mathbf{10_{139}},\mathbf{10_{152}}$ | quiver, KRSS | all $x$   | yes      | ---        | $\times$ | $\times$          |
++---------------------------------------+--------------+-----------+----------+------------+----------+-------------------+
+
+: Overview of the tests. "yes" means that both the spin form and the genus form are non-negative; "all $x$" means all integer framings; --- means not examined; $\times$ means that no input is available. EHA stands for the elliptic Hall algebra. {#tbl-overview}
+
+Inputs: for $\mathbf{4_1}$, homology for rectangular colors and the KN candidate for $\ydBA$; KNTZ and KRSS denote the conjectural formulas of §[-@sec-conj-inputs].\
+Note 1: $|x|\le2$, and also $x=\pm6$ for $K1$.\
+Note 2: positive for all $(p,x)$ with $p$ and $x$ of the same sign; for opposite signs, positive by direct computation for $|p|\le6$, $|x|\le14$.\
+Note 3: positive for all $(m,n)$ of the same sign; for opposite signs, proved for $\min(|m|,n)\le20$ and checked for $|m|\le30$, $n\le40$.\
+Four boxes and beyond (framing zero): eight torus knots are positive (Table [-@tbl-higher]); $\mathbf{4_1}$ admits only a weak test (§[-@sec-fig8-four]).
+
+Integrality of LMOV-type invariants of framed knots in the unrefined setting goes back to Mariño and Vafa [@Marino01] and has been studied in [@Zhu21; @Luo16; @Luo21; @Wang25; @Zhu25]. The "refined LMOV conjecture" of [@Zhu21] is a refinement in a different sense from the $t\neq q$ refinement of KN, as remarked there, and concerns different objects. Non-negativity of refined open BPS invariants for a single brane and symmetric representations is discussed by Cheng and Sułkowski [@Cheng21] at fixed framing and by Banerjee, Ishtiaque and Jeong [@Banerjee26]. In the knots--quivers correspondence [@Kucharski17; @Kucharski17b; @Ekholm18] a change of framing shifts the quiver matrix, $C\mapsto C+f$, and integrality of the refined LMOV invariants of symmetric representations follows from the structure of the quiver. To the best of our knowledge, the generating functions $\widehat{f}_\rho$ of KN have not been studied with framing, nor has the positivity of the spin and genus forms been examined for non-symmetric $\rho$ (including $\ydBA$) outside torus knots. The refined invariants of cables are due to Cherednik and Danilenko [@Cherednik14; @Cherednik15]; their explicit examples are limited to a few colors such as $\ydA$ and $\ydB$ for $K1$, and we are not aware of values for $|\lambda|=3$ or of refined BPS invariants of cables in the literature.
+
+To separate claims of different strength, statements derived analytically are called theorems, propositions or lemmas, and statements checked by computer are called *computational results* and are stated with their range. A proof that contains a finite number of exact computer calculations (sign checks of the coefficients of explicit polynomials, or the verification of linear-programming certificates in rational arithmetic) is marked "computer-assisted" in the heading of the theorem. Assumptions that we could not derive are stated as *hypotheses*. Whenever a statement takes a conjectural formula as input, this is said explicitly.
+
+The paper is organized as follows. In §[-@sec-prelim] we recall the variables and the refined LMOV invariants of KN. In §[-@sec-framing] we define the framed invariants and derive their structure in $x$. In §[-@sec-inputs] we describe the inputs (torus knots, cables, homology, conjectural formulas), the monomial normalization, and the method of computation. Sections [-@sec-one], [-@sec-two], [-@sec-three] and [-@sec-higher] contain the tests for $\ydA$, two boxes, three boxes, and four or more boxes, respectively. Open problems are discussed in §[-@sec-discussion]. The appendices contain details of the computation, the derivation of the normalization, the non-algebraic cables, and the data and code.
+
+# Refined LMOV invariants {#sec-prelim}
+
+## Variables and orientation
+
+Following KN [@Kameyama17], $q=e^{i\epsilon_1}$ and $t=e^{i\epsilon_2}$ are the parameters of the $\Omega$-background $(z_1,z_2)\mapsto(qz_1,t^{-1}z_2)$, and the large $N$ limit of the $SU(N)$ invariants is taken with $a=t^N$. The bold variables $(\mathbf{a},\mathbf{q},\mathbf{t})$ are defined by $$
+a=-\mathbf{a}^2\mathbf{t},\qquad q^{1/2}=-\mathbf{q}\mathbf{t},\qquad t^{1/2}=\mathbf{q}.
+$$ {#eq-cov} They are the variables of the superpolynomial of DGR [@Dunfield05] and of Aganagic and Shakirov [@Aganagic11]; the unrefined limit $t=q$ corresponds to $\mathbf{t}=-1$. The DAHA variables $(q,t,a)$ of Cherednik and Danilenko [@Cherednik14] agree with the $(q,t)$ of KN, and $a_{\mathrm{DAHA}}=-a$. Branches of half-integer powers are fixed by ([-@eq-cov]). The overall sign of $\widehat{f}_\rho$ is a convention; positivity statements are always understood for one choice of overall sign (Definition [-@def-positivity]).
+
+The orientation (choice of mirror image) follows DGR. The torus knot $T_{m,n}$ with $m,n>0$ is the one for which the reduced superpolynomial of the trefoil $T_{2,3}$ is $\mathbf{a}^2\mathbf{q}^{-2}+\mathbf{a}^2\mathbf{q}^2\mathbf{t}^2+\mathbf{a}^4\mathbf{t}^3$; with this choice all crossings are negative. In the elliptic Hall algebra $T_{m,n}$ corresponds to the element of slope $(m,-n)$. Knots of the knot table are taken with the braid representatives of KnotInfo, and twist and double twist knots follow the conventions of KNTZ [@Kameyama19] ($K_{1,1}=\mathbf{3_1}$ and so on). The superpolynomial of the mirror image is obtained by inverting $\mathbf{a},\mathbf{q},\mathbf{t}$, up to a monomial. Positive framing $x>0$ corresponds to $p>0$ of Mariño and Vafa (Proposition [-@prp-MV]).
+
+## Macdonald polynomials
+
+Let $P_\lambda(u;q,t)$ be the monic Macdonald polynomial, where $u=(u_1,u_2,\dots)$ are the variables of symmetric functions, and put $$g_\lambda=\frac{(q/t)^{|\lambda|}}{\langle P_\lambda,P_\lambda\rangle_{q,t}},\qquad
+\langle p_\lambda,p_\mu\rangle_{q,t}=\delta_{\lambda\mu}\,z_\lambda\prod_i\frac{1-q^{\lambda_i}}{1-t^{\lambda_i}} .$$ The invariant of the unknot is a symmetrized form of the principal specialization $$P_\lambda(1,t,\dots,t^{N-1})=\prod_{s\in\lambda}\frac{t^{l'(s)}-a\,q^{a'(s)}}{1-q^{a(s)}t^{l(s)+1}}\qquad(a=t^N),$$ where $a(s),l(s)$ are the arm and leg lengths and $a'(s),l'(s)$ the co-arm and co-leg lengths of the box $s$. With $n(\lambda)=\sum_i(i-1)\lambda_i$ and $\lambda'$ the transposed partition (also written $\lambda^T$), we put $$T_\lambda=q^{n(\lambda')}\,t^{-n(\lambda)}$$ and call it the refined twist eigenvalue. At $t=q$ it becomes $q^{\sum_{s\in\lambda}c(s)}$, where $c(s)$ is the content.
+
+## Refined Chern--Simons invariants
+
+As in KN we write $\overline{\mathrm{rCS}}_\lambda(K;a,q,t)$ for the unreduced and $\mathrm{rCS}_\lambda(K;a,q,t)$ for the reduced refined Chern--Simons invariant; they are related by $$\overline{\mathrm{rCS}}_\lambda(K;a,q,t)=\overline{\mathrm{rCS}}_\lambda(\bigcirc;a,q,t)\,\mathrm{rCS}_\lambda(K;a,q,t),$$ where $\bigcirc$ is the unknot. For torus knots there are three equivalent descriptions: the $S$ and $T$ matrices of Aganagic and Shakirov [@Aganagic11], the DAHA construction of Cherednik [@Cherednik11], and the elliptic Hall algebra formula of Gorsky and Neguţ [@Gorsky13b]. We compute with the last one (§[-@sec-inputs]). These definitions determine the invariants only up to a monomial factor, whereas the extraction of BPS invariants is sensitive to such factors; the monomial normalization is fixed in §[-@sec-normalization]. The difference between $U(N)$ and $SU(N)$ is a correction of framing type and is not distinguished here, as in KN.
+
+## Refined reformulated invariants
+
+KN proposed the following two identities of geometric transition, for the $q$-brane and the $\bar t$-brane respectively: $$
+\sum_\lambda \overline{\mathrm{rCS}}_\lambda(K;a,q,t)\,g_\lambda(q,t)\,P_\lambda(u;q,t)
+=\exp\Bigl(\sum_{d=1}^\infty\sum_\mu \frac1d\,\frac{f^q_\mu(K;a^d,q^d,t^d)}{q^{\frac d2}-q^{-\frac d2}}\,s_\mu(u^d)\Bigr),
+$$ {#eq-GT1}
+
+$$\sum_\lambda \overline{\mathrm{rCS}}_\lambda(K;a,q,t)\,P_{\lambda^T}(-u;t,q)
+=\exp\Bigl(\sum_{d=1}^\infty\sum_\mu \frac1d\,\frac{f^{\bar t}_\mu(K;a^d,q^d,t^d)}{t^{-\frac d2}-t^{\frac d2}}\,s_\mu(u^d)\Bigr).
+$$ {#eq-GT2} The refined reformulated invariants $f^q_\mu$ and $f^{\bar t}_\mu$ defined by these identities are related to a single family $\widehat{f}_\rho$ by a matrix $M_{\mu\rho}(t)$, $|\mu|=|\rho|$, which depends only on $t$: $$
+f^q_\mu(K;a,q,t)=\sum_\rho M_{\mu\rho}(t)\,\widehat{f}_\rho(K;a,q,t),\qquad f^{\bar t}_\mu(K;a,q,t)=\sum_\rho M_{\mu\rho}(q^{-1})\,\widehat{f}_\rho(K;a,q,t).
+$$ {#eq-f-to-hatf} That the two identities give the same $\widehat{f}_\rho$ is a consistency condition of the framework. We normalize $f^q_\mu$ as in Appendix B of KN, which differs from the literal expansion of ([-@eq-GT1]) by the factor $(q/t)^{|\mu|/2}$ (a rescaling $u\mapsto(t/q)^{1/2}u$); there is no such difference for $f^{\bar t}_\mu$.
+
+The KN conjecture states that, after a shift of the $a$-degree by $\pm\frac12$, $\widehat{f}_\rho$ has the form $$
+\widehat{f}_\rho(K;a,q,t)=\sum_{g,\beta,J_r}(-1)^{2J_r}\,\widehat{N}_{\rho,g,\beta,J_r}(K)\,(q^{\frac12}-q^{-\frac12})^{g}(t^{-\frac12}-t^{\frac12})^{g}\Bigl(\frac qt\Bigr)^{J_r-\frac\beta2}a^{\beta}
+$$ {#eq-hat-f-2} with non-negative integers $\widehat{N}_{\rho,g,\beta,J_r}(K)$. Here $g$ is the genus of the M2-brane curve, $\beta$ is the degree in $\mathbb{P}^1$, and $J_r$ is the right spin on the cohomology of the moduli space of M2-branes. In the argument of KN the BPS states carry, besides $J_r$, the charge $S_R$ of an additional $U(1)_R$ symmetry, and $\widehat{N}_{\rho,g,\beta,J_r}$ is the degeneracy under the conjecture that $S_R$ acts trivially. The shift of the $a$-degree is $a^{-1/2}$ for $|\rho|=1$ and $a^{1/2}$ for $|\rho|=3$. In the variables ([-@eq-cov]), $$
+\widehat{f}_\rho=\sum_{g,\beta,F}\widehat{\mathbf{N}}_{\rho,g,\beta,F}\,(\mathbf{q}\mathbf{t}-\mathbf{q}^{-1}\mathbf{t}^{-1})^{g}(\mathbf{q}-\mathbf{q}^{-1})^{g}\,\mathbf{a}^{2\beta}\,\mathbf{t}^{F} .
+$$ {#eq-bold-form} In the counting of BPS states of KN one has $\widehat{\mathbf{N}}_{\rho,g,\beta,F}=\sum_{2(J_r-S_R)=F}(-1)^{2S_R}\widehat{N}_{\rho,g,\beta,J_r,S_R}$, and $\widehat{\mathbf{N}}_{\rho,g,\beta,F}=\widehat{N}_{\rho,g,\beta,J_r}$ with $F=2J_r$ holds only under the conjecture on $S_R$. What we compute and test in this paper is $\widehat{\mathbf{N}}_{\rho,g,\beta,F}$. We write $G=(\mathbf{q}\mathbf{t}-\mathbf{q}^{-1}\mathbf{t}^{-1})(\mathbf{q}-\mathbf{q}^{-1})$ and call ([-@eq-bold-form]) the genus expansion.
+
+Let $\sigma$ be the involution on monomials $\mathbf{a}^{e_\mathbf{a}}\mathbf{q}^{e_\mathbf{q}}\mathbf{t}^{e_\mathbf{t}}$ given by $$
+\sigma:\ (e_\mathbf{a},e_\mathbf{q},e_\mathbf{t})\mapsto(e_\mathbf{a},\,-e_\mathbf{q},\,e_\mathbf{t}-e_\mathbf{q}).
+$$ {#eq-sigma} In terms of $v=\mathbf{q}^2\mathbf{t}$ it exchanges $v$ and $v^{-1}$ at fixed $\mathbf{a}$ and $\mathbf{t}$. Since $G=v+v^{-1}-\mathbf{t}-\mathbf{t}^{-1}$, the genus expansion closes with integer coefficients exactly when $\widehat{f}_\rho$ is $\sigma$-invariant and all exponents of $\mathbf{q}$ are even. KN also observed that the coefficients before the genus expansion, $$\widehat{f}_\rho(K;a=-\mathbf{a}^2\mathbf{t},\,q=\mathbf{q}^2\mathbf{t}^2,\,t=\mathbf{q}^2)=\sum_{i,j,k}\widehat{\mathbf{N}}_{\rho;i,j,k}(K)\,\mathbf{a}^{2i}\mathbf{q}^{2j}\mathbf{t}^{k},$$ are non-negative integers. We distinguish the two families as two forms of the refined LMOV invariants: $\widehat{\mathbf{N}}_{\rho;i,j,k}$ is the *spin form* and $\widehat{\mathbf{N}}_{\rho,g,\beta,F}$ is the *genus form* (the symbols are those of KN). The names come from the construction of the BPS states in KN. For the genus form, KN decompose the space of BPS states as $\bigoplus C_{\mu\sigma\rho}\,\mathcal{H}_{\sigma,g}\otimes A_{\rho,g,\beta,J_r,S_R}$ and set $\widehat{N}_{\rho,g,\beta,J_r,S_R}=\dim A_{\rho,g,\beta,J_r,S_R}$. The factor $G^g$ is the contribution of the Jacobian $H^*((T^2)^g)$ of the bulk of the M2-brane curve $\Sigma_{g,h}$, and $g$ is its genus. This is the refined counterpart of $\widehat{N}_{R,g,Q}$ of Labastida, Mariño and Vafa [@Labastida01].
+
+For the spin form, note that a monomial of the refined index $\mathrm{Tr}\,(-1)^Fq^{J_1-S_R}t^{S_R-J_2}$, where $J_1,J_2$ generate the rotations of the two planes of the $\Omega$-background, becomes $\pm\mathbf{q}^{2(J_1-J_2)}\mathbf{t}^{2(J_1-S_R)}$ under ([-@eq-cov]). Hence $\widehat{\mathbf{N}}_{\rho;i,j,k}$ is a signed count of BPS states with $\beta=i$ and fixed eigenvalues $J_1-J_2=j$ and $2(J_1-S_R)=k$. The quantity $J_1-J_2$ is the exponent in the unrefined index and is what Ooguri and Vafa [@Ooguri99] call the spin $s$ of $N_{R,Q,s}$. The spin form is labeled by weights rather than by irreducible representations and is a signed count, so its non-negativity is not automatic. In the literature on the knots--quivers correspondence [@Ekholm18] the invariants without genus expansion are called LMOV invariants; following KN we reserve the name for the genus form when a distinction is needed. The coefficients of $f^q$ and $f^{\bar t}$ are not refined LMOV invariants and are not used in the positivity statements.
+
+::: {#def-positivity}
+## Positivity
+
+We say that $\widehat{f}_\rho$ is *positive* if it is a Laurent polynomial for which the genus expansion closes over the integers and, for one choice of overall sign, all coefficients of the spin form $\widehat{\mathbf{N}}_{\rho;i,j,k}$ and of the genus form $\widehat{\mathbf{N}}_{\rho,g,\beta,F}$ are non-negative integers.
+:::
+
+The KN conjecture contains, in addition, the statement that the parity of $2J_r$ is constant for fixed $(\rho,g,\beta)$. Definition [-@def-positivity] does not include this parity condition; it is studied separately in §[-@sec-one].
+
+## From the spin form to the genus form
+
+The two forms are not independent: non-negativity of the spin form together with $\sigma$-invariance implies non-negativity of the genus form.
+
+::: {#lem-G}
+## Genus expansion
+
+Suppose that $\widehat{f}_\rho$ is $\sigma$-invariant with even exponents of $\mathbf{q}$, and that the spin form is non-negative. Then the genus form consists of non-negative integers. The converse does not hold.
+:::
+
+::: {.proof}
+Fix the power of $\mathbf{a}$. By assumption the coefficient is a non-negative integer combination of $\mathbf{t}^l\chi_k$ with $\chi_0=1$ and $\chi_k=v^k+v^{-k}$ for $k\ge1$. Regard $\chi_k$ as a polynomial in $w=v+v^{-1}$ and expand around $w_0=\mathbf{t}+\mathbf{t}^{-1}$, so that $G=w-w_0$. Since $d\chi_k/dw=k\,U_{k-1}(w/2)$ with $U_k$ the Chebyshev polynomial of the second kind, the Taylor coefficients are, up to positive factors, derivatives of $U_{k-1}(w/2)$ at $w_0$. These are non-negative Laurent polynomials in $\mathbf{t}$ by the generating function $$\frac{1}{1-w\xi+\xi^2}=\sum_{g\ge0}\frac{G^g\,\xi^g}{\bigl((1-\mathbf{t}\xi)(1-\xi/\mathbf{t})\bigr)^{g+1}} .$$ An example in which the genus form is non-negative while the spin form is not is the non-algebraic cable $K5c$ of Appendix [C](#sec-app-nonalg).
+:::
+
+For the fundamental representation, $\widehat{f}_{\ydA}=(a^{1/2}-a^{-1/2})\mathrm{rCS}_{\ydA}$. Thus if $P$ denotes $\mathrm{rCS}_{\ydA}$ in bold variables, then after the shift of the $a$-degree $\widehat{f}_{\ydA}$ equals $(1+\mathbf{a}^2\mathbf{t})\,\mathbf{a}^{-2}\mathbf{t}^{-1}P$ up to sign. When $P$ is the Poincaré polynomial of a homology theory, positivity of $\ydA$ is therefore natural; this is made precise in §[-@sec-one].
+
+# Framed knots {#sec-framing}
+
+## Definition
+
+::: {#def-framed}
+For a partition $\lambda$ the refined framing factor is $$\theta_\lambda(q,t)=\bigl(-(q/t)^{1/2}\bigr)^{|\lambda|}\,q^{n(\lambda')}\,t^{-n(\lambda)}
+=(-1)^{|\lambda|}\prod_{s\in\lambda}q^{a(s)+\frac12}\,t^{-l(s)-\frac12} .$$ The refined Chern--Simons invariant at framing $x\in\mathbb{Z}$ is $\overline{\mathrm{rCS}}^{(x)}_\lambda=\theta_\lambda^x\,\overline{\mathrm{rCS}}_\lambda$, and likewise $\mathrm{rCS}^{(x)}_\lambda=\theta_\lambda^x\,\mathrm{rCS}_\lambda$. The quantities obtained by inserting $\overline{\mathrm{rCS}}^{(x)}_\lambda$ into ([-@eq-GT1]) and ([-@eq-GT2]) are denoted by $f^{q,(x)}_\mu$, $f^{\bar t,(x)}_\mu$, $\widehat{f}^{(x)}_\rho$, $\widehat{\mathbf{N}}^{(x)}_{\rho;i,j,k}$ and $\widehat{\mathbf{N}}^{(x)}_{\rho,g,\beta,F}$. The case $x=0$ is that of KN.
+:::
+
+The factor $\theta_\lambda$ is a monomial with coefficient $\pm1$. Under the Adams operation $\overline{\mathrm{rCS}}_\lambda\mapsto\overline{\mathrm{rCS}}_\lambda(a^k,q^k,t^k)$ inside the plethystic logarithm it is replaced by $\theta_\lambda(q^k,t^k)^x$; the sign $(-1)^{|\lambda|}$ is *not* raised to the power $k$. This is the same treatment as in the example $f^{(p)}_{\ydB}=q^pW_{\ydB}-\tfrac12\bigl(W_{\ydA}^2+(-1)^pW_{\ydA}(q^2,a^2)\bigr)$ of Mariño and Vafa [@Marino01] (we write $a$ for their variable $\lambda$).
+
+## Origin of the framing factor
+
+::: {#prp-MV}
+At $t=q$ one has $\theta_\lambda^x=(-1)^{|\lambda|x}q^{x\kappa_\lambda/2}$, where $\kappa_\lambda=|\lambda|+\sum_i(\lambda_i^2-2i\lambda_i)=2\sum_{s\in\lambda}c(s)$. Hence the limit $t=q$ of $\overline{\mathrm{rCS}}^{(x)}_\lambda$ is the framed invariant $W^{(p)}_R=(-1)^{|R|p}q^{p\kappa_R/2}W_R$ of Mariño and Vafa [@Marino01] with $p=x$.
+:::
+
+::: {.proof}
+At $t=q$ we have $(q/t)^{1/2}=1$ and $n(\lambda')-n(\lambda)=\sum_s c(s)=\kappa_\lambda/2$. The direction of the variable ($q$ versus $q^{-1}$) is fixed by comparing the principal specialization for the unknot with the quantum dimension of Mariño and Vafa: they agree up to a monomial with $q$ identified with $q$, and do not agree with $q\mapsto q^{-1}$ when $\lambda\neq\lambda^T$.
+:::
+
+::: {#rem-Taki}
+*Remark 5* (Refined topological vertex and the $T$-matrix). The framing factor of the refined topological vertex in the form of Taki [@Taki07] is $f_\mu(t,q)=(-1)^{|\mu|}t^{\|\mu^T\|^2/2}q^{-\|\mu\|^2/2}$. Using $\|\mu\|^2=2n(\mu')+|\mu|$ one finds $f_\mu(t,q)=\theta_\mu(q,t)^{-1}$: the factor of Taki is exactly the inverse of that of Definition [-@def-framed], the only difference being the choice of the positive direction of framing. Taki showed that multiplying the factor $(-1)^{|\nu|}t^{n(\nu)}q^{-n(\nu^T)}$ of Iqbal, Kozçaz and Vafa [@Iqbal07] by $(t/q)^{|\nu|/2}$ is necessary for agreement with the K-theoretic Nekrasov partition function. On the Chern--Simons side, the eigenvalues $T_i=c_T\,q^{(\lambda_{R_i}+\beta\rho)^2/2}$ ($t=q^\beta$) of the refined $T$-matrix of Aganagic and Shakirov satisfy, up to the $SU(N)$ correction, $T_\lambda/T_\emptyset=(a^{1/2}(q/t)^{1/2})^{|\lambda|}\,q^{n(\lambda')}t^{-n(\lambda)}$. Thus, apart from a monomial per box, one unit of framing is the action of the refined $T$-matrix. We use the symbol $\theta_\lambda$ rather than Taki's $f_\mu$ to avoid confusion with $f^q_\mu$, $f^{\bar t}_\mu$ and $\widehat{f}_\rho$.
+:::
+
+::: {#prp-bold}
+In the bold variables, $$\theta_\lambda=\mathbf{t}^{\,|\lambda|+2n(\lambda')}\,\mathbf{q}^{\,2(n(\lambda')-n(\lambda))},$$ which contains no sign. For example $\theta_{\ydA}=\mathbf{t}$, $\theta_{\ydB}=\mathbf{q}^2\mathbf{t}^4$, $\theta_{\ydAA}=\mathbf{q}^{-2}\mathbf{t}^2$ and $\theta_{\ydBA}=\mathbf{t}^5$.
+:::
+
+::: {.proof}
+By ([-@eq-cov]), $-(q/t)^{1/2}=\mathbf{t}$, $q=\mathbf{q}^2\mathbf{t}^2$ and $t=\mathbf{q}^2$.
+:::
+
+Proposition [-@prp-bold] shows that a change of framing shifts the degrees of (colored) HOMFLY-PT homology without signs. In the unrefined limit $\mathbf{t}=-1$ one gets $\theta_\lambda^x\to(-1)^{|\lambda|x}$: the Mariño--Vafa sign is the shadow of the refined degree shift $\mathbf{t}^{|\lambda|x}$.
+
+## Structure in the framing
+
+::: {#lem-adams}
+Let $c$ be a monomial with coefficient $1$ on which the Adams operations act by $c\mapsto c^k$ (for instance $c=a^{1/2}$ or $(q/t)^{1/2}$). Replacing $\overline{\mathrm{rCS}}_\lambda$ by $c^{|\lambda|}\overline{\mathrm{rCS}}_\lambda$ for all $\lambda$ replaces $\widehat{f}_\rho$ by $c^{|\rho|}\widehat{f}_\rho$.
+:::
+
+::: {.proof}
+The factor $c^{|\lambda|}$ amounts to the substitution $u\mapsto cu$ of the symmetric-function variables, which commutes with the plethystic logarithm because $c$ is compatible with the Adams operations.
+:::
+
+For $c=(q/t)^{1/2}=-\mathbf{t}$ this shifts the $\mathbf{t}$-degree of both forms uniformly and changes the overall sign, so it does not affect positivity.
+
+::: {#prp-expsum}
+Let $|\rho|=n$. Then $\mathbf{t}^{-nx}\widehat{f}^{(x)}_\rho$ is an exponential polynomial in $x$, that is, a finite sum $\sum_i c_i\,r_i^{\,x}$ with $c_i$ independent of $x$. The bases $r_i$ are $\{\mathbf{q}^2\mathbf{t}^2,\mathbf{q}^{-2},1,-1\}$ for $n=2$ and $\{\mathbf{q}^6\mathbf{t}^6,\mathbf{q}^{-6},\mathbf{q}^2\mathbf{t}^2,\mathbf{q}^{-2},\mathbf{t}^2,1,-1\}$ for $n=3$. After separating even and odd $x$, the bases are monomials with coefficient $1$.
+:::
+
+::: {.proof}
+$\widehat{f}_\rho$ is a linear combination, with fixed rational functions as coefficients, of products of the $\overline{\mathrm{rCS}}_\lambda$ and their Adams images. With framing, each term acquires the factor $\prod_i\theta_{\lambda_i}(q^{k_i},t^{k_i})^x$. For $n=2$ the factors are $\theta_{\ydB}=\mathbf{q}^2\mathbf{t}^4$, $\theta_{\ydAA}=\mathbf{q}^{-2}\mathbf{t}^2$, $\theta_{\ydA}^2=\mathbf{t}^2$ and $\theta_{\ydA}(q^2,t^2)=-\mathbf{t}^2$; multiplying by $\mathbf{t}^{-2x}$ gives the stated bases. The case $n=3$ is the same.
+:::
+
+In terms of $v=\mathbf{q}^2\mathbf{t}$ the bases $\mathbf{q}^2\mathbf{t}^2=v\mathbf{t}$ and $\mathbf{q}^{-2}=\mathbf{t}/v$ form a pair exchanged by $\sigma$. The dependence on $x$ is of the same type as the dependence of twist knots on the number of twists (§[-@sec-two]): framing behaves like one more twist variable.
+
+::: {#prp-x-indep}
+For every $x\in\mathbb{Z}$ the following hold: (i) $\theta_\lambda(1/t,1/q)=\theta_{\lambda^T}(q,t)$, and consequently the transposition symmetry of $\mathrm{rCS}_\lambda$, the equality of the $\widehat{f}$ obtained from ([-@eq-GT1]) and from ([-@eq-GT2]), and the $\sigma$-invariance of $\widehat{f}_\rho$ hold for $\widehat{f}^{(x)}$ if and only if they hold for $\widehat{f}^{(0)}$; (ii) for $|\rho|=2$, $\widehat{f}^{(x)}_\rho$ is a Laurent polynomial if and only if $\widehat{f}^{(0)}_\rho$ is.
+:::
+
+::: {.proof}
+Statement (i) follows from the definition. For (ii), note that for $|\rho|=2$, $\widehat{f}_\rho$ is a linear combination of the four inputs $\mathrm{rCS}_{\ydB}$, $\mathrm{rCS}_{\ydAA}$, $\mathrm{rCS}_{\ydA}^2$ and $\mathrm{rCS}_{\ydA}(a^2,q^2,t^2)$ divided by the common denominator $2A^2(Q^4-1)(T^4-1)(Q^2T^2-1)$, where $(A,Q,T)=(a,q,t)^{1/2}$. On the zero locus of each irreducible factor of the denominator exactly two of the inputs survive in the numerator, and their framing factors coincide on that locus (a symbolic computation). Hence the vanishing of the numerator on the locus does not depend on $x$.
+:::
+
+::: {#prp-sign}
+## Necessity of the sign
+
+Suppose that the sign $(-1)^{|\lambda|x}$ in Definition [-@def-framed] is omitted. If $x$ is odd, then on the loci $Q=i$ and $T=i$ (that is, $q=-1$ and $t=-1$) the framing factors of the two surviving inputs differ, and for generic input $\widehat{f}_{\ydB}$ and $\widehat{f}_{\ydAA}$ are not Laurent polynomials. For even $x$ the sign has no effect. Omitting the factor $(q/t)^{1/2}$ per box preserves the Laurent property.
+:::
+
+::: {.proof}
+Omitting the sign changes only the factor of the Adams image $\mathrm{rCS}_{\ydA}(a^2,q^2,t^2)$, by $(-1)^x$; the coincidence fails on the loci where this term survives. The last statement is Lemma [-@lem-adams].
+:::
+
+::: {#exr-unlabeled-1}
+For the trefoil at $x=1$ without the sign, the factor $(1+q)(1+t)$ remains in the denominators of $\widehat{f}_{\ydB}$ and $\widehat{f}_{\ydAA}$. At $x=2$, and at $x=1$ with the sign, they are Laurent polynomials.
+:::
+
+Proposition [-@prp-sign] is the refined version of the observation of Mariño and Vafa [@Marino01] that the sign is essential for integrality. They explained the sign by a change of the flat open-string coordinate, $\hat u\mapsto\hat u+i\pi p$, i.e. $V\mapsto(-1)^pV$, which re-expands the generating function $\sum_RW_R\,\mathrm{Tr}_RV$ and multiplies $W_R$ by the constant sign $(-1)^{|R|p}$. A constant sign is not raised to the $d$-th power in the Adams image $W_R(q^d,a^d)$, so this is not a trivial replacement of the type of Lemma [-@lem-adams]: on the BPS side the $d$-fold cover terms acquire $(-1)^{d|R|}$. The sign in Definition [-@def-framed] is treated in the same way. The remaining part $(q/t)^{|\lambda|/2}q^{n(\lambda')}t^{-n(\lambda)}$ of $\theta_\lambda$ comes from the eigenvalues of the refined $T$-matrix (Remark [-@rem-Taki]), which contain no sign. Aganagic and Shakirov [@Aganagic11] remark that the prefactor $\sqrt{q/t}$ for the trefoil should also be related to a change of flat coordinates. We do not derive the refined change of flat coordinates from geometry.
+
+## A criterion for all framings {#sec-newton}
+
+Proposition [-@prp-expsum] reduces positivity for all $x$, for a fixed knot, to finitely many checks. Split $x$ by parity and direction ($x\ge x_0$ or $x\le x_0$), write $x=x_0\pm2y$ with $y\ge0$, order the bases of the resulting exponential polynomial in $y$ as $(r_0,r_1,\dots)$ (they are the monomials $r_i^{\pm2}$ of Proposition [-@prp-expsum]) and form the Newton (divided-difference) expansion $$\mathbf{t}^{-nx}\widehat{f}^{(x)}_\rho=\sum_{k}c_k\,h_{y-k}(r_0,\dots,r_k),$$ where $h_j$ is the complete homogeneous symmetric polynomial ($h_j=0$ for $j<0$). If all $c_k$ are Laurent polynomials whose coefficients have one common sign, then, since the $h_j$ of monomials with coefficient $1$ have non-negative coefficients, the spin form is non-negative for all $y\ge0$. $\sigma$-invariance for all $x$ follows from Proposition [-@prp-x-indep], and Lemma [-@lem-G] then gives non-negativity of the genus form. The finitely many $x$ between the starting point $x_0$ and $0$ are checked directly. We refer to this as the *Newton criterion*; it is used in §[-@sec-two] both for the framing and for the number of twists.
+
+## Physical picture {#sec-physics}
+
+The refined large $N$ duality for framed knots can be assembled from two ingredients. On the Chern--Simons side, $\theta_\lambda$ without its sign is the action of the $T$-matrix of refined Chern--Simons theory (Remark [-@rem-Taki]). In the construction of Aganagic and Shakirov the $U(1)_R$ symmetry exists because the three-manifold admits a semi-free $U(1)$ action (it is a Seifert manifold), and a change of framing of a torus knot stays within the same formalism of $S$ and $T$ matrices. On the string side, in the argument of Mariño and Vafa the framing integer corresponds to the choice of the flat coordinate of $L_K$ (the boundary condition at infinity), and the sign $(-1)^{|\lambda|x}$ comes from this change of coordinate.
+
+Two points are not derived in this paper: that the Schwinger computation of KN and the extraction formulas ([-@eq-GT1]), ([-@eq-GT2]) apply unchanged for all $x$, and that the action of $U(1)_R$ on the string side remains trivial. Under these assumptions positivity is expected for all framings. The precise conjectures are stated in §[-@sec-conj] after the evidence has been presented.
+
+# Inputs, normalization and computation {#sec-inputs}
+
+## Torus knots
+
+For the torus knot $T_{m,n}$ we compute $\overline{\mathrm{rCS}}_\lambda$ from the action of the generators of the elliptic Hall algebra, following Gorsky and Neguţ [@Gorsky13b]. The relation between the elliptic Hall algebra and the DAHA is due to Schiffmann and Vasserot [@Schiffmann09], and its use for cables to Morton and Samuelson [@Morton14].
+
+To fix conventions we reproduced, coefficient by coefficient, the $27$ values for torus knots in the ancillary files of KN ($T_{2,3}$, $T_{2,5}$, $T_{2,7}$, $T_{2,9}$ with $|\lambda|\le3$ and $T_{3,4}$ with $\ydA,\ydB,\ydAA$) and the $13$ tables of BPS invariants in Appendix C of KN, under the monomial normalization of §[-@sec-normalization]. This is a reproduction of known results and is used only as a check of conventions.
+
+## Algebraic iterated torus knots
+
+We write $C_{m,n}K$ for the $(m,n)$-cable of a companion knot $K$; $m$ is the winding number and $n$ is measured in the Seifert framing of the companion. In the DAHA definition of Cherednik and Danilenko [@Cherednik14; @Cherednik15] the knot $C_{m_2,n_2}T_{m_1,n_1}$ has Newton pairs $r=(m_1,m_2)$, $s=(n_1,n_2-m_1n_1m_2)$, and it is algebraic (the link of a plane curve singularity) when all $r_i,s_i>0$, i.e. $n_2>m_1n_1m_2$.
+
+We decompose this definition linearly at each step of the iteration and compute it as a composition of operators of the elliptic Hall algebra. For the outermost step $C_{m,n}$ we expand $\Phi_\lambda=P_\lambda[p_k\mapsto P_{k(m,-s')}]\cdot1=\sum_\mu c_{\lambda\mu}(s')P_\mu$, where $s'$ is the last component of $s$, $p_k$ are power sums and $P_{k(m,-s')}$ are the generators of slope $(m,-s')$, and take the linear combination with the values $\mathrm{rCS}_\mu(K)$ of the companion. It is known that the naive $t$-deformation of the Rosso--Jones formula [@Rosso93] is incorrect [@Danilenko14; @Morozov18]; the form used here follows directly from the definition.
+
+::: {#exr-daha}
+The values so computed agree, in all coefficients and up to a monomial, with the ten explicit examples of Cherednik and Danilenko: $K1$ with $\ydA$ and $\ydB$, and $K2,K3,K4,K5a,K5b,K5c,K7,K8$ with $\ydA$ (the non-algebraic cables are named in Appendix [C](#sec-app-nonalg)). At $t=q$ they agree with the colored HOMFLY-PT polynomials computed from braid presentations.
+:::
+
+The cables studied in this paper are listed in Table [-@tbl-cables].
+
+  Name    Knot                           $b$   $\delta$
+  ------- ----------------------------- ----- ----------
+  $K1$    $(2,13)$-cable of $T_{2,3}$     4       8
+  $K3$    $(2,15)$-cable of $T_{2,3}$     4       9
+  $K6a$   $(2,21)$-cable of $T_{2,5}$     4       14
+  $K9$    $(2,31)$-cable of $T_{2,7}$     4       21
+  $K8$    $(2,25)$-cable of $T_{3,4}$     6       18
+  $K7$    $(3,19)$-cable of $T_{2,3}$     6       21
+  $K10$   $(2,53)$-cable of $K1$          8       42
+
+  : Algebraic iterated torus knots. $b$ is the number of strands of the braid and $\delta$ the genus-type quantity of Computational Result [-@exr-M]. {#tbl-cables}
+
+## Monomial normalization {#sec-normalization}
+
+The DAHA and the elliptic Hall algebra determine the invariants only up to a monomial, but the extraction of BPS invariants depends on it. We normalize by the following rules.
+
+- (N1) The limit $t=q$ is the reduced colored HOMFLY-PT polynomial at framing zero in the conventions of DGR.
+
+- (N2) For $\ydA$, the lowest $\mathbf{t}$-degree in bold variables is $0$.
+
+- (N2$'$) The monomial for the color $\lambda$ is $M_\lambda=M_\square^{|\lambda|}\,T_\lambda^{F}$, where $M_\square$ is the monomial for $\ydA$ fixed by (N1)(N2) and $F=mn$ both for a torus knot $T_{m,n}$ and for an outermost cabling $C_{m,n}$.
+
+For torus knots these rules reproduce the $27$ values of KN in all coefficients. Rule (N2) fixes only a power of $(q/t)$ per box, which by Lemma [-@lem-adams] does not affect positivity. For a colored invariant the monomial is $\pm a^\alpha q^\beta t^\gamma$; the limit $t=q$ determines the sign, $\alpha$ and $\beta+\gamma$ (for the colored cases (N1) then serves as a check, which we carried out). What $t=q$ does not determine is a power $(q/t)^{c_\lambda}$ for each color.
+
+::: {#exm-N2}
+For cables, the color-dependent monomial $(q/t)^{c_\lambda}$ not determined at $t=q$ has the form (N2$'$): it consists of a part proportional to $|\lambda|$, irrelevant for positivity, and of the power $T_\lambda^F$ of the refined twist eigenvalue.
+:::
+
+The evidence is threefold: (i) the hypothesis follows from the refined satellite formula (Hypothesis [-@exm-sat]); (ii) for the non-algebraic cable $K5c$, within the one-parameter family obtained by multiplying the $\ydB$ invariant by $(q/t)^u$, only the value of $u$ given by (N2$'$) is compatible with the Laurent property and the transposition symmetry; (iii) for nine cables and all colors with $|\lambda|\le3$, the form (N2$'$) agrees with the computed values.
+
+::: {#prp-N2-framing}
+## Normalization as framing
+
+The monomial of (N2$'$) can be written as $$M_\lambda=\bigl(M_\square\,(-(q/t)^{1/2})^{-F}\bigr)^{|\lambda|}\,\theta_\lambda^F .$$ Thus the color-dependent part of (N2$'$) is exactly $F$ units of framing in the sense of Definition [-@def-framed]. Shifting the reference framing by an even integer is equivalent to shifting $x$ by the same integer together with a uniform shift of the type of Lemma [-@lem-adams]. Shifting by an odd integer without the Mariño--Vafa sign destroys the Laurent property (Proposition [-@prp-sign]).
+:::
+
+::: {.proof}
+$T_\lambda=\theta_\lambda\,(-(q/t)^{1/2})^{-|\lambda|}$ by Definition [-@def-framed].
+:::
+
+Hypothesis [-@exm-N2] can therefore be rephrased: the color-dependent part of the normalization is $F$ units of framing, with $F=mn$ for the outermost cabling $C_{m,n}$. In particular, a positivity statement for all $x\in\mathbb{Z}$ does not depend on where $x=0$ is placed. The remark of Aganagic and Shakirov [@Aganagic11] that their value for the trefoil differs from the superpolynomial of DGR by "$-6$ units of framing and $\sqrt{q/t}$" matches $F=mn=6$ in absolute value; the sign depends on the choice of the positive direction of framing.
+
+::: {#exr-M}
+For all $22$ knots computed ($9$ torus knots and $13$ cables), the monomial for $\ydA$ fixed by (N1)(N2) is $$M_\square=(-q/t)^{b-1}\bigl(a(q/t)^{1/2}\bigr)^{\delta},$$ where $b$ is the number of strands and $\delta$ is determined recursively by $\delta\mapsto m\delta+(m-1)(n-1)/2$ for each cabling $C_{m,n}$, starting from $\delta=(m-1)(n-1)/2$ for $T_{m,n}$.
+:::
+
+::: {#exm-sat}
+## Refined satellite formula
+
+$\mathrm{rCS}_\lambda(C_{m,n}K)=\sum_\mu C_{\lambda\mu}\,\mathrm{rCS}_\mu(K)$, where the coefficients are the expansion coefficients of the torus knot $T_{m,n}$, regarded as the $(m,n)$-cable of the unknot, normalized by (N2$'$): $C_{\lambda\mu}=M_{T_{m,n}}^{|\lambda|}\,T_\lambda^{mn}\,c_{\lambda\mu}(n)$.
+:::
+
+At $t=q$ this reduces to the classical satellite formula and is compatible with (N1). The closed formula of Computational Result [-@exr-M] can be derived from Hypothesis [-@exm-sat] and two identities that we verified by computation.
+
+::: {#exr-tau}
+Let $\tau:P_\mu\mapsto T_\mu P_\mu$ be the framing operator. For an element of slope $(m,n)$ of the elliptic Hall algebra and an integer $j$, $\tau^jP_\lambda[p_k\mapsto P_{k(m,n)}]\cdot1=P_\lambda[p_k\mapsto P_{k(m,n+jm)}]\cdot1$. This was checked exactly at rational points for five slopes and $j=1,-1,2$.
+:::
+
+::: {#exr-mellit}
+The Poincaré polynomial $\mathcal{P}_{m,n}$ of the HOMFLY-PT homology of the torus knot in the Dyck-path form of Mellit [@Mellit17 Thm. 3.1] satisfies $$\mathcal{P}_{m,n}=-\bigl(a(qt)^{-1/2}\bigr)^{\delta}\frac{1}{1-t}\,\frac{(Q_{m,n}\cdot1)[a/q-1]}{a/q-1},$$ where $Q_{m,n}$ is the operator of Bergeron, Garsia, Leven and Xin [@Bergeron14]. This was checked exactly for $(m,n)=(2,3),(3,2),(2,5),(3,4),(4,3),(3,5),(5,3)$.
+:::
+
+::: {#prp-M}
+Assume Hypothesis [-@exm-sat] and the identities of Computational Results [-@exr-tau] and [-@exr-mellit] for all slopes. Then the closed formula of Computational Result [-@exr-M] and the form (N2$'$) hold.
+:::
+
+::: {.proof name="Sketch of proof"}
+For the cabling step, Computational Result [-@exr-tau] says that the framing operator maps the slope $(m,n)$ to $(m,n+jm)$. Together with Hypothesis [-@exm-sat] this gives $M_{C_{m,n}K}=M_K^{\,m}\,M_{T_{m,n}}$ and $F=mn$. For torus knots four facts are used: (I) the lowest coefficient in $a$ of the unnormalized value of Gorsky and Neguţ is a rational $q,t$-Catalan number, which was conjectured in [@Gorsky13b] and follows from the theorem of Mellit [@Mellit16]; (II) the lowest $a$-degree is given by the theorem of Franks and Williams for positive braids [@Franks87]; (III) the sign and the power of $q$ at $t=q$ follow from the symmetry $q\leftrightarrow q^{-1}$; (IV) the exponent of $(q/t)$ follows from the Dyck-path form of Mellit (Computational Result [-@exr-mellit]). Details are given in Appendix [B](#sec-app-normalization).
+:::
+
+::: {#rem-tilde}
+*Remark 20* (Relation to the tilde normalization). Cherednik and Danilenko [@Cherednik14] normalize the DAHA superpolynomial by dividing by the lowest power of $a$ and by a monomial in $q,t$ so that the constant term of the part of $a$-degree zero is $1$ (tilde normalization); their standard variables $(q_{st},t_{st},a_{st})$ are the bold variables. For the $17$ computed values with non-negative coefficients (the $9$ torus knots and $8$ of the $13$ cables of Computational Result [-@exr-M]: the seven of Table [-@tbl-cables] and $K5b$), our $P=\mathrm{rCS}_{\ydA}$ in bold variables equals $\mathbf{a}^{2\delta}\mathbf{q}^{-2\delta}$ times the tilde-normalized polynomial. All these $P$ are $\sigma$-invariant with even exponents of $\mathbf{q}$.
+:::
+
+## Knots with homological input
+
+For the $801$ prime knots with at most $11$ crossings we take as the input for $\ydA$ the Poincaré polynomial of reduced HOMFLY-PT homology computed by Nakagane and Sano [@Nakagane21]. The conversion to the conventions of DGR was checked by $\sigma$-invariance, by the HOMFLY-PT polynomial at $\mathbf{t}=-1$, and by agreement with $\mathrm{rCS}_{\ydA}$ for torus knots.
+
+## Conjectural formulas for two boxes {#sec-conj-inputs}
+
+For hyperbolic knots, refined invariants for $\ydB$ and $\ydAA$ are not available from a definition, and we use conjectural formulas from the literature.
+
+For the double twist knots $K_{m,n}$ and the twist knots $K_p=K_{p,1}$ we use the formulas of KNTZ [@Kameyama19] for the Poincaré polynomials of HOMFLY-PT homology colored by rectangular Young diagrams (refined version, conjectural). The knot $K_{m,n}$ of KNTZ is the $(2m-1,1,2n-1)$-pretzel knot of GNSSS [@Gukov15]. At $t=q$ the KNTZ formulas are proved by Fang and Zhou [@Fang26]. The conversion to the $t_c$-grading of KN uses the relation of gradings of Gorsky, Gukov and Stošić [@Gorsky13], $\mathbf{Q}\mapsto\mathbf{q}^R$, $\mathbf{t}_r\mapsto\mathbf{q}^{-1}$, $\mathbf{t}_c\mapsto\mathbf{t}\mathbf{q}$, where $R$ is the number of rows of the rectangle. It was calibrated by the agreement, in all coefficients, of the trefoil $K_{1,1}=T_{2,3}$ colored by $\ydA$, $\ydB$, $\ydAA$, $\ydBB$ with the elliptic Hall algebra values (see also [@Nawata12]).
+
+For the thick knots $\mathbf{10_{139}}$ and $\mathbf{10_{152}}$ we use the quiver form of Stošić [@Stosic24] and the conjectural formula of Kucharski, Reineke, Stošić and Sułkowski (KRSS) [@Kucharski17b] to construct the $t_c$-grading. For $\mathbf{8_{19}}=T_{3,4}$ this procedure reproduces the elliptic Hall algebra values for all colors from $\ydB$ to $\ydAAA$.
+
+::: {#exr-kntz}
+The refined formulas of KNTZ and the quadruply-graded formulas of GNSSS agree in all coefficients for $K_{m,n}$ with $\ydA$, $\ydB$, and, through the mirror symmetry $\mathbf{t}_r\leftrightarrow\mathbf{t}_c$, $\ydAA$, for $|m|,|n|\in\{1,2,3\}$ in each of the four quadrants of signs ($144$ comparisons: at each of the $36$ points the symmetric colors $[r]$ and, through the mirror symmetry, the antisymmetric colors $[1^r]$ are compared for $r=1,2$, so that $\ydA$ is compared in both ways). Our implementation of the KNTZ formulas agrees with the values in the ancillary files of KNTZ.
+:::
+
+::: {#cor-unlabeled-2}
+The KNTZ and GNSSS formulas for $\ydA$, $\ydB$, $\ydAA$ agree for all $(m,n)$.
+:::
+
+::: {.proof}
+In each quadrant both formulas are exponential polynomials in $m$ and in $n$ with the same set of at most three bases in each variable, so agreement on a $3\times3$ grid implies agreement everywhere.
+:::
+
+Statements with these inputs are statements of positivity *given the conjectural formulas*; they are of a different nature from the three-box results of §[-@sec-three], whose inputs are defined.
+
+## Exact computation {#sec-exact}
+
+$\overline{\mathrm{rCS}}_\lambda$ and $\widehat{f}_\rho$ are obtained by evaluation modulo $31$-bit primes followed by interpolation in each variable, not by symbolic manipulation. When coefficients are large, two or three primes and the Chinese remainder theorem are used. Every polynomial obtained is checked at points not used in the interpolation. The largest example, $K10$ with three boxes, has about $1.83$ million terms in the spin form, with coefficients up to about $1.1\times10^{19}$. Running times and memory are given in Appendix [A](#sec-app-computation).
+
+# The fundamental representation {#sec-one}
+
+## Positivity for all knots and all framings
+
+::: {#prp-one}
+Let $P\in\mathbb{Z}_{\ge0}[\mathbf{a}^{\pm1},\mathbf{q}^{\pm1},\mathbf{t}^{\pm1}]$ have only even exponents of $\mathbf{q}$ and be invariant under $\sigma$ of ([-@eq-sigma]). If $\mathrm{rCS}_{\ydA}=P$, then for every $x\in\mathbb{Z}$ the genus expansion of $\widehat{f}^{(x)}_{\ydA}$ closes over the integers, and both the spin form and the genus form are non-negative.
+:::
+
+::: {.proof}
+For $x=0$, $\widehat{f}_{\ydA}=(1+\mathbf{a}^2\mathbf{t})\,\mathbf{a}^{-2}\mathbf{t}^{-1}P$ is again non-negative and $\sigma$-invariant, and Lemma [-@lem-G] applies. For general $x$, $\theta_{\ydA}^x=\mathbf{t}^x$, so $\widehat{f}^{(x)}_{\ydA}=\mathbf{t}^x\widehat{f}_{\ydA}$, which shifts $F$ in the genus form by $x$.
+:::
+
+::: {#cor-one}
+If $\mathrm{rCS}_{\ydA}(K)$ is the Poincaré polynomial of the reduced HOMFLY-PT homology of $K$ in the normalization of DGR, then $\widehat{f}^{(x)}_{\ydA}(K)$ is positive for every knot $K$ and every $x$.
+:::
+
+::: {.proof}
+The coefficients are dimensions and hence non-negative. $\sigma$-invariance is the symmetry theorem of Gorsky, Hogancamp and Mellit [@Gorsky21]. Evenness of the exponents of $\mathbf{q}$ follows from the parity of the gradings of the homology of a knot.
+:::
+
+::: {#exr-table}
+For all $801$ prime knots with at most $11$ crossings, the genus expansion of $\widehat{f}_{\ydA}$ closes over the integers and both forms are non-negative. Calling a knot thin if its reduced HOMFLY-PT homology is supported in a single $\delta$-grading and thick otherwise, the list consists of $562$ thin alternating, $143$ thin non-alternating and $96$ thick knots.
+:::
+
+For the cables of Table [-@tbl-cables] the computed $\mathrm{rCS}_{\ydA}$ is non-negative and $\sigma$-invariant (Remark [-@rem-tilde]), so Proposition [-@prp-one] applies directly. For general algebraic iterated torus knots the same conclusion follows from the conjectures of Cherednik and Danilenko (§[-@sec-conj]).
+
+## Parity of the spin and parity knots
+
+KN observed that for torus knots the parity of $2J_r$ is constant for fixed $(\rho,g,\beta)$ and regarded this as evidence for the trivial action of $S_R$. For $\ydA$ this condition can be expressed in terms of the input.
+
+::: {#prp-parity}
+Under the assumptions of Proposition [-@prp-one], the parity of $F$ in the genus form $\widehat{\mathbf{N}}_{\ydA,g,\beta,F}$ is constant for each $(g,\beta)$ if and only if the parity of $e_\mathbf{t}+e_\mathbf{a}/2$ is constant on each maximal range of consecutive $\mathbf{a}$-degrees of $P$. If the support of $P$ in the $\mathbf{a}$-degree has no gaps, this is the condition defining the parity knots of Chandler and Gorsky [@Chandler22]: the parity of the difference between the $t$-degree of DGR and half of the $a$-degree is constant on the whole HOMFLY-PT homology.
+:::
+
+::: {.proof}
+The coefficient of $\mathbf{a}^{2\beta}$ in $\widehat{f}_{\ydA}$ involves only two adjacent $\mathbf{a}$-degrees of $P$. In the expansion of $\mathbf{t}^l\chi_k$ (Lemma [-@lem-G]) the exponents of $\mathbf{t}$ in the coefficient of $G^g$ have the parity of $l+k-g$, so $F\equiv e_\mathbf{t}-g \pmod 2$ along each term. Since the $\mathbf{a}$-degrees are even, $\pm e_\mathbf{a}/2$ have the same parity.
+:::
+
+::: {#exr-parity}
+For all $801$ knots the support in the $\mathbf{a}$-degree has no gaps, and the parity of $F$ is constant for exactly nine knots: the torus knots $\mathbf{3_1},\mathbf{5_1},\mathbf{7_1},\mathbf{9_1},\mathbf{11a_{367}},\mathbf{8_{19}},\mathbf{10_{124}}$, the thick knot $\mathbf{10_{125}}$ and the thin knot $\mathbf{10_{140}}$. These are exactly the knots in this range that are parity knots in the sense of Chandler and Gorsky.
+:::
+
+Hence the constancy of the parity of $2J_r$ reflects the parity property of the homology rather than the triviality of the action of $S_R$ itself, and it also occurs for non-torus knots. The notion of parity knot is due to Chandler and Gorsky; what is new here is its equivalence with the parity of the refined BPS invariants and the list up to $11$ crossings.
+
+# Two boxes {#sec-two}
+
+For hyperbolic knots the inputs of this section are the conjectural formulas of §[-@sec-conj-inputs], and all statements about them are statements given these formulas. KN [@Kameyama17] computed the two-box invariants for several twist and pretzel knots with the GNSSS formulas and observed that they fit the form ([-@eq-hat-f-2]). What is new in Theorems [-@thm-twist] and [-@thm-pretzel] is the proof of positivity for whole families. For torus knots and algebraic cables the inputs are the defined refined invariants.
+
+## Exponential growth as a necessary condition
+
+::: {#prp-two-necessary}
+Let the inputs $\mathrm{rCS}_{\ydA}$ and $\mathrm{rCS}_{\ydB}$ have non-negative coefficients and only even exponents of $\mathbf{q}$ in bold variables. If $\widehat{f}_{\ydB}$ is a Laurent polynomial, then $\mathrm{rCS}_{\ydB}|_{q=1}=\bigl(\mathrm{rCS}_{\ydA}|_{q=1}\bigr)^2$. In particular, if the inputs are Poincaré polynomials of homology groups $H^{\ydA}$ and $H^{\ydB}$, then $\dim H^{\ydB}=(\dim H^{\ydA})^2$. The same holds for $\ydAA$ at $t=1$. The condition does not depend on the framing $x$.
+:::
+
+::: {.proof}
+Write $(A,Q,T)=(a,q,t)^{1/2}$. Restricted to $Q=1$, the numerator of the two-box formula is, for both $\rho=\ydB$ and $\rho=\ydAA$, $$2T(A^2-1)^2(T^4-1)\bigl(\mathrm{rCS}_{\ydA}^2-\mathrm{rCS}_{\ydB}\bigr);$$ the terms with $\mathrm{rCS}_{\ydAA}$ and with the Adams image $\mathrm{rCS}_{\ydA}(a^2,q^2,t^2)$ drop out (at $T=1$ the roles of $\ydB$ and $\ydAA$ are exchanged). The denominator vanishes at $Q=1$, so the Laurent property requires $\mathrm{rCS}_{\ydB}=\mathrm{rCS}_{\ydA}^2$ at $Q=1$. Now $Q=1$ means $\mathbf{t}=-\mathbf{q}^{-1}$, under which $\mathbf{a}^i\mathbf{q}^j\mathbf{t}^k\mapsto(-1)^k\mathbf{a}^i\mathbf{q}^{j-k}$. If $j$ is even then $(-1)^k=(-1)^{j-k}$, so after the further substitution $\mathbf{q}\mapsto-\mathbf{q}$ all coefficients are non-negative and no cancellation occurs. Setting $\mathbf{a}=\mathbf{q}=1$ gives the equality of dimensions. Independence of $x$ is Proposition [-@prp-x-indep].
+:::
+
+For $\mathbf{9_{42}}$ one has $\dim H^{\ydA}=9$ and $\dim H^{\ydB}=401\neq81$ [@Gorsky13], so it cannot fit the KN form for any choice of the $t_c$-grading. That $\mathbf{9_{42}}$ does not fit was pointed out by KN and related there to the failure of exponential growth for thick homology ([@Gukov11], Appendix B); exponential growth itself is discussed in [@Gukov11; @Fuji12]. Proposition [-@prp-two-necessary] shows that it is a necessary condition for the Laurent property.
+
+## Twist knots
+
+Let $K_p=K_{p,1}$ be the twist knots in the convention of KNTZ [@Kameyama19], which is also that of GNSSS [@Gukov15]: $K_1=\mathbf{3_1}$, $K_2=\mathbf{5_2}$, $K_{-1}=\mathbf{4_1}$, $K_{-2}=\mathbf{6_1}$. Put $X=\mathbf{a}^2\mathbf{t}^2$, $Y=\mathbf{a}^4\mathbf{q}^4\mathbf{t}^8$ and $\bar Y=\mathbf{a}^4\mathbf{q}^{-4}\mathbf{t}^4$.
+
+::: {#lem-twist-expsum}
+For $|\rho|=2$, $\widehat{f}_\rho(K_p)$ is an exponential polynomial in $p$ with bases $\{1,X,X^2,Y,\bar Y\}$ for $p>0$; for $p<0$ the bases are inverted and there is an overall factor $\mathbf{t}^2$.
+:::
+
+::: {.proof}
+In the KNTZ formulas $p$ enters only through the twist factors $\mathbf{Tw}^{(p)}_\lambda$ with $\lambda\subseteq\ydB$ or $\lambda\subseteq\ydAA$, as the $p$-th power of an eigenvalue, which in bold variables is $\bigl((\mathbf{a}\mathbf{t})^{2j}(\mathbf{t}\mathbf{q})^{2j(j-1)}\bigr)^p$ with $j=0,1,2$ (the GNSSS formulas have the same form). Thus the bases of the inputs are $\{1,X\}$ for $\ydA$, $\{1,X,Y\}$ for $\ydB$ and $\{1,X,\bar Y\}$ for $\ydAA$, and $\widehat{f}$ is a linear combination of products and Adams images of the inputs divided by a denominator independent of $p$.
+:::
+
+::: {#thm-twist}
+## computer-assisted
+
+With the refined formulas of KNTZ as input, $\widehat{f}_{\ydB}(K_p)$ and $\widehat{f}_{\ydAA}(K_p)$ are positive for all $p\neq0$.
+:::
+
+::: {.proof name="Sketch of proof"}
+We apply the Newton criterion of §[-@sec-newton] in the variable $n=|p|-1$ with the ordering $(m_0,\dots,m_4)=(1,X,X^2,Y,\bar Y)$: $s_{1+n}=\sum_{k=0}^{4}c_k\,h_{n-k}(m_0,\dots,m_k)$, where $s_{|p|}$ denotes the value at $p$. The $c_k$ are integer linear combinations of $s_1,\dots,s_5$ and hence Laurent polynomials. For both $\rho$ and both signs of $p$, an exact computation shows that all coefficients of $c_0,\dots,c_4$ have a common sign. Since the coefficients of $h$ are non-negative, the spin form has a uniform sign for all $p$. The involution $\sigma$ preserves the set of bases (it exchanges $Y$ and $\bar Y$), so $\sigma$-invariance for $|p|\le5$ implies it for all $p$, and Lemma [-@lem-G] gives the genus form. The coefficients $c_k$ and the data of the checks are part of the accompanying data (Appendix [D](#sec-app-data)).
+
+A second proof expresses $-\widehat{f}_\rho(K_{\pm n})$ as a non-negative combination of complete homogeneous symmetric polynomials of subsets of the bases; the certificate was found by linear programming and verified in exact rational arithmetic. This proof does not use the sign of $c_2$, for which we have no structural explanation.
+:::
+
+::: {#exr-unlabeled-3}
+For $|p|\le30$ ($120$ cases) there are no negative terms in either form. The Newton expansion in the proof of Theorem [-@thm-twist], whose coefficients $c_k$ are built from $|p|\le5$, agrees in all coefficients with the direct computation at $|p|=6,\dots,12,15,20,30$, which were not used in its construction.
+:::
+
+This Newton expansion also exhibits unimodality. In terms of $v=\mathbf{q}^2\mathbf{t}$, the coefficients $c_3$ and $c_4$ are positive for structural reasons, and $\widehat{f}(K_p)$ is for all $p$ a positive combination of $\mathfrak{sl}_2$ characters in $v$, hence unimodal (for $c_0,c_1,c_2$ this is a finite check). For $\ydA$ unimodality follows for all knots from the hard Lefschetz property of [@Gorsky21]. We do not know a structural reason for two boxes.
+
+## Double twist knots
+
+::: {#thm-pretzel}
+## computer-assisted
+
+With the refined formulas of KNTZ as input, the two-box invariants of the double twist knots $K_{m,n}$ are positive (i) for all $(m,n)$ with $m$ and $n$ of the same sign, and (ii) for all $(m,n)$ with $m<0<n$ and $\min(|m|,n)\le20$.
+:::
+
+::: {.proof name="Sketch of proof"}
+With $\epsilon=(\mathrm{sign}\,m+\mathrm{sign}\,n)/2$ write $\widehat{f}(K_{m,n})=\mathbf{t}^{2(1-\epsilon)}F(m,n)$; then $F$ is a single exponential polynomial on all of $\mathbb{Z}^2$. In the same-sign quadrants all coefficients of the two-variable Newton expansion have a common sign. In the opposite-sign quadrant the two-variable expansion is not uniform, and we use the one-variable Newton criterion along each line with $\min(|m|,n)\le20$.
+:::
+
+::: {#exr-unlabeled-4}
+At the $820$ points with $|m|,|n|\le20$ and at $200$ points with $21\le|m|\le30$, $21\le n\le40$, there are no negative terms in either form, for both $\rho$.
+:::
+
+For the remaining opposite-sign region $|m|,n>20$ we have a partial reduction (a decomposition into wedges and a mirror-type identity, with linear-programming certificates for the Newton coefficients in the wedge direction). It leaves the non-positivity of three one-variable sequences (the diagonal $F(-u,u)$ and one Newton coefficient $d_1(u)$ for each $\rho$), which holds for $u\le25$ but is not proved in general.
+
+## Thick non-torus knots
+
+::: {#exr-thick}
+With the inputs for $\ydB$ and $\ydAA$ constructed from the quiver of Stošić and the KRSS formula, the two-box invariants of $\mathbf{10_{139}}$ and $\mathbf{10_{152}}$ are positive. The dimensions are $441=21^2$ and $841=29^2$, in accordance with Proposition [-@prp-two-necessary]. At $t=q$ the inputs agree with the colored HOMFLY-PT polynomials for $\ydB$ and $\ydAA$ obtained by solving from the $(2,s)$-cables.
+:::
+
+These are thick non-torus knots that satisfy the necessary condition and are positive. This does not follow from the positivity of the DT invariants in the knots--quivers correspondence: the quiver series involves only symmetric representations, whereas $\widehat{f}_{\ydB}$ and $\widehat{f}_{\ydAA}$ require the input for $\ydAA$. Nor is positivity automatic for a given knot: it depends on the fine gradings of the input. For $\mathbf{5_2}$, we generated twelve alternative assignments of the $t_c$-grading for which the input is non-negative, $\widehat{f}$ is a Laurent polynomial and the genus expansion closes; each of them produces negative terms.
+
+## All framings
+
+::: {#thm-two-all-x}
+## computer-assisted
+
+For the unknot, $T_{2,3}$, $T_{2,5}$, $T_{2,7}$, $T_{3,4}$, $\mathbf{4_1}$, $K1$ and $K3$, the two-box invariants $\widehat{f}^{(x)}_{\ydB}$ and $\widehat{f}^{(x)}_{\ydAA}$ are positive for all $x\in\mathbb{Z}$. The input for $\mathbf{4_1}$ is the KN data.
+:::
+
+::: {.proof}
+By the Newton criterion of §[-@sec-newton]. For each knot, each $\rho$ and each of the four combinations of parity and direction of $x$ there is a starting point $x_0$ from which the Newton coefficients have a common sign; the $x$ between $x_0$ and $0$ were checked directly.
+:::
+
+The starting point in the negative direction moves away from $0$ as the knot becomes more complicated ($-(2k+2)$ for $T_{2,2k+1}$, $-20$ for $K1$, $-22$ for $K3$). We do not know the meaning of this.
+
+::: {#thm-twist-x}
+## computer-assisted
+
+With the refined formulas of KNTZ as input, the two-box invariants of the twist knots are positive for all $(p,x)$ with $p>0$, $x\ge0$ or $p<0$, $x\le0$.
+:::
+
+::: {.proof name="Sketch of proof"}
+$\mathbf{t}^{-2x}\widehat{f}^{(x)}_\rho(K_p)$ is an exponential polynomial in both $p$ and $x$ (Lemma [-@lem-twist-expsum], Proposition [-@prp-expsum]). The coefficients of the tensor-product Newton expansion, built from $|p|=1,\dots,5$ and three values of $x$, have a common sign in these directions.
+:::
+
+::: {#exr-unlabeled-5}
+The $696$ cases with $|p|\le6$, $|x|\le14$ (both $\rho$ and all signs of $p$ and $x$) have no negative terms. Of these, $336$ lie in the opposite-sign region, for which we have no certificate.
+:::
+
+Direct checks over ranges of framings for knots with up to three boxes are collected in §[-@sec-three-x].
+
+# Three boxes {#sec-three}
+
+Three boxes require the non-rectangular color $\ydBA$. A refined invariant $\mathrm{rCS}_{\ydBA}$ is available by definition for torus knots and iterated torus knots, through the elliptic Hall algebra and the DAHA. The main results of this section concern these knots.
+
+## Torus knots and algebraic iterated torus knots
+
+::: {#exr-three}
+For the $15$ knots of Table [-@tbl-three], with the normalization (N1)(N2$'$) of §[-@sec-normalization] and at framing zero, $\widehat{f}_\rho$ is positive for all six $\rho$ with $|\rho|\le3$: with one overall sign for each $\rho$, the spin form $\widehat{\mathbf{N}}_{\rho;i,j,k}$ and the genus form $\widehat{\mathbf{N}}_{\rho,g,\beta,F}$ consist of non-negative integers. The list consists of seven torus knots, seven algebraic iterated torus knots, and $\mathbf{4_1}$.
+:::
+
+  Knot             Class        $\ydA$   $\ydB$   $\ydAA$   $\ydC$    $\ydBA$   $\ydAAA$
+  ---------------- ----------- ----------- ----------- ------------- ------------ ------------- ---------------
+  $T_{2,3}$        torus           (6)         (26)         (41)         (128)        (236)          (282)
+  $T_{2,5}$        torus           (10)       (112)        (144)         (753)        (986)          (1083)
+  $T_{3,4}$        torus           (21)       (429)        (504)        (3249)        (3802)         (4053)
+  $T_{3,5}$        torus           (30)       (766)        (867)        (5831)        (6559)         (6890)
+  $T_{2,11}$       torus           (22)       (733)        (813)        (5667)        (6260)         (6519)
+  $T_{3,7}$        torus           (53)       (1797)       (1953)       (13600)      (14696)        (15199)
+  $T_{4,5}$        torus           (68)       (2356)       (2558)       (18729)      (20195)        (20883)
+  $K1$             algebraic      (104)       (4141)       (4414)       (32732)      (34655)        (35558)
+  $K3$             algebraic      (122)       (5178)       (5483)       (41138)      (43289)        (44300)
+  $K6a$            algebraic      (275)      (12784)      (13267)      (100115)      (103458)       (105035)
+  $K9$             algebraic      (564)      (28584)      (29309)      (224004)      (228995)       (231354)
+  $K8$             algebraic      (617)      (31499)      (32427)      (251627)      (258022)       (261098)
+  $K7$             algebraic      (834)      (43533)      (44631)      (343739)      (351218)       (354818)
+  $K10$            algebraic      (4119)     (227727)     (230642)     (1805429)    (1825082)      (1834640)
+  $\mathbf{4_1}$   KN              (10)        (42)         (42)         (223)        (264)          (223)
+
+  : Tests up to three boxes at framing zero. A check mark means that there are no negative terms in the spin form and in the genus form; the number in parentheses is the number of terms of the spin form. The rows $T_{2,3}$, $T_{2,5}$ and $\mathbf{4_1}$ reproduce tables of KN; for $\mathbf{4_1}$ with $\ydBA$ the KN candidate is used. {#tbl-three}
+
+The five torus knots not in the tables of KN ($T_{3,4}$ with three boxes, $T_{3,5}$, $T_{2,11}$, $T_{3,7}$, $T_{4,5}$) are new tables, but since KN conjecture positivity for all torus knots they are further checks of that conjecture. The three-box results for the seven algebraic iterated torus knots are, to our knowledge, not in the literature. For the three-strand cable $K7$ and the two-step iteration $K10$ even the refined invariants with $|\lambda|=3$ seem to be new; Cherednik and Danilenko [@Cherednik14] give $\ydA$ for $K7$ and the DAHA--Betti polynomial for $K10$.
+
+Since the DAHA and the elliptic Hall algebra determine the values only up to a monomial, the tests for knots not in the KN data depend on the normalization (N2$'$). For the cables this rule is Hypothesis [-@exm-N2], and the dependence is confined to its single point, the color-dependent power $(q/t)^{c_\lambda}$ not determined at $t=q$. Shifting the reference framing by an even integer is a shift of $x$ (Proposition [-@prp-N2-framing]), and such shifts are covered by the framing scans of §[-@sec-three-x]. Other assignments destroy the Laurent property and the transposition symmetry in the example $K5c$.
+
+The input $\mathrm{rCS}_{\ydBA}$ has negative coefficients, while $\widehat{f}_{\ydBA}$ is positive. For torus knots this was pointed out by KN [@Kameyama17] (see also the examples of Cherednik [@Cherednik11]); our results show that it persists for algebraic iterated torus knots. Positivity for three boxes does not follow directly from positivity of the input; it appears only after the extraction of KN (plethystic logarithm and the matrix $M$).
+
+## Framing scans {#sec-three-x}
+
+::: {#exr-framing-batch}
+## Direct checks over framings
+
+In the $1821$ cases (pairs $(x,\rho)$ for a given knot) listed in Table [-@tbl-framing] there are no negative terms in the spin form or in the genus form; in nine cases, all for the unknot, $\widehat{f}=0$. The largest example is $K10$ with three boxes at $x=2$, with about $1.89$ million terms in the spin form.
+:::
+
+  Knot                                           $|\rho|=1$   $|\rho|=2$       $|\rho|=3$         cases     negative (spin/genus)
+  --------------------------------------------- ------------ ------------ --------------------- ---------- -----------------------
+  unknot                                         $|x|\le6$    $|x|\le6$         $|x|\le6$           78               0/0
+  $T_{2,3}$                                      $|x|\le6$    $|x|\le6$         $|x|\le6$           78               0/0
+  $T_{2,5}$, $\mathbf{4_1}$                      $|x|\le4$    $|x|\le4$         $|x|\le4$        each 54             0/0
+  $T_{2,7}$, $T_{3,4}$                           $|x|\le3$    $|x|\le3$         $|x|\le3$        each 42             0/0
+  $T_{3,5}$, $T_{2,11}$, $T_{3,7}$, $T_{4,5}$    $|x|\le10$   $|x|\le10$       $|x|\le10$        each 126            0/0
+  $K1$                                           $|x|\le2$    $|x|\le2$    $|x|\le2$, $x=\pm6$      36               0/0
+  $K3$                                           $|x|\le2$    $|x|\le2$         $|x|\le2$           30               0/0
+  $K6a$, $K7$, $K8$, $K9$                        $|x|\le10$   $|x|\le10$       $|x|\le10$        each 126            0/0
+  $K10$                                          $|x|\le10$   $|x|\le10$        $|x|\le2$           75               0/0
+  $K_p$ ($1\le|p|\le6$)                          $|x|\le4$    $|x|\le4$            --            each 27             0/0
+
+  : Framing scans. The columns $|\rho|=1,2,3$ give the range of framings $x$ examined; "cases" is the number of pairs $(x,\rho)$ tested ("each" means per knot; the case $x=0$ of $K10$ with three boxes belongs to Table [-@tbl-three] and is not counted here); the last column is the total number of negative terms in the spin form and in the genus form. {#tbl-framing}
+
+In particular, for all knots of Table [-@tbl-three] the three-box invariants remain positive for $x\neq0$ in the ranges shown. The torus knot $T_{2,7}$ does not appear in Table [-@tbl-three]; its test at framing zero for $|\rho|\le3$ is part of the scan of Table [-@tbl-framing], which includes $x=0$. For the cables the scans assume Hypothesis [-@exm-N2], as does Computational Result [-@exr-three]. The number of terms grows with positive $x$ and decreases with negative $x$ (for $K10$ with $\rho=\ydC$, about $1.75$ million terms at $x=-2$ and about $1.86$ million at $x=2$). For three boxes $\mathbf{t}^{-3x}\widehat{f}^{(x)}_\rho$ is an exponential polynomial with seven bases (Proposition [-@prp-expsum]), but we did not find an ordering of the bases for which the Newton coefficients have a uniform sign, so we have no proof for all $x$.
+
+## Conjectures {#sec-conj}
+
+The evidence of §[-@sec-one]--§[-@sec-higher] and the picture of §[-@sec-physics] lead us to the following conjectures.
+
+::: {#cnj-A}
+## Framed torus knots
+
+For every torus knot $T_{m,n}$, every framing $x\in\mathbb{Z}$ and every partition $\rho$, the framed refined LMOV generating function $\widehat{f}^{(x)}_\rho(T_{m,n})$ is positive in the sense of Definition [-@def-positivity]: for one overall sign, the spin form $\widehat{\mathbf{N}}^{(x)}_{\rho;i,j,k}$ and the genus form $\widehat{\mathbf{N}}^{(x)}_{\rho,g,\beta,F}$ are non-negative integers.
+:::
+
+::: {#cnj-B}
+## Algebraic iterated torus knots
+
+For every algebraic iterated torus knot, with the refined invariants defined by the DAHA and normalized by (N1)(N2$'$), $\widehat{f}^{(x)}_\rho$ is positive for every framing $x\in\mathbb{Z}$ and every partition $\rho$.
+:::
+
+At $x=0$, Conjecture [-@cnj-A] is part of the conjecture of KN. We do not formulate a conjecture for general knots with homological input: for $\rho=\ydA$ positivity is a theorem (Corollary [-@cor-one]), for two boxes the knot must satisfy the exponential growth property (Proposition [-@prp-two-necessary]), which excludes $\mathbf{9_{42}}$, and for non-rectangular $\rho$ there is no homological input to speak of. For the twist and double twist knots, Theorems [-@thm-twist]--[-@thm-twist-x] support positivity of two boxes at all framings, given the conjectural input.
+
+The motivation for Conjecture [-@cnj-B] is different from that for torus knots. The physical argument of KN obtains the additional $U(1)_R$ symmetry from the Seifert structure. The complement of an algebraic iterated torus knot is in general not a Seifert manifold, so the argument does not apply directly. The motivation comes instead from two conjectures of Cherednik and Danilenko [@Cherednik14]. Their positivity conjecture states that for algebraic knots and rectangular Young diagrams all coefficients of the DAHA superpolynomial are positive. Their Connection Conjecture (ii) states that for uncolored knots with this positivity property (called pseudo-algebraic) the DAHA superpolynomial coincides with the tilde-normalized reduced stable Khovanov--Rozansky polynomial [@Khovanov05].
+
+For $\ydA$, positivity follows from the Connection Conjecture (ii) and Proposition [-@prp-one]. Indeed, under this conjecture the DAHA value for $\ydA$ is a monomial multiple $m\,P_{\mathrm{KhR}}$ of the Poincaré polynomial of Khovanov--Rozansky homology. By (N1) both give the same reduced HOMFLY-PT polynomial at $\mathbf{t}=-1$, so $m=\pm\mathbf{t}^k$ with $\pm(-1)^k=1$; since both have non-negative coefficients, $m=\mathbf{t}^{2l}$. As $\mathbf{t}^{2l}$ is $\sigma$-invariant, Proposition [-@prp-one] applies and positivity for $\ydA$ follows. For rectangular colors, Cherednik and Danilenko conjecture positivity of the DAHA values and expect agreement with homology; the rectangular part of Conjecture [-@cnj-B] transfers this to the level of BPS invariants. For $\ydBA$, on the other hand, Cherednik and Danilenko make no positivity claim, so that positivity at the level of BPS invariants lies outside their conjectures. As for the restriction to algebraic knots, Cherednik and Danilenko note that there are non-algebraic iterated torus knots without positivity, and for most of the non-algebraic cables that we computed, negative coefficients appear already in the DAHA value for $\ydA$ (Appendix [C](#sec-app-nonalg)).
+
+## Non-rectangular colors for hyperbolic knots {#sec-21}
+
+For hyperbolic knots there is no definition-based refined invariant for $\ydBA$, either in the literature or in software. We examined whether structural conditions can determine it.
+
+Working knot by knot, we imposed the colored HOMFLY-PT polynomial for $\ydBA$ at $t=q$ (obtained from three-strand cables), the mirror symmetry, exponential growth, the reduction to $U(2)$, the Laurent property of the three-box $\widehat{f}$, and the closure of the genus expansion. These conditions do not determine $\mathrm{rCS}_{\ydBA}$ uniquely: the difference of two solutions has the form of a knot-independent factor times a free polynomial. The existence of an ambiguity was already noted by Anokhina et al. [@Anokhina12]. One can still ask whether the conditions admit a solution compatible with positivity. An integral $\mathrm{rCS}_{\ydBA}$ satisfying positivity exists for $\mathbf{4_1}$ (the KN candidate) and for $\mathbf{6_1}$ (a solution with $813$ terms). For $\mathbf{5_2}$ we found only rational solutions; the existence of an integral solution is undecided. This is not a test of the conjecture, only a check that it is not contradicted.
+
+We also considered families of knots. At $t=q$, the formula of Morozov [@Morozov16; @Morozov19] for double twist knots colored by $\ydBA$ agrees with the values from cables; this is a check of a known formula. For refined rectangular colors we implemented the KNTZ formulas and compared them with the GNSSS formulas and with the elliptic Hall algebra values for the trefoil up to $\ydBB$. The refined $\ydBA$, however, is not determined uniquely even under assumptions on the structure of the family. Three boxes for hyperbolic knots therefore require a definition of the refined invariant for $\ydBA$; candidates are discussed in §[-@sec-discussion].
+
+# Four boxes and beyond {#sec-higher}
+
+The tables of KN stop at three boxes. For torus knots, for which the refined invariants are defined, we test all $\rho$ with $4\le|\rho|\le9$, in ranges depending on the knot. We also describe a weak test for $\mathbf{4_1}$ with four boxes in which the unknown $\mathrm{rCS}_{\ydCA}$ is constrained, and analyze the structure of the KN candidate for $\ydBA$. Everything in this section is at framing zero.
+
+## Computing $\widehat{f}_\rho$ for any number of boxes
+
+The matrix $M(t)$ in the relation ([-@eq-f-to-hatf]) is written explicitly in KN for $|\mu|\le3$. For general size we use the following diagonalization.
+
+::: {#lem-M-diag}
+For $|\mu|=|\rho|=n$, the matrix $M_{\mu\rho}(t)=\sum_\sigma C_{\mu\sigma\rho}B_\sigma(t)$ is the matrix of the Kronecker product with $B(t)=\sum_\sigma B_\sigma(t)s_\sigma$, where $C_{\mu\sigma\rho}$ are the Kronecker coefficients. It is diagonal in the basis of characters of the symmetric group: $$\sum_\mu M_{\mu\rho}(t)\,\chi_\mu(\kappa)=B(\kappa)\,\chi_\rho(\kappa),\qquad
+B(\kappa)=t^{-\frac{n-1}2}\,\frac{\prod_i(1-t^{\kappa_i})}{1-t},$$ where $\kappa$ runs over conjugacy classes (partitions of $n$).
+:::
+
+::: {.proof}
+By $C_{\mu\sigma\rho}=\sum_\nu z_\nu^{-1}\chi_\mu(\nu)\chi_\sigma(\nu)\chi_\rho(\nu)$ and the orthogonality of characters, the left-hand side equals $\chi_\rho(\kappa)\sum_\sigma B_\sigma(t)\chi_\sigma(\kappa)$. $B_\sigma$ is non-zero only for hooks $\sigma=(n-d,1^d)$, where it equals $(-t)^d t^{-(n-1)/2}$, and $\sum_{d}(-u)^d s_{(n-d,1^d)}=\sum_\kappa z_\kappa^{-1}p_\kappa\prod_i(1-u^{\kappa_i})/(1-u)$.
+:::
+
+Hence $\widehat{f}_\rho$ is obtained by dividing the coefficients of $f^q$ in the power-sum basis by $B(\kappa)$ and returning to the Schur basis with the characters. The plethystic logarithm is computed at each evaluation point by a degree-by-degree recursion in the power-sum basis. The invariants $\mathrm{rCS}_\lambda$ are the elliptic Hall algebra values multiplied by the closed normalization $M_\lambda=M_\square^{|\lambda|}T_\lambda^{mn}$ of Computational Result [-@exr-M]. This procedure reproduces in all coefficients the three-box $\widehat{f}_\rho$ computed with the explicit formulas (for $T_{2,3}$ and $T_{3,4}$, all six $\rho$), and the consistency relation $f^{\bar t}=M(q^{-1})\widehat{f}$ holds at all evaluation points.
+
+## Torus knots
+
+::: {#exr-higher}
+For the eight torus knots and the numbers of boxes in Table [-@tbl-higher], $\widehat{f}_\rho$ is positive for all $\rho$ at framing zero. The number of pairs $(K,\rho)$ with $|\rho|\ge4$ tested is $340$.
+:::
+
+  Knot         $|\rho|$    cases   terms (largest $|\rho|$)
+  ----------- ---------- ------- --------------------------
+  $T_{2,3}$    $4$--$9$       90                    1786668
+  $T_{2,5}$    $4$--$8$       60                    2880410
+  $T_{2,7}$    $4$--$8$       60                    6556642
+  $T_{2,9}$    $4$--$8$       60                   11740842
+  $T_{3,4}$    $4$--$6$       23                    1358553
+  $T_{3,5}$    $4$--$6$       23                    2336943
+  $T_{3,7}$    $4$--$5$       12                    1307758
+  $T_{4,5}$    $4$--$5$       12                    1848265
+
+  : Tests with four or more boxes at framing zero. "Cases" is the total number of $\rho$ tested; "terms" is the sum over $\rho$ of the numbers of terms of the spin form at the largest number of boxes. There are no negative terms in the spin form or in the genus form. {#tbl-higher}
+
+The ranges were chosen as follows. At four boxes the non-hook color $\ydBB$ and the Adams images $(a,q,t)\mapsto(a^2,q^2,t^2)$ of $\ydB$ and $\ydAA$ enter $\widehat{f}_\rho$ for the first time. At six boxes the Adams operations with $d=2,3,6$ have appeared for all colors with at most three boxes. From seven boxes on no new type of term appears and only the size grows. The knots were chosen by the number of strands, i.e. the width in the $a$-degree: $T_{2,2k+1}$ are thin, $T_{3,n}$ are thick of width $2$, and $T_{4,5}$ has width $3$. The overall sign was $-1$ for $|\rho|\equiv2\pmod4$ and $+1$ otherwise, uniformly for all $\rho$ with the same number of boxes. For odd $|\rho|$ the half-integer shift of the $a$-degree is the periodic continuation of the convention of KN for $|\rho|=1,3$; it shifts $\beta$ uniformly and does not affect positivity. The coefficients of the genus form grow rapidly with the number of boxes: up to about $10^{30}$ for $T_{2,3}$ with nine boxes, and already about $10^{21}$ for $T_{4,5}$ with three boxes.
+
+## A weak test for the figure-eight knot with four boxes {#sec-fig8-four}
+
+For $\mathbf{4_1}$ with four boxes the rectangular inputs $\ydD$, $\ydBB$, $\ydAAAA$ come from the refined formulas of KNTZ [@Kameyama19]; they agree in all coefficients with the values of KN for $\ydA$ to $\ydAAA$ and with the GNSSS formulas for the symmetric colors $[r]$, $r\le4$. For $\ydBA$ we use the KN candidate. The refined value for $\ydCA$, and for its transpose $\ydBAA$, is not in the literature. We therefore treat the coefficients of $\mathrm{rCS}_{\ydCA}$ as unknowns subject to the following linear conditions:
+
+- at $t=q$ it equals the differential expansion of Morozov [@Morozov16] for $\ydCA$ (for $\mathbf{4_1}$, a sum of $Z$-factors);
+
+- transposition, $\mathrm{rCS}_{\ydBAA}(a,q,t)=\mathrm{rCS}_{\ydCA}(a,t^{-1},q^{-1})$, and amphichirality;
+
+- exponential growth: it equals $\mathrm{rCS}_{\ydAA}\mathrm{rCS}_{\ydA}^2$ at $q=1$ and $\mathrm{rCS}_{\ydC}\mathrm{rCS}_{\ydA}$ at $t=1$;
+
+- at $a=t^2$ it equals $\mathrm{rCS}_{\ydB}\mathrm{rCS}_{\ydAA}$ (reduction to $U(2)$; a hypothesis);
+
+- all $\widehat{f}_\rho$ with $|\rho|=4$ are Laurent polynomials, the genus expansion closes, and they are positive.
+
+Since $\widehat{f}_\rho$ is linear in $\mathrm{rCS}_{\ydCA}$, with a denominator depending only on $q,t$, these are conditions of a linear program.
+
+::: {#exr-fig8-four}
+With the unknowns restricted to $2367$ monomials determined from the values at the specializations, the following hold. With overall sign $-1$ the problem is infeasible, already with positivity of the spin form alone. With overall sign $+1$ there exists a rational solution for which both forms are non-negative. The existence of an integral solution is undecided (Appendix [A](#sec-app-computation)).
+:::
+
+This is not a test of the conjecture; it only shows that, over the rationals, an $\mathrm{rCS}_{\ydCA}$ compatible with the conjecture exists at four boxes. The conclusion depends on the KN candidate for $\ydBA$, on the $U(2)$ hypothesis, and on the range of unknowns. The formulation was checked on $T_{2,3}$, for which $\mathrm{rCS}_{\ydCA}$ is known from the elliptic Hall algebra: the true value satisfies all conditions and lies in the range of unknowns, and the $\widehat{f}_\rho$ assembled from it agree with the direct computation.
+
+## The structure of the KN candidate for $\ydBA$ {#sec-fig8-21}
+
+KN state that their candidate for $\mathbf{4_1}$ colored by $\ydBA$ was found by imposing mirror symmetry, exponential growth and amphichirality [@Kameyama17]. It can be written in terms of the $Z$-factor expansion of Anokhina et al. [@Anokhina12]. Let $(A,Q,T)=(a,q,t)^{1/2}$, $\{z\}=z-z^{-1}$ and $\mathfrak{Z}_{I|J}^{(s|\sigma)}=\{AQ^{I+s}T^{-\sigma}\}\{AQ^sT^{-J-\sigma}\}$, with $\mathfrak{Z}_{I|J}=\mathfrak{Z}_{I|J}^{(0|0)}$.
+
+::: {#exr-fig8-21}
+The KN candidate equals $$\begin{multline*}
+1+\bigl(\mathfrak{Z}^{(-1|-1)}_{3|3}+\mathfrak{Z}^{(1|0)}_{1|1}+\mathfrak{Z}^{(0|1)}_{1|1}\bigr)
++\bigl(\mathfrak{Z}^{(0|-1)}_{3|3}\mathfrak{Z}^{(1|0)}_{1|1}+\mathfrak{Z}^{(-1|0)}_{3|3}\mathfrak{Z}^{(0|1)}_{1|1}+\alpha\,\mathfrak{Z}^{(1|0)}_{1|1}\mathfrak{Z}^{(0|1)}_{1|1}\bigr)\\
++\mathfrak{Z}_{3|3}\mathfrak{Z}^{(1|0)}_{1|1}\mathfrak{Z}^{(0|1)}_{1|1}
+\end{multline*}$$ with $\alpha=1-\{Q\}\{T\}$. Anokhina et al. take the same expression with $\alpha=1-(Q-T^{-1})(T-Q^{-1})$ and obtain a superpolynomial with all coefficients positive. In bold variables the KN candidate has $69$ terms of which $10$ are negative, and its value at $\mathbf{a}=\mathbf{q}=\mathbf{t}=1$ is $125=5^3$, the cube of the value for $\ydA$; for the expression of Anokhina et al. the value is $189$.
+:::
+
+At $t=q$ both choices of $\alpha$ reduce to $1-(Q-Q^{-1})^2$. Thus the KN candidate corresponds to imposing exponential growth instead of positivity of the superpolynomial.
+
+We also examined the condition of Heegaard--Floer type proposed by Anokhina et al. for hook colors $\lambda=[r,1^{s-1}]$: $$
+\mathrm{rCS}_\lambda\bigl(A=T/Q\,\big|\,Q,T\bigr)=\mathrm{rCS}_{\ydA}\bigl(A=T/Q\,\big|\,Q^rT^{s-1},\,T^sQ^{r-1}\bigr).
+$$ {#eq-HF}
+
+::: {#exr-HF}
+([-@eq-HF]) holds for $\mathbf{4_1}$ with $\ydBA$, both for the KN candidate and for the expression of Anokhina et al. For the elliptic Hall algebra values of $T_{2,3}$, $T_{2,5}$, $T_{3,4}$ with $\ydBA$ and $\ydCA$ it holds up to the monomial $(T/Q)^{\delta(|\lambda|-1)}$.
+:::
+
+Condition ([-@eq-HF]) is a linear condition that was not included in the linear program above.
+
+Finally, we tried to extend the method of KN to $\ydCA$ by decomposing the value of Morozov at $t=q$ into the form of Anokhina et al.: one product of shifted $Z$-factors for each subset of boxes, with corrections of the coefficients only for disconnected subsets. For $\ydBA$ this search reproduces the expansion of Anokhina et al. as the unique solution. For $\ydCA$ there is no decomposition of this form with shifts $|k|\le2$, and none in which the shifts are sums of contributions of pairs of boxes. The color $\ydCA$ seems to require structure beyond products over subsets.
+
+# Discussion {#sec-discussion}
+
+We extended the refined large $N$ duality of KN to framed knots and tested the positivity of the spin form and the genus form of the refined LMOV invariants. With defined inputs (torus knots and algebraic iterated torus knots) no negative term was found in any case examined, up to three boxes for cables, up to between five and nine boxes for torus knots (Table [-@tbl-higher]), and over ranges of framings. For the cables this holds under the normalization hypothesis (Hypothesis [-@exm-N2]). With homological or conjectural inputs, positivity is a theorem for $\ydA$ and is proved for families of twist and double twist knots for two boxes.
+
+For individual knots the exponential-polynomial structure in $x$ and the Newton criterion reduce positivity for all $x$ to finitely many checks (Theorem [-@thm-two-all-x]). This is a knot-by-knot argument and not a theorem for general knots. It is open whether the positivity of the Newton coefficients can be derived from properties of the input such as non-negativity and $\sigma$-invariance of homology. Certificates are also missing for twist knots with $p$ and $x$ of opposite signs and for three boxes at all $x$. We did not compare the framed unknot with the refined open BPS invariants of toric branes of Cheng and Sułkowski [@Cheng21]. On the physical side, we showed that the Mariño--Vafa sign is necessary for the Laurent property (Proposition [-@prp-sign]), but we did not derive the refined shift of the flat coordinate, $V\mapsto-(q/t)^{1/2}V$, from geometry. That $U(1)_R$ acts trivially on the string side independently of the framing also remains an assumption.
+
+Three boxes for hyperbolic knots require a definition of the refined invariant for $\ydBA$. We see three candidates: a construction through refined Racah matrices (a refinement of the arborescent calculus [@Mironov16]); an extension of the DAHA or elliptic Hall algebra definition to hyperbolic knots (the genus-two DAHA is so far limited to $\mathfrak{sl}_2$ [@Arthamonov15]); and a computation of HOMFLY-PT homology colored by $\ydBA$ together with a rule converting it to $\overline{\mathrm{rCS}}$. All are beyond the scope of this paper. For $\mathbf{4_1}$ with four boxes the color $\ydCA$ poses the same problem (§[-@sec-fig8-four]). The KN candidate for $\ydBA$ fits the $Z$-factor expansion of Anokhina et al. (Computational Result [-@exr-fig8-21]), but no expansion of the same form was found for $\ydCA$. The condition ([-@eq-HF]) of Heegaard--Floer type holds for the elliptic Hall algebra values and can serve as a new constraint on $\ydCA$.
+
+The closed formula for the monomial normalization (Computational Result [-@exr-M]) was derived under the refined satellite formula (Hypothesis [-@exm-sat]). Since the DAHA and the elliptic Hall algebra do not determine the monomial, this hypothesis remains a physical assumption. For torus knots, the form of the corollary of Mellit in the standard normalization was checked by computation (Computational Result [-@exr-mellit]); an explicit identification of the operators $d_\pm$ with $Q_{m,n}$ is left open. It does not affect the positivity results.
+
+Finally, the tests for torus knots beyond three boxes are finite computations (Table [-@tbl-higher]). The coefficients of the genus form grow rapidly with the number of boxes, yet no negative term appears. A proof of positivity for all numbers of boxes from the structure of the elliptic Hall algebra is open, as are the remaining opposite-sign region for double twist knots (§[-@sec-two]) and a structural reason for the unimodality of the two-box invariants.
+
+# Acknowledgments {#acknowledgments .unnumbered}
+
+The author used Claude (Anthropic) for computations, literature search and drafting. All results, references and text were checked by the author, who takes full responsibility for the content.
+
+# Appendix A: Details of the computation {#sec-app-computation .appendix .unnumbered}
+
+The invariants $\overline{\mathrm{rCS}}_\lambda$ and $\widehat{f}_\rho$ are evaluated modulo a $31$-bit prime $p$ on a grid and interpolated in each of the variables $(A,Q,T)=(a,q,t)^{1/2}$. When coefficients exceed $p/2$, two or three primes are used and the result is reconstructed by the Chinese remainder theorem (Garner's algorithm). The polynomials obtained are checked at points not used in the interpolation. Evaluation points are stored in blocks so that a computation can be resumed.
+
+For the genus expansion we proceed as in Lemma [-@lem-G]: with $v=\mathbf{q}^2\mathbf{t}$, $w=v+v^{-1}$ and $w_0=\mathbf{t}+\mathbf{t}^{-1}$ we have $G=w-w_0$. Each coefficient of a power of $\mathbf{a}$ is rewritten as a polynomial in $w$ and expanded in powers of $G$ by Horner's scheme.
+
+For $|\rho|\ge4$, $\widehat{f}_\rho$ is computed directly at each evaluation point (§[-@sec-higher]). The variable $A$ is also evaluated numerically and interpolated as a polynomial in $a=A^2$, with a check at one point outside the range. For torus knots the parities of the exponents of $Q$ and $T$ are uniform, so we interpolate in $q=Q^2$, $t=T^2$, which reduces the number of evaluation points by a factor of four. In the elliptic Hall algebra computation, the action of the operators corresponding to the power sums and its evaluation are shared across the colors $\lambda$. With eight parallel processes, the running times for the largest number of boxes of each knot in Table [-@tbl-higher] were $428$ s for $T_{2,3}$, $299$ s for $T_{2,5}$, $1260$ s for $T_{2,7}$, $2036$ s for $T_{2,9}$, $280$ s for $T_{3,4}$, $322$ s for $T_{3,5}$, $64$ s for $T_{3,7}$ and $474$ s for $T_{4,5}$. In the weak test of §[-@sec-fig8-four], the mixed integer program with overall sign $+1$ was stopped after $50$ minutes without an integral solution, which leaves its existence undecided.
+
+The computations were done on an Apple M3 Pro with $36$ GB of memory and a Mac mini M1 with $8$ GB. The heaviest case is $K10$: $\mathrm{rCS}_{\ydC}$ took about four hours ($14440$ s) with two primes and $\mathrm{rCS}_{\ydBA}$ about two hours ($7387$ s). The three-box $\widehat{f}_\rho$ required three primes, $4050$ s and at most $17.6$ GB of memory. For $K7$ and $K8$ all colors with $|\rho|\le3$ took $12275$ s and $22853$ s, with less than $2$ GB of memory.
+
+Each stage of the implementation was tested on small inputs: the reproduction of the values of KN, of the explicit examples of Cherednik and Danilenko and of HOMFLY-PT polynomials computed from braids, the interpolation and the Chinese remainder theorem, and the agreement of two independent implementations of the genus expansion.
+
+# Appendix B: Derivation of the normalization {#sec-app-normalization .appendix .unnumbered}
+
+We give the details of the proof of Proposition [-@prp-M], first for the cabling step and then for torus knots. The framing operator $\tau:P_\mu\mapsto T_\mu P_\mu$ satisfies $\tau^jP_\lambda[p_k\mapsto P_{k(m,n)}]\cdot1=P_\lambda[p_k\mapsto P_{k(m,n+jm)}]\cdot1$ (Computational Result [-@exr-tau]). The cable construction is linear in the companion. Applying (N2$'$) to the companion shifts the slope of the pattern from $(m,-s')$ to $(m,-n)$, i.e. to the Seifert framing. Together with Hypothesis [-@exm-sat] this gives $M_{C_{m,n}K}=M_K^{\,m}M_{T_{m,n}}$ and $F=mn$.
+
+For torus knots the four facts used in the proof are the following. (I) The coefficient of $a^0$ in the unnormalized reduced value of Gorsky and Neguţ is $(-t/q)^{m-1}C_{m,n}(1/q,t)$, where $C_{m,n}$ is the rational $q,t$-Catalan number. This was conjectured by Gorsky and Neguţ and follows from the theorem of Mellit [@Mellit16] through the operators $Q_{m,n}$ of Bergeron, Garsia, Leven and Xin. (II) The lowest $a$-degree $\delta$ follows from the theorem of Franks and Williams on positive braids [@Franks87]. (III) The sign and the power of $q$ at $t=q$ follow from the $q,t$-symmetry of $C_{m,n}$. (IV) The exponent of $(q/t)$ follows from the Dyck-path form of Mellit [@Mellit17] and Computational Result [-@exr-mellit]. Together these give $M_{T_{m,n}}=(-q/t)^{m-1}\bigl(a(q/t)^{1/2}\bigr)^{\delta}$.
+
+The formula of Computational Result [-@exr-mellit] used in (IV) differs in form from the corollary as stated by Mellit. Mellit [@Mellit17 Cor. 3.4] writes $\mathcal{P}_{m,n}=(-1)^n(a(qt)^{-1/2})^\delta\frac{1}{1-t}\frac{P_{m,n}(1)[a-1]}{a-1}$ with $P_{m,n}$ "the corresponding generator of the elliptic Hall algebra". By Thm. 3.3 of the same paper this holds if $P_{m,n}(1)$ is read as $-d_-B_{c_{m,n}}d_+(1)$ in terms of the operators $d_\pm$ of Carlsson and Mellit. If instead it is read as the element in the standard normalization ($Q_{m,n}$ of [@Bergeron14] or $\widetilde P$ of [@Gorsky13b]), the formula with the substitution $[a-1]$ does not hold; in a comparison over four choices of the element ($Q_{m,n}\cdot1$ and $\widetilde P\cdot1$, each with both orders of the indices), eight choices of the variables ($q$ and $t$ exchanged or inverted) and the five substitutions $[a-1]$, $[a/q-1]$, $[aq-1]$, $[a/t-1]$, $[at-1]$, for $(m,n)=(2,3),(3,2),(2,5),(3,4),(4,3)$, only the form of Computational Result [-@exr-mellit] agrees with the Dyck-path form up to a monomial. Since (IV) only fixes the exponent of $(q/t)$ in $M_\square$, this point does not affect any positivity result (Lemma [-@lem-adams]).
+
+# Appendix C: Non-algebraic cables {#sec-app-nonalg .appendix .unnumbered}
+
+The non-algebraic cables that we computed are the $(2,1)$-, $(2,3)$-, $(2,5)$-, $(2,7)$- and $(2,-1)$-cables of $T_{2,3}$, named $K2$, $K4$, $K5a$, $K5b$, $K5c$ in this order, and the $(2,1)$-cable $K6b$ of $T_{2,5}$. These knots have $n_2<m_1n_1m_2$. For the five cables other than $K5b$ the DAHA value for $\ydA$ does not satisfy the necessary conditions coming from spectral sequences and is therefore not the Poincaré polynomial of HOMFLY-PT homology, so the premise of the KN positivity is not satisfied. Table [-@tbl-nonalg] shows the outcome of the tests.
+
+  Knot    Class         $\ydA$          $\ydB$           $\ydAA$             $\ydC$              $\ydBA$             $\ydAAA$
+  ------- ---------- ---------------- -------------------- -------------------- ----------------------- ------------------------ ------------------------
+  $K2$    non-alg.     10/47; 6/48     152/1136; 41/1045    174/1273; 51/1190     967/8525; 253/7852      1078/9527; 292/8774      1156/9990; 318/9254
+  $K4$    non-alg.     18/42; 20/43    286/1109; 195/952    330/1255; 224/1090   2561/8614; 1749/7420     2850/9646; 1989/8325    3025/10121; 2128/8795
+  $K5a$   non-alg.      8/38; 5/47     409/1226; 332/1066   460/1377; 376/1210   4441/9758; 3631/8278    4982/10844; 4066/9235    5164/11348; 4263/9733
+  $K5b$   non-alg.         (48)        136/1395; 66/1305    149/1537; 78/1452    2097/10706; 1060/9612   2358/11707; 1181/10553   2351/12202; 1228/11040
+  $K5c$   non-alg.      5/57; 0/69      78/1307; 0/1299      77/1443; 0/1433       400/9501; 6/9123        423/10494; 7/10053       376/10864; 0/10444
+  $K6b$   non-alg.    30/133; 10/178   576/4400; 81/4367    618/4677; 91/4656    3626/33214; 512/32175   3766/35136; 541/34032    3878/36067; 560/34980
+
+  : Non-algebraic cables at framing zero. Each entry reads "negative terms/terms of the spin form; negative terms/terms of the genus form", with the better overall sign in each case. {#tbl-nonalg}
+
+The failures are of three types. (I) For the $(2,3)$- and $(2,5)$-cables of $T_{2,3}$ ($K4$, $K5a$), positivity with a refinement of uniform parity is impossible already at the level of the uncolored HOMFLY-PT polynomial. (II) For the $(2,1)$-cables ($K2$, $K6b$) and the $(2,-1)$-cable ($K5c$) the HOMFLY-PT polynomial is compatible with positivity, but the DAHA value $\mathrm{rCS}_{\ydA}$ itself has negative coefficients. (III) For the $(2,7)$-cable of $T_{2,3}$ ($K5b$) the failure in the colored case depends on the framing: among even framings $|x|\le24$, both forms are positive for two boxes when $x\le-12$ and for three boxes when $x\le-14$. For the cable $K5c$ with $\rho=\ydA$ the genus form is non-negative while the spin form has $5$ negative terms among $57$, and the same happens for $\ydB$, $\ydAA$ and $\ydAAA$ (Table [-@tbl-nonalg]); this shows that the converse of Lemma [-@lem-G] fails.
+
+# Appendix D: Data and code {#sec-app-data .appendix .unnumbered}
+
+The values of $\overline{\mathrm{rCS}}_\lambda$, $\widehat{f}_\rho$, the spin form and the genus form for all cases reported here, the certificates used in the computer-assisted proofs, and the code and tests used for the computation will be made available with the final version of this paper.

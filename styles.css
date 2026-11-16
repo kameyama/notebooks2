@@ -1,1 +1,8 @@
 /* css styles */
+
+/* wide display equations scroll inside the text column instead of overflowing it */
+span.math.display {
+  display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
